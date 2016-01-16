@@ -258,7 +258,7 @@ Command* j1Console::FindCommand(const char* str, uint nArgs) const
 	Command* ret = NULL;
 	for (item = commandList.start; item && !ret; item = item->next)
 	{
-		if (item->data->command == str)
+		if (item->data->command == str || item->data->abreviation == str)
 		{
 			ret = item->data;
 		}
@@ -298,6 +298,7 @@ void j1Console::Open()
 	consoleRect->Activate();
 	inputRect->Activate();
 	inputText->Activate();
+	App->gui->SetFocus(inputText);
 
 	active = true;
 }
@@ -334,6 +335,14 @@ void j1Console::DisplayCommands() const
 		str.Clear();
 		str += "  ";
 		str += item->data->command.GetString();
+
+		if (item->data->abreviation != "")
+		{
+			str += " (";
+			str += item->data->abreviation.GetString();
+			str += ")";
+		}
+
 		str += " -- ";
 		str += item->data->desc.GetString();
 		LOG("%s", str.GetString());

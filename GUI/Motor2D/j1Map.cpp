@@ -28,6 +28,14 @@ bool j1Map::Awake(pugi::xml_node& config)
 	return ret;
 }
 
+// Called before the first frame
+bool j1Map::Start()
+{
+	App->console->AddCommand(&c_Map_Render);
+	App->console->AddCommand(&c_Map_Debug);
+
+	return true;
+}
 void j1Map::Draw()
 {
 	if (map_loaded == false)
@@ -35,7 +43,7 @@ void j1Map::Draw()
 
 	// TODO 4: Make sure we draw all the layers and not just the first one
 	p2List_item<MapLayer*>* layer = data.layers.start;
-	for (int i = 0; i < data.layers.count(); i++)
+	for (uint i = 0; i < data.layers.count(); i++)
 	{
 		if (layer->data->properties.GetProperty("Draw") == 1)
 		{

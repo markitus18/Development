@@ -6,6 +6,7 @@
 #include "p2Point.h"
 #include "p2DynArray.h"
 #include "j1Module.h"
+#include "j1Console.h"
 
 // ----------------------------------------------------
 
@@ -16,7 +17,7 @@ struct Properties
 
 	int GetProperty(char* p)
 	{
-		int i = names.find(p);
+		uint i = names.find(p);
 		if (i <= values.Count())
 			return values[i];
 		return 0;
@@ -109,6 +110,9 @@ public:
 	// Called before render is available
 	bool Awake(pugi::xml_node& conf);
 
+	// Called before first frame
+	bool Start();
+
 	// Called each loop iteration
 	void Draw();
 
@@ -142,6 +146,49 @@ private:
 	pugi::xml_document	map_file;
 	p2SString			folder;
 	bool				map_loaded;
+
+#pragma region Commands
+	struct C_Map_Render : public Command
+	{
+		C_Map_Render() : Command("map_render", "Enable / Disable map render", 1, "map_r"){}
+		void function(const p2DynArray<p2SString>* arg)
+		{
+			p2SString str = arg->At(1)->GetString();
+			if (str == "enable")
+			{
+				App->map->data.layers.start->data->properties.values[0] = 1;
+			}
+			else if (str == "disable")
+			{
+				App->map->data.layers.start->data->properties.values[0] = 0;
+			}
+			else
+				LOG("map_render: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+
+		}
+	};
+	C_Map_Render c_Map_Render;
+
+	struct C_Map_Debug : public Command
+	{
+		C_Map_Debug() : Command("map_debug", "Enable / Disable map debug", 1, "map_d"){}
+		void function(const p2DynArray<p2SString>* arg)
+		{
+			p2SString str = arg->At(1)->GetString();
+			if (str == "enable")
+			{
+				App->map->data.layers.start->next->data->properties.values[0] = 1;
+			}
+			else if (str == "disable")
+			{
+				App->map->data.layers.start->next->data->properties.values[0] = 0;
+			}
+			else
+				LOG("map_debug: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+
+		}
+	};
+	C_Map_Debug c_Map_Debug;
 };
 
 #endif // __j1MAP_H__

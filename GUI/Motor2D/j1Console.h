@@ -22,11 +22,12 @@ struct Command
 {
 public:
 	Command(){}
-	Command(char* str, char* dsc, uint n){ command = str; desc = dsc, nArgs = n;}
+	Command(char* str, char* dsc, uint n, char* abr = NULL){ command = str; desc = dsc, nArgs = n; abreviation = abr;}
 
 public:
 	p2SString desc;
 	p2SString command;
+	p2SString abreviation;
 	uint nArgs;
 	virtual void function(const p2DynArray<p2SString>* arg){ LOG("Executing command function"); }
 

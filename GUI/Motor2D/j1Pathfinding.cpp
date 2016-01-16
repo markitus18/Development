@@ -32,6 +32,10 @@ bool j1PathFinding::Start()
 	mapData = new map;
 	startTile = endTile = iPoint{ -1, -1 };
 	LoadMapData();
+
+	App->console->AddCommand(&c_Path_Corners);
+	App->console->AddCommand(&c_Path_Diag);
+
 	return true;
 }
 // Called each loop iteration
@@ -54,29 +58,7 @@ bool j1PathFinding::Update(float dt)
 
 			App->pathFinding->StepUp();
 		}
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP)
-		{
-			App->pathFinding->allowDiagonals = !App->pathFinding->allowDiagonals;
-			if (App->pathFinding->allowDiagonals)
-			{
-				LOG("-- Pathfinding: Diagonals enabled --");
-			}
-			else
-				LOG("-- Pathfinding: Diagonals disabled --");
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_C) == KEY_UP)
-		{
-			App->pathFinding->allowCorners = !App->pathFinding->allowCorners;
-			if (App->pathFinding->allowCorners)
-			{
-				LOG("-- Pathfinding: Corners enabled --");
-			}
-			else
-				LOG("-- Pathfinding: Corners disabled --");
-		}
 	}
-
 	return true;
 }
 
@@ -344,7 +326,7 @@ bool j1PathFinding::CheckIfExists(node* node)
 {
 	bool nodeExists = false;
 	int nodeIndex;
-	for (int i = 0; i < openList.count() && !nodeExists; i++)
+	for (uint i = 0; i < openList.count() && !nodeExists; i++)
 	{
 		if (openList[i]->tile.x == node->tile.x && openList[i]->tile.y == node->tile.y)
 		{
@@ -374,7 +356,7 @@ bool j1PathFinding::CheckIfExists(node* node)
 bool j1PathFinding::IsNodeClosed(node*  node)
 {
 	bool ret = false;
-	for (int i = 0; i < closedList.count() && !ret; i++)
+	for (uint i = 0; i < closedList.count() && !ret; i++)
 	{
 		if (closedList[i]->tile.x == node->tile.x && closedList[i]->tile.y == node->tile.y)
 		{

@@ -35,7 +35,6 @@ bool j1Scene::Awake(pugi::xml_node& node)
 // Called before the first frame
 bool j1Scene::Start()
 {
-	//EXERCICE 3
 	pugi::xml_node config = App->GetConfig("scene");
 	App->GetConfig("scene");
 
@@ -63,13 +62,9 @@ bool j1Scene::Start()
 	App->console->AddCommand(&move_labels);
 	App->console->AddCommand(&save_labels);
 	App->console->AddCommand(&load_labels);
-	if(App->map->Load("iso.tmx") == true)
-	{
-		int w, h;
-		uchar* data = NULL;
 
-		RELEASE_ARRAY(data);
-	}
+	App->map->Load("iso.tmx");
+
 	//LoadGUI();
 
 	debug_tex = App->tex->Load("maps/path.png");
@@ -145,7 +140,7 @@ bool j1Scene::Update(float dt)
 
 	if (App->pathFinding->pathFinished)
 	{
-		for (int i = 0; i < App->pathFinding->path.Count(); i++)
+		for (uint i = 0; i < App->pathFinding->path.Count(); i++)
 		{
 			iPoint position = App->map->MapToWorld(App->pathFinding->path[i].x, App->pathFinding->path[i].y);
 			App->render->Blit(debug_tex, position.x, position.y, new SDL_Rect{ 0, 0, 64, 64 });
@@ -154,12 +149,12 @@ bool j1Scene::Update(float dt)
 
 	else if (App->pathFinding->pathStarted)
 	{
-		for (int i = 0; i < App->pathFinding->openList.count(); i++)
+		for (uint i = 0; i < App->pathFinding->openList.count(); i++)
 		{
 			iPoint position = App->map->MapToWorld(App->pathFinding->openList[i]->tile.x, App->pathFinding->openList[i]->tile.y);
 			App->render->Blit(debug_tex, position.x, position.y, new SDL_Rect{ 0, 0, 64, 64 });
 		}
-		for (int i = 0; i < App->pathFinding->closedList.count(); i++)
+		for (uint i = 0; i < App->pathFinding->closedList.count(); i++)
 		{
 			iPoint position = App->map->MapToWorld(App->pathFinding->closedList[i]->tile.x, App->pathFinding->closedList[i]->tile.y);
 			App->render->Blit(debug_tex, position.x, position.y, new SDL_Rect{ 0, 64, 64, 64 });
@@ -190,9 +185,6 @@ bool j1Scene::PostUpdate()
 {
 	bool ret = true;
 	
-//	if(App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-//	ret = false;
-
 	return ret;
 }
 
@@ -229,24 +221,6 @@ void j1Scene::ManageInput(float dt)
 		if (App->input->GetKey(SDL_SCANCODE_U) == KEY_DOWN)
 		{
 			App->LoadGUI();
-		}
-
-		//Change map layer debug
-		if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_UP)
-		{
-			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
-				App->map->data.layers.start->next->data->properties.values[0] = 0;
-			else
-				App->map->data.layers.start->next->data->properties.values[0] = 1;
-		}
-
-		//Enable / Disable render mode
-		if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_UP)
-		{
-			if (App->map->data.layers.start->data->properties.values[0] == 1)
-				App->map->data.layers.start->data->properties.values[0] = 0;
-			else
-				App->map->data.layers.start->data->properties.values[0] = 1;
 		}
 
 		//Paint unwalkable
@@ -597,7 +571,7 @@ void j1Scene::UpdateValueText(float value)
 bool j1Scene::SaveDrag(pugi::xml_node node) const
 {
 	pugi::xml_node tmp;
-	for (int i = 0; i < configLabels.Count(); i++)
+	for (uint i = 0; i < configLabels.Count(); i++)
 	{
 		SDL_Rect rect = configLabels[i]->GetWorldRect();
 		iPoint pos = { rect.x, rect.y };
@@ -615,7 +589,7 @@ bool j1Scene::SaveDrag(pugi::xml_node node) const
 bool j1Scene::LoadDrag(pugi::xml_node node)
 {
 	pugi::xml_node label = node.first_child();
-	int i = 0;
+	uint i = 0;
 
 	while (label)
 	{

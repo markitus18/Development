@@ -114,6 +114,7 @@ private:
 	
 	p2DynArray<UILabel*> configLabels;
 
+#pragma region Commands
 	struct CloseGUI : public Command
 	{
 		CloseGUI() : Command("close_gui", "Close GUI window", 0){}
@@ -179,6 +180,7 @@ private:
 		}
 	};
 	LoadLabels load_labels;
+#pragma endregion
 };
 
 #endif // __j1SCENE_H__
