@@ -180,6 +180,27 @@ private:
 		}
 	};
 	LoadLabels load_labels;
+
+	struct C_SaveGame : public Command
+	{
+		C_SaveGame() : Command("save_game", "Save current game", 0){}
+		void function(const p2DynArray<p2SString>* arg)
+		{
+			App->SaveGame("save_game.xml");
+		}
+	};
+	C_SaveGame c_SaveGame;
+
+	struct C_LoadGame : public Command
+	{
+		C_LoadGame() : Command("load_game", "Load current game", 0){}
+		void function(const p2DynArray<p2SString>* arg)
+		{
+			App->LoadGame("save_game.xml");
+		}
+	};
+	C_LoadGame c_LoadGame;
+
 #pragma endregion
 };
 

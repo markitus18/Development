@@ -146,18 +146,6 @@ private:
 
 	bool				init = false;
 
-//	class Command;
-	/*
-	struct Command_LoadGUI : public Command
-	{
-		Command_LoadGUI() : Command("load_gui", "Load GUI label position", 0){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-		//	save_gui = true;
-		}
-	};
-	Command_LoadGUI command_loadGUI;
-	*/
 };
 
 

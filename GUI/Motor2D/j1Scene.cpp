@@ -63,7 +63,8 @@ bool j1Scene::Start()
 	App->console->AddCommand(&move_labels);
 	App->console->AddCommand(&save_labels);
 	App->console->AddCommand(&load_labels);
-
+	App->console->AddCommand(&c_SaveGame);
+	App->console->AddCommand(&c_LoadGame);
 	App->map->Load("iso.tmx");
 
 	//LoadGUI();
@@ -102,17 +103,7 @@ bool j1Scene::Update(float dt)
 	ManageInput(dt);
 
 	App->map->Draw();
-	/*
-  p2SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d Tile:%d,%d",
-					App->map->data.width, App->map->data.height,
-					App->map->data.tile_width, App->map->data.tile_height,
-					App->map->data.tilesets.count(),
-					map_coordinates.x, map_coordinates.y);
-
-
-//	App->win->SetTitle(title.GetString());
-	*/
-
+	
 	// Debug pathfinding ------------------------------
 
 	//Getting current mouse tile
@@ -185,12 +176,6 @@ void j1Scene::ManageInput(float dt)
 {
 	if (App->input->GetInputState() == false)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
-			App->LoadGame("save_game.xml");
-
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-			App->SaveGame("save_game.xml");
-
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 			App->render->camera.y += (int)floor(200.0f * dt);
 

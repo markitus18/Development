@@ -469,7 +469,7 @@ void UIInputText::UpdateTextTexture()
 		{
 			//Building the string from the list
 			p2List_item<char>* item = textList.start;
-			for (int i = 0; i < textList.count() && item; i++)
+			for (uint i = 0; i < textList.count() && item; i++)
 			{
 				str[i] = item->data;
 				item = item->next;
@@ -478,7 +478,7 @@ void UIInputText::UpdateTextTexture()
 		}
 		else
 		{
-			for (int i = 0; i < textList.count(); i++)
+			for (uint i = 0; i < textList.count(); i++)
 			{
 				str[i] = '*';
 			}
