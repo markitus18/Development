@@ -88,6 +88,8 @@ public:
 	bool		pathStarted = false;
 	bool		pathFinished = false;
 
+	bool		editMode = false;
+
 	p2DynArray<iPoint> path;
 
 #pragma region Commands
@@ -136,6 +138,29 @@ public:
 		}
 	};
 	C_Path_Diag c_Path_Diag;
+
+	struct C_Path_EditMode : public Command
+	{
+		C_Path_EditMode() : Command("map_edit", "Enable / Disable  map edit", 1, "pf_e"){}
+		void function(const p2DynArray<p2SString>* arg)
+		{
+			p2SString str = arg->At(1)->GetString();
+			if (str == "enable")
+			{
+				App->pathFinding->editMode = true;
+				LOG("-- Map: Map edition enabled  --");
+			}
+			else if (str == "disable")
+			{
+				App->pathFinding->editMode = false;
+				LOG("-- Map: Map edition disabled --");
+			}
+			else
+				LOG("map_edit: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+
+		}
+	};
+	C_Path_EditMode c_Path_EditMode;
 #pragma endregion
 };
 #endif // __j1PATHFINDING_H__

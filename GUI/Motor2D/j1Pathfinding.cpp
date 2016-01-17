@@ -8,6 +8,7 @@
 #include "j1Window.h"
 #include "j1Map.h"
 #include "j1PathFinding.h"
+#include "j1Scene.h"
 
 j1PathFinding::j1PathFinding() : j1Module()
 {
@@ -35,6 +36,7 @@ bool j1PathFinding::Start()
 
 	App->console->AddCommand(&c_Path_Corners);
 	App->console->AddCommand(&c_Path_Diag);
+	App->console->AddCommand(&c_Path_EditMode);
 
 	return true;
 }
@@ -59,6 +61,41 @@ bool j1PathFinding::Update(float dt)
 			App->pathFinding->StepUp();
 		}
 	}
+
+	if (editMode)
+	{
+		//Paint unwalkable
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+		{
+			int x = App->scene->currentTile_x;
+			int y = App->scene->currentTile_y;
+			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
+			{
+				if (x >= 0 && y >= 0)
+				{
+					App->map->ChangeTile(x, y, 26);
+					mapChanged = true;
+				}
+			}
+		}
+
+		//Paint walkable
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+		{
+			int x = App->scene->currentTile_x;
+			int y = App->scene->currentTile_y;
+			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
+			{
+				if (x >= 0 && y >= 0)
+				{
+					App->map->ChangeTile(x, y, 25);
+					mapChanged = true;
+				}
+			}
+		}
+	}
+
+
 	return true;
 }
 

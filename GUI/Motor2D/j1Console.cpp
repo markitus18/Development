@@ -78,14 +78,24 @@ bool j1Console::Update(float dt)
 		App->input->GetMouseMotion(x, y);
 		if ((y > 0 && textStart + y <=0) || (y < 0 && textStart + outputHeight + y > 250 - 15))
 		{
+			int minY = 0;
+			int maxY = inputText->GetWorldRect().y - 20;
+
 			textStart += y;
 			for (uint n = 0; n < output.Count(); n++)
 			{
+				output[n]->active = true;
 				iPoint pos = output[n]->GetLocalPosition();
 				output[n]->SetLocalPosition(pos.x, pos.y + y);
+				iPoint newPos = output[n]->GetLocalPosition();
+
+				if (newPos.y >= maxY || newPos.y < 0)
+				{
+					output[n]->active = false;
+				}
+
 			}
 		}
-
 	}
 	return true;
 }
@@ -240,14 +250,25 @@ void j1Console::Output(char* str)
 	newOutput->layer = 1;
 	output.PushBack(newOutput);
 
+	int minY = 0;
+	int maxY = inputText->GetWorldRect().y - 20;
+
 	int offset = (250 - 15) - (textStart + y + LINE_SPACING);
 	if (offset < 0)
 	{
 		textStart += offset;
 		for (uint n = 0; n < output.Count(); n++)
 		{
+			output[n]->active = true;
 			iPoint pos = output[n]->GetLocalPosition();
 			output[n]->SetLocalPosition(pos.x, pos.y + offset);
+			iPoint newPos = output[n]->GetLocalPosition();
+
+			if (newPos.y >= maxY || newPos.y < 0)
+			{
+				output[n]->active = false;
+			}
+
 		}
 	}
 }
@@ -296,9 +317,26 @@ CVar* j1Console::FindCVar(const char* str)
 void j1Console::Open()
 {
 	consoleRect->Activate();
-	inputRect->Activate();
+	inputRect->Activate(); 
 	inputText->Activate();
 	App->gui->SetFocus(inputText);
+
+	int minY = 0;
+	int maxY = inputText->GetWorldRect().y - 20;
+
+	textStart = output.Count() * (-LINE_SPACING) + maxY + 10;
+	for (uint n = 0; n < output.Count(); n++)
+	{
+		output[n]->active = true;
+		iPoint pos = output[n]->GetLocalPosition();
+		output[n]->SetLocalPosition(pos.x, textStart + LINE_SPACING * n);
+
+		iPoint newPos = output[n]->GetLocalPosition();
+		if (newPos.y >= maxY || newPos.y < 0)
+		{
+			output[n]->active = false;
+		}
+	}
 
 	active = true;
 }

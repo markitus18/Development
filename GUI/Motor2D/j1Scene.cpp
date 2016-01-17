@@ -38,6 +38,8 @@ bool j1Scene::Start()
 	pugi::xml_node config = App->GetConfig("scene");
 	App->GetConfig("scene");
 
+	// Loading texts from XML
+	/*
 	for (pugi::xml_node label = config.child("ui_label"); label; label = label.next_sibling("ui_label"))
 	{
 		TTF_Font* font = App->font->Load("fonts/open_sans/OpenSans-Regular.ttf", 24);
@@ -54,11 +56,10 @@ bool j1Scene::Start()
 
 		configLabels.PushBack(newLabel);
 	}
+	*/
 
 	App->console->AddCommand(&command_closeGUI);
 	App->console->AddCommand(&command_openGUI);
-
-	//EXERCISE 5
 	App->console->AddCommand(&move_labels);
 	App->console->AddCommand(&save_labels);
 	App->console->AddCommand(&load_labels);
@@ -90,14 +91,6 @@ bool j1Scene::PreUpdate()
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
-	if (!logStart)
-	{
-		LOG("To check EXERCISE 4/5:");
-		LOG("I dont have the labels to be dragged by a bool, so i can't drag them now");
-		LOG("To check save / load functionality, use command 'move_labels'");
-
-		logStart = true;
-	}
 	// Gui ---
 	if (elementHold)
 	{
@@ -168,15 +161,7 @@ bool j1Scene::Update(float dt)
 		App->render->Blit(App->map->data.tilesets.start->next->data->texture, startPosition.x, startPosition.y, new SDL_Rect{ 0, 64, 64, 64 });
 	if (App->pathFinding->endTileExists)
 		App->render->Blit(App->map->data.tilesets.start->next->data->texture, endPosition.x, endPosition.y, new SDL_Rect{ 64, 64, 64, 64 });
-	/*
-	const p2DynArray<iPoint>* path = App->pathfinding->GetLastPath();
-
-	for(uint i = 0; i < path->Count(); ++i)
-	{
-		iPoint pos = App->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-		App->render->Blit(debug_tex, pos.x, pos.y);
-	}
-	*/
+	
 	return true;
 }
 
@@ -217,37 +202,6 @@ void j1Scene::ManageInput(float dt)
 
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 			App->render->camera.x -= (int)floor(200.0f * dt);
-
-		if (App->input->GetKey(SDL_SCANCODE_U) == KEY_DOWN)
-		{
-			App->LoadGUI();
-		}
-
-		//Paint unwalkable
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
-		{
-			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
-			{
-				if (currentTile_x >= 0 && currentTile_y >= 0)
-				{
-					App->map->ChangeTile(currentTile_x, currentTile_y, 26);
-					App->pathFinding->mapChanged = true;
-				}
-			}
-		}
-
-		//Paint walkable
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-		{
-			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
-			{
-				if (currentTile_x >= 0 && currentTile_y >= 0)
-				{
-					App->map->ChangeTile(currentTile_x, currentTile_y, 25);
-					App->pathFinding->mapChanged = true;
-				}
-			}
-		}
 
 		//change pahtfinding start tile
 		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_UP)
