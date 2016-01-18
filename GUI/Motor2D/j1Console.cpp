@@ -131,6 +131,27 @@ void j1Console::OnGUI(UI_Event _event, UIElement* _element)
 void j1Console::AddCommand(Command* command)
 {
 	commandList.add(command);
+
+	bool found = false;
+	bool std = false;
+	for (uint i = 0; i < tags.Count(); i++)
+	{
+		if (command->tag == tags[i])
+		{
+			found = true;
+		}
+		if (tags[i] == "Myscelaneous")
+		{
+			std = true;
+		}
+	}
+	if (!found)
+	{
+		if (command->tag != "Myscelaneous")
+			tags.PushBack(command->tag);
+		else if (!std)
+			tags.PushBack("Myscelaneous");
+	}
 }
 
 uint j1Console::AddCVar(const char* newName, float* reference, j1Module* listener, bool serialize)
@@ -368,37 +389,51 @@ void j1Console::DisplayCommands() const
 	p2SString str;
 	LOG("   ");
 	LOG("Command List:");
-	for (item = commandList.start; item; item = item->next)
+	for (uint i = 0; i < tags.Count(); i++)
 	{
-		str.Clear();
-		str += "  ";
-		str += item->data->command.GetString();
-
-		if (item->data->abreviation != "")
+		LOG("    %s:", tags[i].GetString());
+		for (item = commandList.start; item; item = item->next)
 		{
-			str += " (";
-			str += item->data->abreviation.GetString();
-			str += ")";
+			if (item->data->tag == tags[i])
+			{
+				str.Clear();
+				str += "        ";
+				str += item->data->command.GetString();
+
+				if (item->data->abreviation != "")
+				{
+					str += " (";
+					str += item->data->abreviation.GetString();
+					str += ")";
+				}
+
+				str += " -- ";
+				str += item->data->desc.GetString();
+				LOG("%s", str.GetString());
+			}
+
 		}
+		LOG(" ");
+		p2List_item<CVar*>* citem;
+		for (citem = CVarList.start; citem; citem = citem->next)
+		{
+			if (item)
+			{
+				if (item->data->tag == tags[i])
+				{
+					str.Clear();
+					str += "  ";
+					if (citem->data->GetListener())
+						str += citem->data->GetListener()->name.GetString();
+					str += " -- ";
+					str += citem->data->GetName().GetString();
 
-		str += " -- ";
-		str += item->data->desc.GetString();
-		LOG("%s", str.GetString());
+					LOG("%s", str.GetString());
+				}
+			}
+		}
 	}
-	LOG(" ");
-	p2List_item<CVar*>* citem;
-	LOG("Variables List:");
-	for (citem = CVarList.start; citem; citem = citem->next)
-	{
-		str.Clear();
-		str += "  ";
-		if (citem->data->GetListener())
-			str += citem->data->GetListener()->name.GetString();
-		str += " -- ";
-		str += citem->data->GetName().GetString();
 
-		LOG("%s", str.GetString());
-	}
 }
 
 bool j1Console::isActive() const

@@ -22,12 +22,14 @@ struct Command
 {
 public:
 	Command(){}
-	Command(char* str, char* dsc, uint n, char* abr = NULL){ command = str; desc = dsc, nArgs = n; abreviation = abr;}
+	Command(char* str, char* dsc, uint n, char* abr = NULL, char* newTag = "Myscelaneous"){ command = str; desc = dsc, nArgs = n; abreviation = abr; tag = newTag; }
 
 public:
 	p2SString desc;
 	p2SString command;
 	p2SString abreviation;
+	p2SString tag;
+
 	uint nArgs;
 	virtual void function(const p2DynArray<p2SString>* arg){ LOG("Executing command function"); }
 
@@ -47,6 +49,7 @@ public:
 private:
 	p2SString desc;
 	p2SString name;
+	p2SString tag;
 	CVarTypes type;
 	Command* command = NULL;
 	j1Module* listener = NULL;
@@ -147,6 +150,7 @@ private:
 private:
 	p2List<Command*> commandList;
 	p2List<CVar*> CVarList;
+	p2DynArray<p2SString> tags;
 
 	UIInputText* inputText;
 	UIRect* consoleRect;
@@ -168,7 +172,7 @@ private:
 
 	struct Command_commandList : public Command
 	{
-		Command_commandList() : Command("list", "Display command list", 0){}
+		Command_commandList() : Command("list", "Display command list", 0, NULL, "Console"){}
 		void function(const p2DynArray<p2SString>* arg)
 		{
 			App->console->DisplayCommands();
@@ -179,7 +183,7 @@ private:
 
 	struct Command_closeConsole : public Command
 	{
-		Command_closeConsole() : Command("close", "Close console", 0){}
+		Command_closeConsole() : Command("close", "Close console", 0, NULL, "Console"){}
 		void function(const p2DynArray<p2SString>* arg)
 		{
 			App->console->Close();
@@ -190,7 +194,7 @@ private:
 
 	struct Command_clearConsole : public Command
 	{
-		Command_clearConsole() : Command("cls", "Clear console output", 0){}
+		Command_clearConsole() : Command("cls", "Clear console output", 0, NULL, "Console"){}
 		void function(const p2DynArray<p2SString>* arg)
 		{
 			App->console->Clear();
@@ -201,7 +205,7 @@ private:
 
 	struct QuitCommand : public Command
 	{
-		QuitCommand() : Command("quit", "Quit the application", 0){}
+		QuitCommand() : Command("quit", "Quit the application", 0, NULL, "Console"){}
 		void function(const p2DynArray<p2SString>* arg)
 		{
 			App->console->closeGame = true;
