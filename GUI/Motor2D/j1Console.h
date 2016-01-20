@@ -22,7 +22,7 @@ struct Command
 {
 public:
 	Command(){}
-	Command(char* str, char* dsc, uint n, char* abr = NULL, char* newTag = "Myscelaneous"){ command = str; desc = dsc, nArgs = n; abreviation = abr; tag = newTag; }
+	Command(char* str, char* dsc, uint n, char* abr = NULL, char* newTag = "Miscellaneous"){ command = str; desc = dsc, nArgs = n; abreviation = abr; tag = newTag; }
 
 public:
 	p2SString desc;

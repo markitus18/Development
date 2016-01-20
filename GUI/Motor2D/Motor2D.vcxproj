@@ -100,11 +100,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Animation.h" />
+    <ClInclude Include="j1Console.h" />
     <ClInclude Include="j1FileSystem.h" />
     <ClInclude Include="j1Fonts.h" />
     <ClInclude Include="j1Gui.h" />
     <ClInclude Include="j1Map.h" />
-    <ClInclude Include="j1Console.h" />
     <ClInclude Include="j1Pathfinding.h" />
     <ClInclude Include="j1PerfTimer.h" />
     <ClInclude Include="j1Scene.h" />

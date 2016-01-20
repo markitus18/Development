@@ -140,17 +140,10 @@ void j1Console::AddCommand(Command* command)
 		{
 			found = true;
 		}
-		if (tags[i] == "Myscelaneous")
-		{
-			std = true;
-		}
 	}
 	if (!found)
 	{
-		if (command->tag != "Myscelaneous")
-			tags.PushBack(command->tag);
-		else if (!std)
-			tags.PushBack("Myscelaneous");
+		tags.PushBack(command->tag);
 	}
 }
 
@@ -386,6 +379,7 @@ void j1Console::Clear()
 void j1Console::DisplayCommands() const
 {
 	p2List_item<Command*>* item;
+	p2List_item<Command*>* misc;
 	p2SString str;
 	LOG("   ");
 	LOG("Command List:");
@@ -410,9 +404,10 @@ void j1Console::DisplayCommands() const
 				str += " -- ";
 				str += item->data->desc.GetString();
 				LOG("%s", str.GetString());
-			}
-
+			}	
 		}
+
+
 		LOG(" ");
 		p2List_item<CVar*>* citem;
 		for (citem = CVarList.start; citem; citem = citem->next)
@@ -433,8 +428,8 @@ void j1Console::DisplayCommands() const
 			}
 		}
 	}
-
 }
+
 
 bool j1Console::isActive() const
 {
