@@ -24,10 +24,11 @@ bool j1Console::Awake(pugi::xml_node& config)
 {
 	bool ret = true;
 
-	AddCommand(&command_commandList);
-	AddCommand(&command_closeConsole);
-	AddCommand(&command_clearConsole);
-	AddCommand(&command_quitCommand);
+	AddCommand(&c_commandList);
+	AddCommand(&c_tagList);
+	AddCommand(&c_closeConsole);
+	AddCommand(&c_clearConsole);
+	AddCommand(&c_Quit);
 
 	return ret;
 }
@@ -58,6 +59,21 @@ bool j1Console::Start()
 	inputText->maxCharacters = 67;
 	inputText->SetLayer(GUI_MAX_LAYERS);
 
+	//Moving Miscellaneous tag to the last tag in the list
+	bool found = false;
+	for (int i = 0; i < tags.Count(); i++)
+	{
+		if (tags[i] == "Miscellaneous" && i != tags.Count() - 1)
+		{
+			found = true;
+		}
+		if (found && i != tags.Count() - 1)
+		{
+			tags[i] = tags[i + 1];
+		}
+	}
+	if (found)
+		tags[tags.Count() - 1] = "Miscellaneous";
 
 	return true;
 	
@@ -300,7 +316,7 @@ Command* j1Console::FindCommand(const char* str, uint nArgs) const
 	}
 	if (ret)
 	{
-		if (nArgs != ret->nArgs)
+		if (nArgs > ret->nArgs)
 		{
 			LOG("Command '%s' should recieve %i arguments, sent %i.", str, ret->nArgs, nArgs);
 			ret = NULL;
@@ -370,16 +386,61 @@ void j1Console::Clear()
 	for (uint i = 0; i < output.Count(); i++)
 	{
 		output[i]->active = false;
+//		App->gui->DeleteElement(output[i]);
 		//We should erase those texts, not just deactivate them
 	}
 	textStart = 0;
 	output.Clear();
 }
 
-void j1Console::DisplayCommands() const
+void j1Console::DisplayCommands(p2SString str) const
+{
+	if (str == "")
+	{
+		DisplayAllCommands();
+	}
+	else
+	{
+		p2List_item<Command*>* item;
+		bool found = false;
+		for (uint i = 0; i < tags.Count() && !found; i++)
+		{
+			p2SString str2 = tags[i];
+			if (tags[i] == str)
+			{
+				LOG("%s:", str.GetString());
+				for (item = commandList.start; item; item = item->next)
+				{
+					if (item->data->tag == tags[i])
+					{
+						str.Clear();
+						str += "    ";
+						str += item->data->command.GetString();
+
+						if (item->data->abreviation != "")
+						{
+							str += " (";
+							str += item->data->abreviation.GetString();
+							str += ")";
+						}
+
+						str += " -- ";
+						str += item->data->desc.GetString();
+						LOG("%s", str.GetString());
+					}
+				}
+				found = true;
+			}
+		}
+		if (!found)
+		{
+			LOG("There is no tag '%s' in the command list", str.GetString());
+		}
+	}
+}
+void j1Console::DisplayAllCommands() const
 {
 	p2List_item<Command*>* item;
-	p2List_item<Command*>* misc;
 	p2SString str;
 	LOG("   ");
 	LOG("Command List:");
@@ -430,6 +491,14 @@ void j1Console::DisplayCommands() const
 	}
 }
 
+void j1Console::DisplayTags() const
+{
+	LOG("Tag List:");
+	for (int i = 0; i < tags.Count(); i++)
+	{
+		LOG("    %s", tags[i].GetString());
+	}
+}
 
 bool j1Console::isActive() const
 {

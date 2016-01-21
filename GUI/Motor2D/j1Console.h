@@ -134,7 +134,9 @@ public:
 	void Close();
 	void Clear();
 
-	void DisplayCommands() const;
+	void DisplayCommands(p2SString str) const;
+	void DisplayAllCommands() const;
+	void DisplayTags() const;
 
 	bool isActive() const;
 
@@ -169,49 +171,63 @@ private:
 	bool closeGame = false;
 
 
-
-	struct Command_commandList : public Command
+#pragma region Commands
+	struct C_commandList : public Command
 	{
-		Command_commandList() : Command("list", "Display command list", 0, NULL, "Console"){}
+		C_commandList() : Command("list", "Display command list", 1, NULL, "Console"){}
 		void function(const p2DynArray<p2SString>* arg)
 		{
-			App->console->DisplayCommands();
+			p2SString str("");
+			if (arg->Count() > 1)
+			{
+				str = arg->At(1)->GetString();
+			}
+			App->console->DisplayCommands(str);
 		}
 	};
+	C_commandList c_commandList;
 
-	Command_commandList command_commandList;
-
-	struct Command_closeConsole : public Command
+	struct C_tagList : public Command
 	{
-		Command_closeConsole() : Command("close", "Close console", 0, NULL, "Console"){}
+		C_tagList() : Command("tags", "Display tag list", 0, NULL, "Console"){}
+		void function(const p2DynArray<p2SString>* arg)
+		{
+			App->console->DisplayTags();
+		}
+	};
+	C_tagList c_tagList;
+
+	struct C_closeConsole : public Command
+	{
+		C_closeConsole() : Command("close", "Close console", 0, NULL, "Console"){}
 		void function(const p2DynArray<p2SString>* arg)
 		{
 			App->console->Close();
 		}
 	};
+	C_closeConsole c_closeConsole;
 
-	Command_closeConsole command_closeConsole;
-
-	struct Command_clearConsole : public Command
+	struct C_clearConsole : public Command
 	{
-		Command_clearConsole() : Command("cls", "Clear console output", 0, NULL, "Console"){}
+		C_clearConsole() : Command("cls", "Clear console output", 0, NULL, "Console"){}
 		void function(const p2DynArray<p2SString>* arg)
 		{
 			App->console->Clear();
 		}
 	};
+	C_clearConsole c_clearConsole;
 
-	Command_clearConsole command_clearConsole;
-
-	struct QuitCommand : public Command
+	struct C_Quit : public Command
 	{
-		QuitCommand() : Command("quit", "Quit the application", 0, NULL, "Console"){}
+		C_Quit() : Command("quit", "Quit the application", 0, NULL, "Console"){}
 		void function(const p2DynArray<p2SString>* arg)
 		{
 			App->console->closeGame = true;
 		}
 	};
-	QuitCommand command_quitCommand;
+	C_Quit c_Quit;
+#pragma endregion
+
 };
 
 #endif // __j1CONSOLE_H__

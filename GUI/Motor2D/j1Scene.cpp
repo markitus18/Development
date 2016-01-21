@@ -29,6 +29,14 @@ bool j1Scene::Awake(pugi::xml_node& node)
 	LOG("Loading Scene");
 	bool ret = true;
 
+	App->console->AddCommand(&command_closeGUI);
+	App->console->AddCommand(&command_openGUI);
+	App->console->AddCommand(&move_labels);
+	App->console->AddCommand(&save_labels);
+	App->console->AddCommand(&load_labels);
+	App->console->AddCommand(&c_SaveGame);
+	App->console->AddCommand(&c_LoadGame);
+
 	return ret;
 }
 
@@ -58,13 +66,7 @@ bool j1Scene::Start()
 	}
 	*/
 
-	App->console->AddCommand(&command_closeGUI);
-	App->console->AddCommand(&command_openGUI);
-	App->console->AddCommand(&move_labels);
-	App->console->AddCommand(&save_labels);
-	App->console->AddCommand(&load_labels);
-	App->console->AddCommand(&c_SaveGame);
-	App->console->AddCommand(&c_LoadGame);
+
 	App->map->Load("iso.tmx");
 
 	//LoadGUI();
