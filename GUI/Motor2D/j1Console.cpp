@@ -39,13 +39,13 @@ bool j1Console::Start()
 	TTF_Font* inputFont = App->font->Load("fonts/open_sans/OpenSans-Regular.ttf", 16);
 
 	//Console rect
-	consoleRect = App->gui->CreateRect("Console rect", { 0, 0, App->render->camera.w, 250 }, 0, 0, 0, 200);
+	consoleRect = App->gui->CreateRect("Console rect", { 0, 0, App->render->camera.w, 350 }, 0, 0, 0, 200);
 	consoleRect->SetLayer(GUI_MAX_LAYERS);
 	consoleRect->interactive = true;
 	consoleRect->listener = this;
 	
 	//Console input rect
-	inputRect = App->gui->CreateRect("Console Input rect", { 0, 250, App->render->camera.w, 40 }, 130, 130, 130);
+	inputRect = App->gui->CreateRect("Console Input rect", { 0, 350, App->render->camera.w, 40 }, 130, 130, 130);
 	inputRect->SetLayer(GUI_MAX_LAYERS);
 
 	//Console input label
@@ -54,14 +54,14 @@ bool j1Console::Start()
 	console_defLabel->SetLayer(GUI_MAX_LAYERS);
 
 	//Console input
-	inputText = App->gui->CreateInputText("Console Input", { 0, 250, App->render->camera.w, 40}, NULL, console_defLabel, App->gui->GetScreen(), 10, 10, true, this);
+	inputText = App->gui->CreateInputText("Console Input", { 0, 350, App->render->camera.w, 40}, NULL, console_defLabel, App->gui->GetScreen(), 10, 10, true, this);
 	inputText->Center_x(App->gui->GetScreen());
 	inputText->maxCharacters = 67;
 	inputText->SetLayer(GUI_MAX_LAYERS);
 
 	//Moving Miscellaneous tag to the last tag in the list
 	bool found = false;
-	for (int i = 0; i < tags.Count(); i++)
+	for (uint i = 0; i < tags.Count(); i++)
 	{
 		if (tags[i] == "Miscellaneous" && i != tags.Count() - 1)
 		{
@@ -283,7 +283,7 @@ void j1Console::Output(char* str)
 	int minY = 0;
 	int maxY = inputText->GetWorldRect().y - 20;
 
-	int offset = (250 - 15) - (textStart + y + LINE_SPACING);
+	int offset = (350 - 15) - (textStart + y + LINE_SPACING);
 	if (offset < 0)
 	{
 		textStart += offset;
@@ -494,7 +494,7 @@ void j1Console::DisplayAllCommands() const
 void j1Console::DisplayTags() const
 {
 	LOG("Tag List:");
-	for (int i = 0; i < tags.Count(); i++)
+	for (uint i = 0; i < tags.Count(); i++)
 	{
 		LOG("    %s", tags[i].GetString());
 	}

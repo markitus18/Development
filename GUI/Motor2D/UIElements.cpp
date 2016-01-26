@@ -24,7 +24,7 @@ void UIElement::OnLooseFocus(){}
 
 void UIElement::Deactivate()
 {
-	for (int i = 0; i < childs.Count(); i++)
+	for (uint i = 0; i < childs.Count(); i++)
 	{
 		childs[i]->Deactivate();
 	}
@@ -37,7 +37,7 @@ void UIElement::Deactivate()
 
 void UIElement::Activate()
 {
-	for (int i = 0; i < childs.Count(); i++)
+	for (uint i = 0; i < childs.Count(); i++)
 	{
 		childs[i]->Activate();
 	}
@@ -205,7 +205,8 @@ bool UILabel::Update()
 
 void UILabel::SetNewTexture(char* newText,  SDL_Color newColor, TTF_Font* newFont)
 {
-	font = newFont;
+	if (newFont)
+		font = newFont;
 	color = newColor;
 	text = newText;
 	texture = App->font->Print(text.GetString(), color, font);
@@ -409,7 +410,7 @@ void UIInputText::GetNewInput(char* text)
 	bool end = false;
 	if (textList.count() < maxCharacters)
 	{
-		for (int i = 0; !end && textList.count() <= maxCharacters; i++)
+		for (uint i = 0; !end && textList.count() <= maxCharacters; i++)
 		{
 			if (text[i] == '\0')
 				end = true;
@@ -752,9 +753,9 @@ void UIScrollBar::OnLooseFocus()
 float UIScrollBar::GetValue()
 {
 	LOG("%i", thumb->GetLocalPosition().x + thumb->GetWorldRect().w / 2);
-	float minPos = thumb->GetWorldRect().w / 2 + offsetL;
-	float maxPos = (((GetWorldRect().w) - minPos) - offsetR) - thumb->GetWorldRect().w / 2 ;
-	float thumbPos = thumb->GetLocalPosition().x - offsetL;
+	float minPos = (float)thumb->GetWorldRect().w / 2 + offsetL;
+	float maxPos = (float)(((GetWorldRect().w) - minPos) - offsetR) - thumb->GetWorldRect().w / 2 ;
+	float thumbPos = (float)thumb->GetLocalPosition().x - offsetL;
 	float totalLenght = maxPos - minPos;
 	float ret = (thumbPos / totalLenght);
 	if (ret > 1)
