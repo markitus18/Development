@@ -5,6 +5,8 @@
 #include "j1Module.h"
 #include "p2DynArray.h"
 #include "p2Point.h"
+//#include "j1Console.h"
+
 #include "SDL_TTF\include\SDL_ttf.h"
 
 #define CURSOR_WIDTH 1
@@ -100,7 +102,31 @@ private:
 	UIElement* screen_button;
 	UIElement* focus;
 	UIElement* hoveringElement;
-
+	/*
+#pragma region Commands
+	struct C_UIDebug : public Command
+	{
+		C_UIDebug() : Command("gui_debug", "Enable / Disable GUI debug", 1, NULL, "GUI"){}
+		void function(const p2DynArray<p2SString>* arg)
+		{
+			p2SString str = arg->At(1)->GetString();
+			if (str == "enable")
+			{
+				App->pathFinding->allowDiagonals = true;
+				LOG("-- GUI: Debug mode enabled --");
+			}
+			else if (str == "disable")
+			{
+				App->pathFinding->allowDiagonals = false;
+				LOG("-- GUI: Debug mode disabled --");
+			}
+			else
+				LOG("gui_debug: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+		}
+	};
+	C_UIDebug c_UIDebug;
+#pragma endregion
+	*/
 };
 
 #endif // __j1GUI_H__

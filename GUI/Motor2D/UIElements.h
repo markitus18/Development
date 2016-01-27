@@ -50,6 +50,7 @@ public:
 
 	iPoint GetLocalPosition() const;
 	SDL_Rect GetWorldRect() const;
+
 	virtual bool Update();
 
 public:
@@ -59,12 +60,12 @@ public:
 	bool dragable = false;
 	int layer = 0;
 
-	UIElement* parent;
-
 	SDL_Texture* hoveringTexture;
 	bool mouseWasIn = false;
 	bool mouseWasClicked = false;
 	j1Module* listener;
+
+	UIElement* parent;
 	p2DynArray<UIElement*> childs;
 
 private:

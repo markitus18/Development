@@ -1,6 +1,6 @@
 #include "j1Console.h"
-
-
+#include "p2Defs.h"
+#include "p2Log.h"
 
 CVar::CVar(const char* newName, float* newReference, bool newSerialize) : name(newName), type(c_float), serialize(newSerialize)
 {

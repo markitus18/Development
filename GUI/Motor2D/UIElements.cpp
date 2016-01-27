@@ -6,7 +6,6 @@
 #include "j1Input.h"
 #include "j1Gui.h"
 #include "UIElements.h"
-#include "j1App.h"
 
 
 
