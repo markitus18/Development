@@ -1,5 +1,3 @@
-#include "p2Defs.h"
-#include "p2Log.h"
 #include "j1App.h"
 #include "j1Render.h"
 #include "j1Textures.h"
@@ -438,3 +436,22 @@ UIElement* j1Gui::GetScreen() const
 }
 // class Gui ---------------------------------------------------
 
+#pragma region Commands
+void j1Gui::C_UIDebug::function(const p2DynArray<p2SString>* arg)
+{
+	p2SString str = arg->At(1)->GetString();
+	if (str == "enable")
+	{
+		App->gui->debugMode = true;
+		LOG("-- GUI: Debug mode enabled --");
+	}
+	else if (str == "disable")
+	{
+		App->gui->debugMode = false;
+		LOG("-- GUI: Debug mode disabled --");
+	}
+	else
+		LOG("gui_debug: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+}
+
+#pragma endregion

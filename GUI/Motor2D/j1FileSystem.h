@@ -46,11 +46,8 @@ private:
 	struct Command_CreateDir : public Command
 	{
 		Command_CreateDir() : Command("mkdir", "Create a new directory", 1){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			p2SString str = *arg->At(1);
-			App->fs->CreateDir(str.GetString());
-		}
+		void function(const p2DynArray<p2SString>* arg);
+
 	};
 	Command_CreateDir command_createDir;
 };

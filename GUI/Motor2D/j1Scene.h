@@ -118,86 +118,49 @@ private:
 	struct CloseGUI : public Command
 	{
 		CloseGUI() : Command("close_gui", "Close GUI window", 0){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			if (App->scene->window_button->active)
-				App->scene->window_button->Deactivate();
-				
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	CloseGUI command_closeGUI;
 
 	struct OpenGUI : public Command
 	{
 		OpenGUI() : Command("open_gui", "Open GUI window", 0){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			if (!App->scene->window_button->active)
-			{
-				App->scene->window_button->Activate();
-				App->scene->connectionErrorLabel->Deactivate();
-			}
-
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	OpenGUI command_openGUI;
 
-	//EXERCISE 4
 	struct MoveLabels : public Command
 	{
 		MoveLabels() : Command("move_labels", "Move labels from scene:", 0){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			if (App->scene->configLabels.Count() > 0)
-			{
-				App->scene->configLabels[0]->SetGlobalPosition(250, 370);
-			}
-			if (App->scene->configLabels.Count() > 1)
-			{
-				App->scene->configLabels[1]->SetGlobalPosition(450, 50);
-			}
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	MoveLabels move_labels;
-	// EXERCICE 5
 
 	struct SaveLabels : public Command
 	{
 		SaveLabels() : Command("save_labels", "Save labels from scene:", 0){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			App->SaveGUI();
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	SaveLabels save_labels;
 
 	struct LoadLabels : public Command
 	{
 		LoadLabels() : Command("load_labels", "Save labels from scene:", 0){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			App->LoadGUI();
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	LoadLabels load_labels;
 
 	struct C_SaveGame : public Command
 	{
 		C_SaveGame() : Command("save_game", "Save current game", 0){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			App->SaveGame("save_game.xml");
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_SaveGame c_SaveGame;
 
 	struct C_LoadGame : public Command
 	{
 		C_LoadGame() : Command("load_game", "Load current game", 0){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			App->LoadGame("save_game.xml");
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_LoadGame c_LoadGame;
 

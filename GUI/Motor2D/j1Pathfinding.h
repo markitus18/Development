@@ -2,8 +2,6 @@
 #define __j1PATHFINDING_H__
 
 #include "j1Module.h"
-#include "p2Point.h"
-#include "p2List.h"
 #include "j1Console.h"
 
 class j1PathFinding : public j1Module
@@ -96,69 +94,21 @@ public:
 	struct C_Path_Corners: public Command
 	{
 		C_Path_Corners() : Command("pathfinding_corner", "Enable / Disable pathfinding corners", 1, "pf_c"){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			p2SString str = arg->At(1)->GetString();
-			if (str == "enable")
-			{
-				App->pathFinding->allowCorners = true;
-				LOG("-- Pathfinding: Corners enabled --");
-			}
-			else if (str == "disable")
-			{
-				App->pathFinding->allowCorners = false;
-				LOG("-- Pathfinding: Corners disabled --");
-			}
-			else
-				LOG("pathfinding_corner: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
-
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_Path_Corners c_Path_Corners;
 
 	struct C_Path_Diag : public Command
 	{
 		C_Path_Diag() : Command("pathfinding_diag", "Enable / Disable pathfinding diagonals", 1, "pf_d"){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			p2SString str = arg->At(1)->GetString();
-			if (str == "enable")
-			{
-				App->pathFinding->allowDiagonals = true;
-				LOG("-- Pathfinding: Diagonals enabled --");
-			}
-			else if (str == "disable")
-			{
-				App->pathFinding->allowDiagonals = false;
-				LOG("-- Pathfinding: Diagonals disabled --");
-			}
-			else
-				LOG("pathfinding_diag: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
-
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_Path_Diag c_Path_Diag;
 
 	struct C_Path_EditMode : public Command
 	{
 		C_Path_EditMode() : Command("map_edit", "Enable / Disable  map edit", 1, "pf_e"){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			p2SString str = arg->At(1)->GetString();
-			if (str == "enable")
-			{
-				App->pathFinding->editMode = true;
-				LOG("-- Map: Map edition enabled  --");
-			}
-			else if (str == "disable")
-			{
-				App->pathFinding->editMode = false;
-				LOG("-- Map: Map edition disabled --");
-			}
-			else
-				LOG("map_edit: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
-
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_Path_EditMode c_Path_EditMode;
 #pragma endregion

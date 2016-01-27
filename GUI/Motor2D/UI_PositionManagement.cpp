@@ -1,4 +1,4 @@
-#include "j1App.h"
+//#include "j1App.h"
 #include "j1Gui.h"
 #include "UIElements.h"
 

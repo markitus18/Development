@@ -452,3 +452,37 @@ void j1Map::ChangeTile(int x, int y, int id)
 	}
 
 }
+
+#pragma region Commands
+void j1Map::C_Map_Render::function(const p2DynArray<p2SString>* arg)
+{
+	p2SString str = arg->At(1)->GetString();
+	if (str == "enable")
+	{
+		//App->map->data.layers.start->data->properties.values[0] = 1;
+	}
+	else if (str == "disable")
+	{
+		//App->map->data.layers.start->data->properties.values[0] = 0;
+	}
+	else
+		LOG("map_render: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+
+}
+
+void j1Map::C_Map_Debug::function(const p2DynArray<p2SString>* arg)
+{
+	p2SString str = arg->At(1)->GetString();
+	if (str == "enable")
+	{
+		App->map->data.layers.start->next->data->properties.values[0] = 1;
+	}
+	else if (str == "disable")
+	{
+		App->map->data.layers.start->next->data->properties.values[0] = 0;
+	}
+	else
+		LOG("map_debug: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+}
+
+#pragma endregion

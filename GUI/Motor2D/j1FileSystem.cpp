@@ -180,3 +180,11 @@ void j1FileSystem::CreateDir(const char* name)
 	else
 		LOG("Error while attempting to create directory '%s'", name);
 }
+
+#pragma region Commands
+void j1FileSystem::Command_CreateDir::function(const p2DynArray<p2SString>* arg)
+{
+	p2SString str = *arg->At(1);
+	App->fs->CreateDir(str.GetString());
+}
+#pragma endregion

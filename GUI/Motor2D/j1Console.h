@@ -2,11 +2,6 @@
 #define __j1CONSOLE_H__
 
 #include "j1Module.h"
-#include "j1Gui.h"
-#include "p2DynArray.h"
-#include "j1App.h"
-#include "UIElements.h"
-#include "j1Fonts.h"
 
 #define LINE_SPACING 16
 
@@ -31,8 +26,7 @@ public:
 	p2SString tag;
 
 	uint nArgs;
-	virtual void function(const p2DynArray<p2SString>* arg){ LOG("Executing command function"); }
-
+	virtual void function(const p2DynArray<p2SString>* arg);
 };
 
 class CVar
@@ -93,6 +87,10 @@ public:
 	void Display();
 };
 
+
+class UIInputText;
+class UIRect;
+class UILabel;
 
 class j1Console : public j1Module
 {
@@ -170,60 +168,40 @@ private:
 
 	bool closeGame = false;
 
-
+	
 #pragma region Commands
 	struct C_commandList : public Command
 	{
 		C_commandList() : Command("list", "Display command list", 1, NULL, "Console"){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			p2SString str("");
-			if (arg->Count() > 1)
-			{
-				str = arg->At(1)->GetString();
-			}
-			App->console->DisplayCommands(str);
-		}
+		void function(const p2DynArray<p2SString>* arg);	
 	};
 	C_commandList c_commandList;
 
 	struct C_tagList : public Command
 	{
 		C_tagList() : Command("tags", "Display tag list", 0, NULL, "Console"){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			App->console->DisplayTags();
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_tagList c_tagList;
 
 	struct C_closeConsole : public Command
 	{
 		C_closeConsole() : Command("close", "Close console", 0, NULL, "Console"){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			App->console->Close();
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_closeConsole c_closeConsole;
 
 	struct C_clearConsole : public Command
 	{
 		C_clearConsole() : Command("cls", "Clear console output", 0, NULL, "Console"){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			App->console->Clear();
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_clearConsole c_clearConsole;
 
 	struct C_Quit : public Command
 	{
 		C_Quit() : Command("quit", "Quit the application", 0, NULL, "Console"){}
-		void function(const p2DynArray<p2SString>* arg)
-		{
-			App->console->closeGame = true;
-		}
+		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_Quit c_Quit;
 #pragma endregion

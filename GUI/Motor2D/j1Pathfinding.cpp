@@ -440,3 +440,59 @@ bool j1PathFinding::map::isWalkable(int x, int y) const
 	}
 	return false;
 }
+
+#pragma region Commands
+void j1PathFinding::C_Path_Corners::function(const p2DynArray<p2SString>* arg)
+{
+	p2SString str = arg->At(1)->GetString();
+	if (str == "enable")
+	{
+		//App->pathFinding->allowCorners = true;
+		LOG("-- Pathfinding: Corners enabled --");
+	}
+	else if (str == "disable")
+	{
+		//App->pathFinding->allowCorners = false;
+		LOG("-- Pathfinding: Corners disabled --");
+	}
+	else
+		LOG("pathfinding_corner: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+
+}
+
+void j1PathFinding::C_Path_Diag::function(const p2DynArray<p2SString>* arg)
+{
+	p2SString str = arg->At(1)->GetString();
+	if (str == "enable")
+	{
+		//App->pathFinding->allowDiagonals = true;
+		LOG("-- Pathfinding: Diagonals enabled --");
+	}
+	else if (str == "disable")
+	{
+		//App->pathFinding->allowDiagonals = false;
+		LOG("-- Pathfinding: Diagonals disabled --");
+	}
+	else
+		LOG("pathfinding_diag: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+
+}
+ 
+void::j1PathFinding::C_Path_EditMode::function(const p2DynArray<p2SString>* arg)
+{
+	p2SString str = arg->At(1)->GetString();
+	if (str == "enable")
+	{
+		//App->pathFinding->editMode = true;
+		LOG("-- Map: Map edition enabled  --");
+	}
+	else if (str == "disable")
+	{
+		//App->pathFinding->editMode = false;
+		LOG("-- Map: Map edition disabled --");
+	}
+	else
+		LOG("map_edit: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+
+}
+#pragma endregion

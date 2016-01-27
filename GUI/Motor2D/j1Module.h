@@ -7,6 +7,9 @@
 #define __j1MODULE_H__
 
 #include "p2SString.h"
+#include "p2DynArray.h"
+#include "p2List.h"
+#include "p2Point.h"
 #include "PugiXml\src\pugixml.hpp"
 
 class UIElement;

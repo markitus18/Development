@@ -1,5 +1,6 @@
 #include "p2Defs.h"
 #include "p2Log.h"
+#include "j1App.h"
 #include "j1Input.h"
 #include "j1Textures.h"
 #include "j1Audio.h"
@@ -552,3 +553,58 @@ bool j1Scene::LoadDrag(pugi::xml_node node)
 
 	return true;
 }
+
+#pragma region Commands
+void::j1Scene::CloseGUI::function(const p2DynArray<p2SString>* arg)
+{	
+	if (App->scene->window_button->active)
+	App->scene->window_button->Deactivate();	
+}
+
+void::j1Scene::OpenGUI::function(const p2DynArray<p2SString>* arg)
+{
+		
+	if (!App->scene->window_button->active)
+	{
+	App->scene->window_button->Activate();
+	App->scene->connectionErrorLabel->Deactivate();
+	}
+		
+
+}
+
+void::j1Scene::MoveLabels::function(const p2DynArray<p2SString>* arg)
+{
+		
+	if (App->scene->configLabels.Count() > 0)
+	{
+	App->scene->configLabels[0]->SetGlobalPosition(250, 370);
+	}
+	if (App->scene->configLabels.Count() > 1)
+	{
+	App->scene->configLabels[1]->SetGlobalPosition(450, 50);
+	}
+		
+}
+
+void::j1Scene::SaveLabels::function(const p2DynArray<p2SString>* arg)
+{
+	App->SaveGUI();
+}
+
+void::j1Scene::LoadLabels::function(const p2DynArray<p2SString>* arg)
+{
+	App->LoadGUI();
+}
+
+void::j1Scene::C_SaveGame::function(const p2DynArray<p2SString>* arg)
+{
+	App->SaveGame("save_game.xml");
+}
+
+void::j1Scene::C_LoadGame::function(const p2DynArray<p2SString>* arg)
+{
+	App->LoadGame("save_game.xml");
+}
+
+#pragma endregion

@@ -6,10 +6,15 @@
 #include "j1Render.h"
 #include "j1Input.h"
 #include "j1App.h"
+#include "j1Gui.h"
+#include "j1Fonts.h"
+#include "UIElements.h"
 
 #include "SDL/include/SDL.h"
 #include "SDL_mixer\include\SDL_mixer.h"
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
+
+void Command::function(const p2DynArray<p2SString>* arg){ LOG("Executing command function"); }
 
 j1Console::j1Console() : j1Module()
 {
@@ -550,6 +555,7 @@ bool j1Console::SaveCVars(pugi::xml_node& Vars) const
 
 	return true;
 }
+
 bool j1Console::LoadCVars(pugi::xml_node& conf)
 {
 	pugi::xml_node vars = conf.first_child();
@@ -569,3 +575,36 @@ bool j1Console::LoadCVars(pugi::xml_node& conf)
 	}
 	return true;
 }
+
+#pragma region Commands
+void j1Console::C_commandList::function(const p2DynArray<p2SString>* arg)
+{
+	p2SString str("");
+	if (arg->Count() > 1)
+	{
+		str = arg->At(1)->GetString();
+	}
+	App->console->DisplayCommands(str);
+}
+
+void j1Console::C_tagList::function(const p2DynArray<p2SString>* arg)
+{
+	App->console->DisplayTags();
+}
+
+void j1Console::C_closeConsole::function(const p2DynArray<p2SString>* arg)
+{
+    App->console->Close();
+}
+
+void j1Console:: C_clearConsole::function(const p2DynArray<p2SString>* arg)
+{
+	App->console->Clear();
+}
+
+void j1Console::C_Quit::function(const p2DynArray<p2SString>* arg)
+{
+	App->console->closeGame = true;
+}
+#pragma endregion
+
