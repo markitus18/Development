@@ -20,15 +20,39 @@ class j1Module
 {
 public:
 
-	j1Module() : active(false)
+	j1Module(bool start_enabled = true) : enabled(start_enabled)
 	{}
 
 	virtual ~j1Module()
 	{}
 
+	bool IsEnabled() const
+	{
+		return enabled;
+	}
+
+	bool Enable()
+	{
+		if (enabled == false)
+		{
+			enabled = true;
+			Start();
+		}
+	}
+
+	bool Disable()
+	{
+		bool ret = true;
+		if (enabled)
+		{
+			enabled = false;
+			ret = CleanUp();
+		}
+		return ret;
+	}
 	void Init()
 	{
-		active = true;
+		enabled = true;
 	}
 
 	// Called before render is available
@@ -90,7 +114,7 @@ public:
 public:
 
 	p2SString	name;
-	bool		active;
+	bool		enabled;
 
 };
 

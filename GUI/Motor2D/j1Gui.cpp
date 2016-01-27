@@ -6,7 +6,7 @@
 #include "j1Gui.h"
 #include "UIElements.h"
 
-j1Gui::j1Gui() : j1Module()
+j1Gui::j1Gui(bool start_enabled) : j1Module(start_enabled)
 {
 	name.create("gui");
 }
@@ -24,6 +24,7 @@ bool j1Gui::Awake(pugi::xml_node& conf)
 	atlas_file_name = conf.child("atlas").attribute("file").as_string("");
 	cursorInput_file_name = conf.child("cursorInput").attribute("file").as_string("");
 
+	App->console->AddCommand(&c_UIDebug);
 	return ret;
 }
 
@@ -439,19 +440,25 @@ UIElement* j1Gui::GetScreen() const
 #pragma region Commands
 void j1Gui::C_UIDebug::function(const p2DynArray<p2SString>* arg)
 {
-	p2SString str = arg->At(1)->GetString();
-	if (str == "enable")
+	if (arg->Count() > 1)
 	{
-		App->gui->debugMode = true;
-		LOG("-- GUI: Debug mode enabled --");
-	}
-	else if (str == "disable")
-	{
-		App->gui->debugMode = false;
-		LOG("-- GUI: Debug mode disabled --");
+		p2SString str = arg->At(1)->GetString();
+		if (str == "enable")
+		{
+			App->gui->debugMode = true;
+			LOG("-- GUI: Debug mode enabled --");
+		}
+		else if (str == "disable")
+		{
+			App->gui->debugMode = false;
+			LOG("-- GUI: Debug mode disabled --");
+		}
+		else
+			LOG("gui_debug: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
 	}
 	else
-		LOG("gui_debug: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+		LOG("'%s': not enough arguments, expecting enable / disable", arg->At(0)->GetString());
+
 }
 
 #pragma endregion

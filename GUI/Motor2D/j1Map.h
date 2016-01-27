@@ -19,9 +19,13 @@ struct Properties
 			return values[i];
 		return 0;
 	}
-	// TODO 5: Create a generic structure to hold properties
-	// TODO 7: Our custom properties should have one method
-	// to ask for the value of a custom property
+
+	void SetProperty(char* p, int newValue)
+	{
+		uint i = names.find(p);
+		if (i <= values.Count())
+			values[i] = newValue;
+	}
 };
 
 // ----------------------------------------------------
@@ -99,7 +103,7 @@ class j1Map : public j1Module
 {
 public:
 
-	j1Map();
+	j1Map(bool);
 
 	// Destructor
 	virtual ~j1Map();
@@ -109,6 +113,9 @@ public:
 
 	// Called before first frame
 	bool Start();
+	
+	// Called every frame
+	bool Update(float dt);
 
 	// Called each loop iteration
 	void Draw();
@@ -144,20 +151,28 @@ private:
 	p2SString			folder;
 	bool				map_loaded;
 
+	bool		editMode = false;
 #pragma region Commands
 	struct C_Map_Render : public Command
 	{
-		C_Map_Render() : Command("map_render", "Enable / Disable map render", 1, "map_r"){}
+		C_Map_Render() : Command("map_render", "Enable / Disable map render", 1, "map_r", "Map"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_Map_Render c_Map_Render;
 
 	struct C_Map_Debug : public Command
 	{
-		C_Map_Debug() : Command("map_debug", "Enable / Disable map debug", 1, "map_d"){}
+		C_Map_Debug() : Command("map_debug", "Enable / Disable map debug", 1, "map_d", "Map"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_Map_Debug c_Map_Debug;
+
+	struct C_Map_EditMode : public Command
+	{
+		C_Map_EditMode() : Command("map_edit", "Enable / Disable  map edit", 1, "map_e", "Map"){}
+		void function(const p2DynArray<p2SString>* arg);
+	};
+	C_Map_EditMode c_Map_EditMode;
 };
 
 #endif // __j1MAP_H__

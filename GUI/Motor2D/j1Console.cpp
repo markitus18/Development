@@ -16,7 +16,7 @@
 
 void Command::function(const p2DynArray<p2SString>* arg){ LOG("Executing command function"); }
 
-j1Console::j1Console() : j1Module()
+j1Console::j1Console(bool start_enabled) : j1Module(start_enabled)
 {
 	name.create("console");
 }
@@ -98,7 +98,7 @@ bool j1Console::Update(float dt)
 	{
 		int x, y;
 		App->input->GetMouseMotion(x, y);
-		if ((y > 0 && textStart + y <=0) || (y < 0 && textStart + outputHeight + y > 250 - 15))
+		if ((y > 0 && textStart + y <=0) || (y < 0 && textStart + outputHeight + y > 350 - 15))
 		{
 			int minY = 0;
 			int maxY = inputText->GetWorldRect().y - 20;

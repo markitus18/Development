@@ -10,21 +10,21 @@
 #include "j1PathFinding.h"
 #include "j1Gui.h"
 #include "UIElements.h"
-#include "j1Scene.h"
+#include "j1SceneGUI.h"
 #include "j1Fonts.h"
 #include "j1Console.h"
 
-j1Scene::j1Scene() : j1Module()
+j1SceneGUI::j1SceneGUI(bool start_enabled) : j1Module(start_enabled)
 {
 	name.create("scene");
 }
 
 // Destructor
-j1Scene::~j1Scene()
+j1SceneGUI::~j1SceneGUI()
 {}
 
 // Called before render is available
-bool j1Scene::Awake(pugi::xml_node& node)
+bool j1SceneGUI::Awake(pugi::xml_node& node)
 {
 
 	LOG("Loading Scene");
@@ -42,7 +42,7 @@ bool j1Scene::Awake(pugi::xml_node& node)
 }
 
 // Called before the first frame
-bool j1Scene::Start()
+bool j1SceneGUI::Start()
 {
 	pugi::xml_node config = App->GetConfig("scene");
 	App->GetConfig("scene");
@@ -67,10 +67,7 @@ bool j1Scene::Start()
 	}
 	*/
 
-
-	App->map->Load("iso.tmx");
-
-	//LoadGUI();
+	LoadGUI();
 
 	debug_tex = App->tex->Load("maps/path.png");
 	
@@ -78,22 +75,13 @@ bool j1Scene::Start()
 }
 
 // Called each loop iteration
-bool j1Scene::PreUpdate()
+bool j1SceneGUI::PreUpdate()
 {
-	// debug pathfing ------------------
-	static iPoint origin;
-	static bool origin_selected = false;
-
-	int x, y;
-	App->input->GetMousePosition(x, y);
-	iPoint p = App->render->ScreenToWorld(x, y);
-	p = App->map->WorldToMap(p.x, p.y);
-
 	return true;
 }
 
 // Called each loop iteration
-bool j1Scene::Update(float dt)
+bool j1SceneGUI::Update(float dt)
 {
 	// Gui ---
 	if (elementHold)
@@ -104,63 +92,20 @@ bool j1Scene::Update(float dt)
 	}
 	// -------
 	ManageInput(dt);
-
-	App->map->Draw();
 	
-	// Debug pathfinding ------------------------------
 
 	//Getting current mouse tile
 	int x, y;
 	App->input->GetMousePosition(x, y);
-	int mapX, mapY;
-	mapX = x - App->render->camera.x;
-	mapY = y - App->render->camera.y;
-	iPoint map_coordinates = App->map->WorldToMap(mapX, mapY);
-	//Fixing offset 
-	map_coordinates.x -= 1;
 
-	iPoint currentTile = App->map->MapToWorld(map_coordinates.x, map_coordinates.y);
-	currentTile_x = map_coordinates.x;
-	currentTile_y = map_coordinates.y;
+	x = x - App->render->camera.x;
+	y = y - App->render->camera.y;
 
-	App->render->Blit(debug_tex, currentTile.x, currentTile.y, new SDL_Rect{0, 0, 64, 64});
-
-	if (App->pathFinding->pathFinished)
-	{
-		for (uint i = 0; i < App->pathFinding->path.Count(); i++)
-		{
-			iPoint position = App->map->MapToWorld(App->pathFinding->path[i].x, App->pathFinding->path[i].y);
-			App->render->Blit(debug_tex, position.x, position.y, new SDL_Rect{ 0, 0, 64, 64 });
-		}
-	}
-
-	else if (App->pathFinding->pathStarted)
-	{
-		for (uint i = 0; i < App->pathFinding->openList.count(); i++)
-		{
-			iPoint position = App->map->MapToWorld(App->pathFinding->openList[i]->tile.x, App->pathFinding->openList[i]->tile.y);
-			App->render->Blit(debug_tex, position.x, position.y, new SDL_Rect{ 0, 0, 64, 64 });
-		}
-		for (uint i = 0; i < App->pathFinding->closedList.count(); i++)
-		{
-			iPoint position = App->map->MapToWorld(App->pathFinding->closedList[i]->tile.x, App->pathFinding->closedList[i]->tile.y);
-			App->render->Blit(debug_tex, position.x, position.y, new SDL_Rect{ 0, 64, 64, 64 });
-		}
-	}
-
-	//Drawing Start and End tiles
-	iPoint startPosition = App->map->MapToWorld(App->pathFinding->startTile.x, App->pathFinding->startTile.y);
-	iPoint endPosition = App->map->MapToWorld(App->pathFinding->endTile.x, App->pathFinding->endTile.y);
-	if (App->pathFinding->startTileExists)
-		App->render->Blit(App->map->data.tilesets.start->next->data->texture, startPosition.x, startPosition.y, new SDL_Rect{ 0, 64, 64, 64 });
-	if (App->pathFinding->endTileExists)
-		App->render->Blit(App->map->data.tilesets.start->next->data->texture, endPosition.x, endPosition.y, new SDL_Rect{ 64, 64, 64, 64 });
-	
 	return true;
 }
 
 // Called each loop iteration
-bool j1Scene::PostUpdate()
+bool j1SceneGUI::PostUpdate()
 {
 	bool ret = true;
 	
@@ -168,14 +113,14 @@ bool j1Scene::PostUpdate()
 }
 
 // Called before quitting
-bool j1Scene::CleanUp()
+bool j1SceneGUI::CleanUp()
 {
 	LOG("Freeing scene");
 
 	return true;
 }
 
-void j1Scene::ManageInput(float dt)
+void j1SceneGUI::ManageInput(float dt)
 {
 	if (App->input->GetInputState() == false)
 	{
@@ -190,48 +135,6 @@ void j1Scene::ManageInput(float dt)
 
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 			App->render->camera.x -= (int)floor(200.0f * dt);
-
-		//change pahtfinding start tile
-		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_UP)
-		{
-			if (App->pathFinding->startTile.x != currentTile_x || App->pathFinding->startTile.y != currentTile_y)
-			{
-				LOG("Pathfinding: Starting tile updated");
-				App->pathFinding->startTile.x = currentTile_x;
-				App->pathFinding->startTile.y = currentTile_y;
-				App->pathFinding->startTileExists = true;
-			}
-			else
-			{
-				if (!App->pathFinding->startTileExists)
-					App->pathFinding->startTileExists = true;
-				else
-					App->pathFinding->startTileExists = false;
-			}
-
-
-		}
-		//Change pathfinding end tile
-		if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP)
-		{
-			if (App->pathFinding->endTile.x != currentTile_x || App->pathFinding->endTile.y != currentTile_y)
-			{
-				LOG("Pathfinding: End tile updated");
-				App->pathFinding->endTile.x = currentTile_x;
-				App->pathFinding->endTile.y = currentTile_y;
-				App->pathFinding->endTileExists = true;
-			}
-			else
-			{
-				if (!App->pathFinding->endTileExists)
-					App->pathFinding->endTileExists = true;
-				else
-					App->pathFinding->endTileExists = false;
-			}
-		}
-
-
-
 	}
 	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	{
@@ -253,7 +156,7 @@ void j1Scene::ManageInput(float dt)
 	}
 }
 
-void j1Scene::LoadGUI()
+void j1SceneGUI::LoadGUI()
 {
 	TTF_Font* inputFont = App->font->Load("fonts/open_sans/OpenSans-Regular.ttf", 24);
 	TTF_Font* inputTitleFont = App->font->Load("fonts/open_sans/OpenSans-Regular.ttf", 18);
@@ -383,7 +286,7 @@ void j1Scene::LoadGUI()
 
 
 
-void j1Scene::OnGUI(UI_Event _event, UIElement* _element)
+void j1SceneGUI::OnGUI(UI_Event _event, UIElement* _element)
 {
 	
 	if (_element == login_button)
@@ -436,7 +339,7 @@ void j1Scene::OnGUI(UI_Event _event, UIElement* _element)
 	}
 }
 
-bool j1Scene::CheckLoginData()
+bool j1SceneGUI::CheckLoginData()
 {
 
 	bool ret = false;
@@ -472,7 +375,7 @@ bool j1Scene::CheckLoginData()
 	
 }
 
-void j1Scene::RegisterNewUser()
+void j1SceneGUI::RegisterNewUser()
 {
 	//Next step:  Create a new file similar to "save_game" in
 	//which we store all user accounts data
@@ -487,7 +390,7 @@ void j1Scene::RegisterNewUser()
 	*/
 }
 
-void j1Scene::LoadWelcomeText()
+void j1SceneGUI::LoadWelcomeText()
 {
 	
 	TTF_Font* font = App->font->Load("fonts/mirage_gothic/mirage_gothic.ttf", 140);
@@ -501,7 +404,7 @@ void j1Scene::LoadWelcomeText()
 	
 }
 
-void j1Scene::UpdateValueText(float value)
+void j1SceneGUI::UpdateValueText(float value)
 {
 	char* valueStr = new char;
 	sprintf_s(valueStr, 72, "Value: %0.2f", value);
@@ -510,7 +413,7 @@ void j1Scene::UpdateValueText(float value)
 }
 
 //EXERCISE 4
-bool j1Scene::SaveDrag(pugi::xml_node node) const
+bool j1SceneGUI::SaveDrag(pugi::xml_node node) const
 {
 	pugi::xml_node tmp;
 	for (uint i = 0; i < configLabels.Count(); i++)
@@ -528,7 +431,7 @@ bool j1Scene::SaveDrag(pugi::xml_node node) const
 	return true;
 }
 
-bool j1Scene::LoadDrag(pugi::xml_node node)
+bool j1SceneGUI::LoadDrag(pugi::xml_node node)
 {
 	pugi::xml_node label = node.first_child();
 	uint i = 0;
@@ -550,59 +453,53 @@ bool j1Scene::LoadDrag(pugi::xml_node node)
 		i++;
 		label = label.next_sibling();
 	}
-
 	return true;
 }
 
 #pragma region Commands
-void::j1Scene::CloseGUI::function(const p2DynArray<p2SString>* arg)
+void::j1SceneGUI::CloseGUI::function(const p2DynArray<p2SString>* arg)
 {	
-	if (App->scene->window_button->active)
-	App->scene->window_button->Deactivate();	
+	if (App->sceneGUI->window_button->active)
+		App->sceneGUI->window_button->Deactivate();
 }
 
-void::j1Scene::OpenGUI::function(const p2DynArray<p2SString>* arg)
+void::j1SceneGUI::OpenGUI::function(const p2DynArray<p2SString>* arg)
+{	
+	if (!App->sceneGUI->window_button->active)
+	{
+		App->sceneGUI->window_button->Activate();
+		App->sceneGUI->connectionErrorLabel->Deactivate();
+	}
+}
+
+void::j1SceneGUI::MoveLabels::function(const p2DynArray<p2SString>* arg)
 {
-		
-	if (!App->scene->window_button->active)
+	if (App->sceneGUI->configLabels.Count() > 0)
 	{
-	App->scene->window_button->Activate();
-	App->scene->connectionErrorLabel->Deactivate();
+		App->sceneGUI->configLabels[0]->SetGlobalPosition(250, 370);
 	}
-		
-
+	if (App->sceneGUI->configLabels.Count() > 1)
+	{
+		App->sceneGUI->configLabels[1]->SetGlobalPosition(450, 50);
+	}	
 }
 
-void::j1Scene::MoveLabels::function(const p2DynArray<p2SString>* arg)
-{
-		
-	if (App->scene->configLabels.Count() > 0)
-	{
-	App->scene->configLabels[0]->SetGlobalPosition(250, 370);
-	}
-	if (App->scene->configLabels.Count() > 1)
-	{
-	App->scene->configLabels[1]->SetGlobalPosition(450, 50);
-	}
-		
-}
-
-void::j1Scene::SaveLabels::function(const p2DynArray<p2SString>* arg)
+void::j1SceneGUI::SaveLabels::function(const p2DynArray<p2SString>* arg)
 {
 	App->SaveGUI();
 }
 
-void::j1Scene::LoadLabels::function(const p2DynArray<p2SString>* arg)
+void::j1SceneGUI::LoadLabels::function(const p2DynArray<p2SString>* arg)
 {
 	App->LoadGUI();
 }
 
-void::j1Scene::C_SaveGame::function(const p2DynArray<p2SString>* arg)
+void::j1SceneGUI::C_SaveGame::function(const p2DynArray<p2SString>* arg)
 {
 	App->SaveGame("save_game.xml");
 }
 
-void::j1Scene::C_LoadGame::function(const p2DynArray<p2SString>* arg)
+void::j1SceneGUI::C_LoadGame::function(const p2DynArray<p2SString>* arg)
 {
 	App->LoadGame("save_game.xml");
 }

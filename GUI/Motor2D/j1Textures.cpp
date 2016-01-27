@@ -8,7 +8,7 @@
 #include "SDL_image/include/SDL_image.h"
 #pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
 
-j1Textures::j1Textures() : j1Module()
+j1Textures::j1Textures(bool start_enabled) : j1Module(start_enabled)
 {
 	name.create("textures");
 }

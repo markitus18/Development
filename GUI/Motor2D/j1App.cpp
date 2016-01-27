@@ -9,7 +9,8 @@
 #include "j1Render.h"
 #include "j1Textures.h"
 #include "j1Audio.h"
-#include "j1Scene.h"
+#include "j1SceneGUI.h"
+#include "j1SceneMap.h"
 #include "j1FileSystem.h"
 #include "j1Map.h"
 #include "j1Pathfinding.h"
@@ -23,18 +24,23 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
 	PERF_START(ptimer);
 
-	input = new j1Input();
-	win = new j1Window();
-	render = new j1Render();
-	tex = new j1Textures();
-	font = new j1Fonts();
-	gui = new j1Gui();
-	audio = new j1Audio();
-	scene = new j1Scene();
-	fs = new j1FileSystem();
-	map = new j1Map();
-	pathFinding = new j1PathFinding();
-	console = new j1Console();
+	input = new j1Input(true);
+	win = new j1Window(true);
+	render = new j1Render(true);
+	tex = new j1Textures(true);
+	font = new j1Fonts(true);
+	gui = new j1Gui(true);
+	audio = new j1Audio(true);
+
+	//Scenes-------------------------
+	sceneGUI = new j1SceneGUI(false);
+	sceneMap = new j1SceneMap(true);
+	//-------------------------------
+
+	fs = new j1FileSystem(true);
+	map = new j1Map(true);
+	pathFinding = new j1PathFinding(true);
+	console = new j1Console(true);
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -47,10 +53,10 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	AddModule(gui);
 	AddModule(console);
-
-	// scene last
-	AddModule(scene);
+	AddModule(sceneGUI);
+	AddModule(sceneMap);
 	AddModule(pathFinding);
+
 	// render last to swap buffer
 	AddModule(render);
 
@@ -74,7 +80,6 @@ j1App::~j1App()
 
 void j1App::AddModule(j1Module* module)
 {
-	module->Init();
 	modules.add(module);
 }
 
@@ -112,7 +117,8 @@ bool j1App::Awake()
 
 		while(item != NULL && ret == true)
 		{
-			ret = item->data->Awake(config.child(item->data->name.GetString()));
+			if (item->data->IsEnabled())
+				ret = item->data->Awake(config.child(item->data->name.GetString()));
 			item = item->next;
 		}
 	}
@@ -136,7 +142,8 @@ bool j1App::Start()
 
 	while(item != NULL && ret == true)
 	{
-		ret = item->data->Start();
+		if (item->data->IsEnabled())
+			ret = item->data->Start();
 		item = item->next;
 	}
 	startup_time.Start();
@@ -253,7 +260,7 @@ bool j1App::PreUpdate()
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if (pModule->IsEnabled() == false) {
 			continue;
 		}
 
@@ -275,7 +282,7 @@ bool j1App::DoUpdate()
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if (pModule->IsEnabled() == false) {
 			continue;
 		}
 
@@ -296,7 +303,7 @@ bool j1App::PostUpdate()
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if (pModule->IsEnabled() == false) {
 			continue;
 		}
 
@@ -318,7 +325,7 @@ bool j1App::CleanUp()
 
 	while(item != NULL && ret == true)
 	{
-		ret = item->data->CleanUp();
+		ret = item->data->Disable();
 		item = item->prev;
 	}
 
@@ -559,7 +566,7 @@ bool j1App::SaveGUI() const
 	pugi::xml_node root;
 
 	root = data.append_child("Labels");
-	ret = scene->SaveDrag(root);
+	ret = sceneGUI->SaveDrag(root);
 
 	if (ret == true)
 	{
@@ -598,7 +605,7 @@ bool j1App::LoadGUI()
 
 			root = data.child("Labels");
 
-			ret = scene->LoadDrag(root);
+			ret = sceneGUI->LoadDrag(root);
 
 			data.reset();
 			if (ret == true)

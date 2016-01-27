@@ -9,7 +9,7 @@
 #include "SDL_TTF\include\SDL_ttf.h"
 #pragma comment( lib, "SDL_ttf/libx86/SDL2_ttf.lib" )
 
-j1Fonts::j1Fonts() : j1Module()
+j1Fonts::j1Fonts(bool start_enabled) : j1Module(start_enabled)
 {
 	name.create("fonts");
 }

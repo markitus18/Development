@@ -1,5 +1,5 @@
-#ifndef __j1SCENE_H__
-#define __j1SCENE_H__
+#ifndef __j1SceneGUI_H__
+#define __j1SceneGUI_H__
 
 #include "j1Module.h"
 #include "j1Console.h"
@@ -13,15 +13,15 @@ class UIInputText;
 class UICheckingButton;
 class UIScrollBar;
 
-class j1Scene : public j1Module
+class j1SceneGUI : public j1Module
 {
 
 public:
 
-	j1Scene();
+	j1SceneGUI(bool);
 
 	// Destructor
-	virtual ~j1Scene();
+	virtual ~j1SceneGUI();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
@@ -53,7 +53,6 @@ public:
 
 	void UpdateValueText(float value);
 
-	//EXERCICE 4
 	bool SaveDrag(pugi::xml_node) const;
 	bool LoadDrag(pugi::xml_node);
 
@@ -117,49 +116,49 @@ private:
 #pragma region Commands
 	struct CloseGUI : public Command
 	{
-		CloseGUI() : Command("close_gui", "Close GUI window", 0){}
+		CloseGUI() : Command("close_gui", "Close GUI window", 0, NULL, "Scene"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	CloseGUI command_closeGUI;
 
 	struct OpenGUI : public Command
 	{
-		OpenGUI() : Command("open_gui", "Open GUI window", 0){}
+		OpenGUI() : Command("open_gui", "Open GUI window", 0, NULL, "Scene"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	OpenGUI command_openGUI;
 
 	struct MoveLabels : public Command
 	{
-		MoveLabels() : Command("move_labels", "Move labels from scene:", 0){}
+		MoveLabels() : Command("move_labels", "Move labels from scene:", 0, NULL, "Scene"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	MoveLabels move_labels;
 
 	struct SaveLabels : public Command
 	{
-		SaveLabels() : Command("save_labels", "Save labels from scene:", 0){}
+		SaveLabels() : Command("save_labels", "Save labels from scene:", 0, NULL, "Scene"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	SaveLabels save_labels;
 
 	struct LoadLabels : public Command
 	{
-		LoadLabels() : Command("load_labels", "Save labels from scene:", 0){}
+		LoadLabels() : Command("load_labels", "Save labels from scene:", 0, NULL, "Scene"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	LoadLabels load_labels;
 
 	struct C_SaveGame : public Command
 	{
-		C_SaveGame() : Command("save_game", "Save current game", 0){}
+		C_SaveGame() : Command("save_game", "Save current game", 0, NULL, "Scene"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_SaveGame c_SaveGame;
 
 	struct C_LoadGame : public Command
 	{
-		C_LoadGame() : Command("load_game", "Load current game", 0){}
+		C_LoadGame() : Command("load_game", "Load current game", 0, NULL, "Scene"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_LoadGame c_LoadGame;
@@ -167,4 +166,4 @@ private:
 #pragma endregion
 };
 
-#endif // __j1SCENE_H__
+#endif // __j1SceneGUI_H__

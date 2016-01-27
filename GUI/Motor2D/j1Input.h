@@ -30,7 +30,7 @@ class j1Input : public j1Module
 
 public:
 
-	j1Input();
+	j1Input(bool);
 
 	// Destructor
 	virtual ~j1Input();

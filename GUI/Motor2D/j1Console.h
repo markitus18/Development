@@ -96,7 +96,7 @@ class j1Console : public j1Module
 {
 public:
 
-	j1Console();
+	j1Console(bool);
 
 	// Destructor
 	virtual ~j1Console();
@@ -160,7 +160,7 @@ private:
 
 	p2DynArray<UILabel*> output;
 
-	bool active = true;
+	bool active = false;
 	bool dragText = false;
 
 	int textStart = 0;

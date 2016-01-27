@@ -8,7 +8,7 @@ class j1Render : public j1Module
 {
 public:
 
-	j1Render();
+	j1Render(bool);
 
 	// Destructor
 	virtual ~j1Render();

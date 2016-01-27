@@ -12,7 +12,7 @@ class j1Audio : public j1Module
 {
 public:
 
-	j1Audio();
+	j1Audio(bool);
 
 	// Destructor
 	virtual ~j1Audio();

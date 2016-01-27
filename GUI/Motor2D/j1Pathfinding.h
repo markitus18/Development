@@ -24,7 +24,7 @@ class j1PathFinding : public j1Module
 	};
 
 public:
-	j1PathFinding();
+	j1PathFinding(bool);
 
 	//Destructor
 	virtual ~j1PathFinding();
@@ -86,31 +86,23 @@ public:
 	bool		pathStarted = false;
 	bool		pathFinished = false;
 
-	bool		editMode = false;
-
 	p2DynArray<iPoint> path;
 
 #pragma region Commands
 	struct C_Path_Corners: public Command
 	{
-		C_Path_Corners() : Command("pathfinding_corner", "Enable / Disable pathfinding corners", 1, "pf_c"){}
+		C_Path_Corners() : Command("pathfinding_corner", "Enable / Disable pathfinding corners", 1, "pf_c", "Pathfinding"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_Path_Corners c_Path_Corners;
 
 	struct C_Path_Diag : public Command
 	{
-		C_Path_Diag() : Command("pathfinding_diag", "Enable / Disable pathfinding diagonals", 1, "pf_d"){}
+		C_Path_Diag() : Command("pathfinding_diag", "Enable / Disable pathfinding diagonals", 1, "pf_d", "Pathfinding"){}
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_Path_Diag c_Path_Diag;
 
-	struct C_Path_EditMode : public Command
-	{
-		C_Path_EditMode() : Command("map_edit", "Enable / Disable  map edit", 1, "pf_e"){}
-		void function(const p2DynArray<p2SString>* arg);
-	};
-	C_Path_EditMode c_Path_EditMode;
 #pragma endregion
 };
 #endif // __j1PATHFINDING_H__

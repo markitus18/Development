@@ -14,7 +14,7 @@ class j1Fonts : public j1Module
 {
 public:
 
-	j1Fonts();
+	j1Fonts(bool);
 
 	// Destructor
 	virtual ~j1Fonts();

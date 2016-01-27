@@ -8,7 +8,7 @@
 #include "SDL_mixer\include\SDL_mixer.h"
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
-j1Audio::j1Audio() : j1Module()
+j1Audio::j1Audio(bool start_enabled) : j1Module(start_enabled)
 {
 	music = NULL;
 	name.create("audio");
@@ -28,7 +28,7 @@ bool j1Audio::Awake(pugi::xml_node& config)
 	if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
 	{
 		LOG("SDL_INIT_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
-		active = false;
+		enabled = false;
 		ret = true;
 	}
 
@@ -39,7 +39,7 @@ bool j1Audio::Awake(pugi::xml_node& config)
 	if((init & flags) != flags)
 	{
 		LOG("Could not initialize Mixer lib. Mix_Init: %s", Mix_GetError());
-		active = false;
+		enabled = false;
 		ret = true;
 	}
 
@@ -47,7 +47,7 @@ bool j1Audio::Awake(pugi::xml_node& config)
 	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
 		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-		active = false;
+		enabled = false;
 		ret = true;
 	}
 
@@ -57,7 +57,7 @@ bool j1Audio::Awake(pugi::xml_node& config)
 // Called before quitting
 bool j1Audio::CleanUp()
 {
-	if(!active)
+	if (!enabled)
 		return true;
 
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
@@ -85,7 +85,7 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
 
-	if(!active)
+	if (!enabled)
 		return false;
 
 	if(music != NULL)
@@ -139,7 +139,7 @@ unsigned int j1Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
 
-	if(!active)
+	if (!enabled)
 		return 0;
 
 	Mix_Chunk* chunk = Mix_LoadWAV_RW(App->fs->Load(path), 1);
@@ -162,7 +162,7 @@ bool j1Audio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 
-	if(!active)
+	if (!enabled)
 		return false;
 
 	if(id > 0 && id <= fx.count())

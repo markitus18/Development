@@ -8,9 +8,9 @@
 #include "j1Window.h"
 #include "j1Map.h"
 #include "j1PathFinding.h"
-#include "j1Scene.h"
+#include "j1SceneGUI.h"
 
-j1PathFinding::j1PathFinding() : j1Module()
+j1PathFinding::j1PathFinding(bool start_enabled) : j1Module(start_enabled)
 {
 	name.create("pathFinding");
 }
@@ -24,6 +24,8 @@ j1PathFinding::~j1PathFinding()
 // Called before render is available
 bool j1PathFinding::Awake()
 {
+	App->console->AddCommand(&c_Path_Corners);
+	App->console->AddCommand(&c_Path_Diag);
 	return true;
 }
 
@@ -33,10 +35,6 @@ bool j1PathFinding::Start()
 	mapData = new map;
 	startTile = endTile = iPoint{ -1, -1 };
 	LoadMapData();
-
-	App->console->AddCommand(&c_Path_Corners);
-	App->console->AddCommand(&c_Path_Diag);
-	App->console->AddCommand(&c_Path_EditMode);
 
 	return true;
 }
@@ -61,41 +59,6 @@ bool j1PathFinding::Update(float dt)
 			App->pathFinding->StepUp();
 		}
 	}
-
-	if (editMode)
-	{
-		//Paint unwalkable
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
-		{
-			int x = App->scene->currentTile_x;
-			int y = App->scene->currentTile_y;
-			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
-			{
-				if (x >= 0 && y >= 0)
-				{
-					App->map->ChangeTile(x, y, 26);
-					mapChanged = true;
-				}
-			}
-		}
-
-		//Paint walkable
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-		{
-			int x = App->scene->currentTile_x;
-			int y = App->scene->currentTile_y;
-			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
-			{
-				if (x >= 0 && y >= 0)
-				{
-					App->map->ChangeTile(x, y, 25);
-					mapChanged = true;
-				}
-			}
-		}
-	}
-
-
 	return true;
 }
 
@@ -444,55 +407,46 @@ bool j1PathFinding::map::isWalkable(int x, int y) const
 #pragma region Commands
 void j1PathFinding::C_Path_Corners::function(const p2DynArray<p2SString>* arg)
 {
-	p2SString str = arg->At(1)->GetString();
-	if (str == "enable")
+	if (arg->Count() > 1)
 	{
-		//App->pathFinding->allowCorners = true;
-		LOG("-- Pathfinding: Corners enabled --");
-	}
-	else if (str == "disable")
-	{
-		//App->pathFinding->allowCorners = false;
-		LOG("-- Pathfinding: Corners disabled --");
+		p2SString str = arg->At(1)->GetString();
+		if (str == "enable")
+		{
+			App->pathFinding->allowCorners = true;
+			LOG("-- Pathfinding: Corners enabled --");
+		}
+		else if (str == "disable")
+		{
+			App->pathFinding->allowCorners = false;
+			LOG("-- Pathfinding: Corners disabled --");
+		}
+		else
+			LOG("pathfinding_corner: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
 	}
 	else
-		LOG("pathfinding_corner: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
-
+		LOG("'%s': not enough arguments, expecting enable / disable", arg->At(0)->GetString());
 }
 
 void j1PathFinding::C_Path_Diag::function(const p2DynArray<p2SString>* arg)
 {
-	p2SString str = arg->At(1)->GetString();
-	if (str == "enable")
+	if (arg->Count() > 1)
 	{
-		//App->pathFinding->allowDiagonals = true;
-		LOG("-- Pathfinding: Diagonals enabled --");
-	}
-	else if (str == "disable")
-	{
-		//App->pathFinding->allowDiagonals = false;
-		LOG("-- Pathfinding: Diagonals disabled --");
-	}
-	else
-		LOG("pathfinding_diag: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
-
-}
- 
-void::j1PathFinding::C_Path_EditMode::function(const p2DynArray<p2SString>* arg)
-{
-	p2SString str = arg->At(1)->GetString();
-	if (str == "enable")
-	{
-		//App->pathFinding->editMode = true;
-		LOG("-- Map: Map edition enabled  --");
-	}
-	else if (str == "disable")
-	{
-		//App->pathFinding->editMode = false;
-		LOG("-- Map: Map edition disabled --");
+		p2SString str = arg->At(1)->GetString();
+		if (str == "enable")
+		{
+			App->pathFinding->allowDiagonals = true;
+			LOG("-- Pathfinding: Diagonals enabled --");
+		}
+		else if (str == "disable")
+		{
+			App->pathFinding->allowDiagonals = false;
+			LOG("-- Pathfinding: Diagonals disabled --");
+		}
+		else
+			LOG("pathfinding_diag: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
 	}
 	else
-		LOG("map_edit: unexpected command '%s', expecting enable / disable", arg->At(1)->GetString());
+		LOG("'%s': not enough arguments, expecting enable / disable", arg->At(0)->GetString());
 
 }
 #pragma endregion

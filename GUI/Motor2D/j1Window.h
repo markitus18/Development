@@ -10,7 +10,7 @@ class j1Window : public j1Module
 {
 public:
 
-	j1Window();
+	j1Window(bool);
 
 	// Destructor
 	virtual ~j1Window();

@@ -8,7 +8,7 @@
 
 #define MAX_KEYS 300
 
-j1Input::j1Input() : j1Module()
+j1Input::j1Input(bool start_enabled) : j1Module(start_enabled)
 {
 	name.create("input");
 

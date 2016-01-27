@@ -24,7 +24,7 @@ class j1Gui : public j1Module
 {
 public:
 
-	j1Gui();
+	j1Gui(bool);
 
 	// Destructor
 	virtual ~j1Gui();

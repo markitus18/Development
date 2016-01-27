@@ -7,7 +7,7 @@
 
 #define VSYNC true
 
-j1Render::j1Render() : j1Module()
+j1Render::j1Render(bool start_enabled) : j1Module(start_enabled)
 {
 	name.create("renderer");
 	background.r = 0;

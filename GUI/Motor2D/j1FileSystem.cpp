@@ -7,7 +7,7 @@
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
-j1FileSystem::j1FileSystem() : j1Module()
+j1FileSystem::j1FileSystem(bool start_enabled) : j1Module(start_enabled)
 {
 	name.create("file_system");
 

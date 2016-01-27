@@ -12,7 +12,7 @@ class j1FileSystem : public j1Module
 {
 public:
 
-	j1FileSystem();
+	j1FileSystem(bool);
 
 	// Destructor
 	virtual ~j1FileSystem();
@@ -45,7 +45,7 @@ public:
 private:
 	struct Command_CreateDir : public Command
 	{
-		Command_CreateDir() : Command("mkdir", "Create a new directory", 1){}
+		Command_CreateDir() : Command("mkdir", "Create a new directory", 1, NULL, "File System"){}
 		void function(const p2DynArray<p2SString>* arg);
 
 	};

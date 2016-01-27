@@ -10,7 +10,7 @@ class j1Textures : public j1Module
 {
 public:
 
-	j1Textures();
+	j1Textures(bool);
 
 	// Destructor
 	virtual ~j1Textures();
