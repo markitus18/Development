@@ -91,6 +91,7 @@ public:
 class UIInputText;
 class UIRect;
 class UILabel;
+class UIScrollBar;
 
 class j1Console : public j1Module
 {
@@ -157,6 +158,10 @@ private:
 
 	UIRect* inputRect;
 	UILabel* console_defLabel;
+
+	UIScrollBar* scrollbar;
+	UIRect* scrollbar_rect;
+	UIRect* scrollbar_thumb;
 
 	p2DynArray<UILabel*> output;
 

@@ -204,7 +204,7 @@ UICheckingButton* j1Gui::CreateCheckingButton(char* name, iPoint position, UIIma
 	return checkingButton;
 }
 
-UIScrollBar* j1Gui::CreateScrollBar(char* name, iPoint position, UIImage* image, UIImage* thumb, UIElement* parent, int offsetL, int offsetR, int thumbOffset, bool active, j1Module* listener)
+UIScrollBar* j1Gui::CreateScrollBar(char* name, iPoint position, UIElement* image, UIElement* thumb, UIElement* parent, int offsetL, int offsetR, int thumbOffset, bool active, j1Module* listener)
 {
 	UIScrollBar* scrollBar = new UIScrollBar(name, position, image, thumb);
 

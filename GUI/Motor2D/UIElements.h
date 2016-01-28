@@ -11,6 +11,12 @@ enum UI_Event
 	RETURN_DOWN,
 };
 
+enum ScrollBar_Types
+{
+	VERTICAL = 0,
+	HORIZONTAL,
+};
+
 class UIElement
 {
 public:
@@ -42,8 +48,8 @@ public:
 	void Align(UIElement*);
 	void Align_x(UIElement*);
 	void Align_y(UIElement*);
-
 	//---------------------------
+
 	void SetParent(UIElement* parent);
 	void SetHoveringTexture(SDL_Texture*);
 	void SetLayer(int lay);
@@ -213,7 +219,7 @@ class UIScrollBar : public UIElement
 {
 public:
 	UIScrollBar();
-	UIScrollBar(char* name, iPoint position, UIImage* bar, UIImage* thumb);
+	UIScrollBar(char* name, iPoint position, UIElement* bar, UIElement* thumb);
 	~UIScrollBar();
 
 	bool Update();
@@ -228,15 +234,16 @@ public:
 	float GetValue();
 
 public:
-	UIImage*	bar;
-	UIImage*	thumb;
+	UIElement*		bar;
+	UIElement*		thumb;
 
-	bool		moved = false;
-	bool		thumbClicked = false;
-	bool		barClicked = false;
-	int			offsetL;
-	int			offsetR;
-	int			thumbOffset;
+	ScrollBar_Types type = VERTICAL;
+	bool			moved = false;
+	bool			thumbClicked = false;
+	bool			barClicked = false;
+	int				offsetL;
+	int				offsetR;
+	int				thumbOffset;
 };
 
 class UIRect : public UIElement

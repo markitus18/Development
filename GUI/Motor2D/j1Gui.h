@@ -52,7 +52,7 @@ public:
 	UILabel* CreateText(char* name, iPoint position, char* text, UIElement* parent = NULL, bool active = true, j1Module* listener = NULL, TTF_Font* font = NULL, SDL_Color color = { 255, 255, 255 }, bool interactive = false);
 	UIButton* CreateButton(char* name, iPoint position, UIImage* image, UIElement* parent, bool active = true, j1Module* listener = NULL);
 	UICheckingButton* CreateCheckingButton(char* name, iPoint position, UIImage* image, UIImage* image2, UIElement* parent, bool active = true, j1Module* listener = NULL);
-	UIScrollBar* CreateScrollBar(char* name, iPoint position, UIImage* image, UIImage* thumb, UIElement* parent, int offsetL, int offsetR,int thumbOffset, bool active = true, j1Module* listener = NULL);
+	UIScrollBar* CreateScrollBar(char* name, iPoint position, UIElement* image, UIElement* thumb, UIElement* parent, int offsetL, int offsetR, int thumbOffset, bool active = true, j1Module* listener = NULL);
 	UIInputText* CreateInputText(char* name, SDL_Rect rect, UIImage* image, UILabel* label, UIElement* parent, int offsetX, int offsetY, bool active = true, j1Module* listener = NULL);
 	UIRect* CreateRect(char* name, SDL_Rect rect, int newR, int newG, int newB, int newA = 255, bool newFilled = true, UIElement* parent = NULL, bool active = true, j1Module* listener = NULL);
 	

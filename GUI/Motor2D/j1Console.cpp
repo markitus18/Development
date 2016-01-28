@@ -44,13 +44,13 @@ bool j1Console::Start()
 {
 	TTF_Font* inputFont = App->font->Load("fonts/open_sans/OpenSans-Regular.ttf", 16);
 
-	
+
 	//Console rect
 	consoleRect = App->gui->CreateRect("Console rect", { 0, 0, App->render->camera.w, 350 }, 0, 0, 0, 200);
 	consoleRect->SetLayer(GUI_MAX_LAYERS);
 	consoleRect->interactive = true;
 	consoleRect->listener = this;
-	
+
 	//Console input rect
 	inputRect = App->gui->CreateRect("Console Input rect", { 0, 350, App->render->camera.w, 40 }, 130, 130, 130);
 	inputRect->SetLayer(GUI_MAX_LAYERS);
@@ -61,10 +61,20 @@ bool j1Console::Start()
 	console_defLabel->SetLayer(GUI_MAX_LAYERS);
 
 	//Console input
-	inputText = App->gui->CreateInputText("Console Input", { 0, 350, App->render->camera.w, 40}, NULL, console_defLabel, App->gui->GetScreen(), 10, 10, true, this);
+	inputText = App->gui->CreateInputText("Console Input", { 0, 350, App->render->camera.w, 40 }, NULL, console_defLabel, App->gui->GetScreen(), 10, 10, true, this);
 	inputText->Center_x(App->gui->GetScreen());
 	inputText->maxCharacters = 67;
 	inputText->SetLayer(GUI_MAX_LAYERS);
+
+	//Console scroll bar
+	scrollbar_rect = App->gui->CreateRect("Console Scroll Bar Rect", { 0, 0, 15, 350 }, 200, 200, 200);
+	scrollbar_rect->SetLayer(GUI_MAX_LAYERS);
+
+	scrollbar_thumb = App->gui->CreateRect("Console Scroll Bar Thumb", { App->render->camera.w - 13, 155, 11, 20 }, 0, 0, 0);
+	scrollbar_thumb->SetLayer(GUI_MAX_LAYERS);
+
+	scrollbar = App->gui->CreateScrollBar("Console Scroll Bar", { App->render->camera.w - 15, 0 }, scrollbar_rect, scrollbar_thumb, App->gui->GetScreen(), 2, 2, 0, true, this);
+	scrollbar->SetLayer(GUI_MAX_LAYERS);
 
 	//Moving Miscellaneous tag to the last tag in the list
 	bool found = false;
@@ -364,6 +374,9 @@ void j1Console::Open()
 	int maxY = inputText->GetWorldRect().y - 20;
 
 	textStart = output.Count() * (-LINE_SPACING) + maxY + 10;
+	if (textStart > 0)
+		textStart = 0;
+
 	for (uint n = 0; n < output.Count(); n++)
 	{
 		output[n]->active = true;

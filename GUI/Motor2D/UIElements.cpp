@@ -637,7 +637,7 @@ void UICheckingButton::OnMouseUp()
 //Scroll Bar
 UIScrollBar::UIScrollBar()
 {}
-UIScrollBar::UIScrollBar(char* newName, iPoint newPosition, UIImage* newBar, UIImage* newThumb)
+UIScrollBar::UIScrollBar(char* newName, iPoint newPosition, UIElement* newBar, UIElement* newThumb)
 {
 	name = newName;
 	bar = newBar;
@@ -662,45 +662,95 @@ bool UIScrollBar::Update()
 
 	else if (this == App->gui->GetFocus())
 	{
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		if (type == HORIZONTAL)
 		{
-			x = -1;
-			moved = true;
+			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+			{
+				x = -1;
+				moved = true;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+			{
+				x = 1;
+				moved = true;
+			}
 		}
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		else if (type == VERTICAL)
 		{
-			x = 1;
-			moved = true;
+			if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+			{
+				y = -1;
+				moved = true;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+			{
+				y = 1;
+				moved = true;
+			}
 		}
+
+
 	}
 	if (barClicked)
 	{
 		int mouseX, mouseY;
 		App->input->GetMousePosition(mouseX, mouseY);
 		iPoint thumbPos = thumb->GetLocalPosition();
-		if (mouseX > thumbRect.x + thumbRect.w / 2)
+		if (type == HORIZONTAL)
 		{
-			x = 1;
-			moved = true;
+			if (mouseX > thumbRect.x + thumbRect.w / 2)
+			{
+				x = 1;
+				moved = true;
+			}
+			if (mouseX < thumbRect.x  + thumbRect.w / 2)
+			{
+				x = -1;
+				moved = true;
+			}
 		}
-		if (mouseX < thumbRect.x  + thumbRect.w / 2)
+		else if (type == VERTICAL)
 		{
-			x = -1;
-			moved = true;
+			if (mouseY > thumbRect.y + thumbRect.h / 2)
+			{
+				y = 1;
+				moved = true;
+			}
+			if (mouseY < thumbRect.y + thumbRect.h / 2)
+			{
+				y = -1;
+				moved = true;
+			}
 		}
+
 	}
 
 	if (moved)
 	{
-		if (thumbPos.x + x < offsetL)
+		if (type == HORIZONTAL)
 		{
-			thumbPos.x = offsetL - x;
+			if (thumbPos.x + x < offsetL)
+			{
+				thumbPos.x = offsetL - x;
+			}
+			if (thumbPos.x + x + thumbRect.w > GetWorldRect().w - offsetR)
+			{
+				thumbPos.x = GetWorldRect().w - offsetR - x - thumbRect.w;
+			}
+			thumb->SetLocalPosition(thumbPos.x + x, thumbPos.y);
 		}
-		if (thumbPos.x + x + thumbRect.w > GetWorldRect().w - offsetR)
+		else if (type == VERTICAL)
 		{
-			thumbPos.x = GetWorldRect().w - offsetR - x - thumbRect.w;
+			if (thumbPos.y + y < offsetL)
+			{
+				thumbPos.y = offsetL - y;
+			}
+			if (thumbPos.y + y + thumbRect.h > GetWorldRect().h - offsetR)
+			{
+				thumbPos.y = GetWorldRect().h - offsetR - y - thumbRect.h;
+			}
+			thumb->SetLocalPosition(thumbPos.x, thumbPos.y + y);
 		}
-		thumb->SetLocalPosition(thumbPos.x + x, thumbPos.y);
 		listener->OnGUI(SCROLL_CHANGE, this);
 	}
 
@@ -714,7 +764,7 @@ void UIScrollBar::OnMouseDown()
 	int w = thumb->GetWorldRect().w / 2;
 
 	SDL_Rect thumbRect = thumb->GetWorldRect();
-	if (mouseX > thumbRect.x && mouseX < thumbRect.x + thumbRect.w && mouseY >thumbRect.w && mouseY < thumbRect.y + thumbRect.h)
+	if (mouseX > thumbRect.x && mouseX < thumbRect.x + thumbRect.w && mouseY >thumbRect.y && mouseY < thumbRect.y + thumbRect.h)
 	{
 		LOG("Thumb Clicked");
 		thumbClicked = true;
