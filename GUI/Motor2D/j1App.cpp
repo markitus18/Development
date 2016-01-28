@@ -53,8 +53,8 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	AddModule(gui);
 	AddModule(console);
-	AddModule(sceneGUI);
-	AddModule(sceneMap);
+	AddScene(sceneGUI);
+	AddScene(sceneMap);
 	AddModule(pathFinding);
 
 	// render last to swap buffer
@@ -83,10 +83,17 @@ void j1App::AddModule(j1Module* module)
 	modules.add(module);
 }
 
+void j1App::AddScene(j1Module* module)
+{
+	modules.add(module);
+	scenes.add(module);
+}
 // Called before render is available
 bool j1App::Awake()
 {
 	PERF_START(ptimer);
+
+	App->console->AddCommand(&c_LoadScene);
 
 	pugi::xml_node		app_config;
 
@@ -483,7 +490,7 @@ float j1App::GetTimeSinceStart()
 	return startup_time.ReadSec();
 }
 
-bool j1App::isInit()
+bool j1App::isInit() const
 {
 	return init;
 }
@@ -620,4 +627,45 @@ bool j1App::LoadGUI()
 		LOG("Could not load gui.xml");
 
 	return ret;
+}
+
+j1Module* j1App::FindScene(const char* name) const
+{
+	j1Module* scene = NULL;
+	p2List_item<j1Module*>* item;
+	bool found = false;
+
+	for (item = scenes.start; item && !found; item = item->next)
+	{
+		if (item->data->name == name)
+		{
+			scene = item->data;
+			found = true;
+		}
+	}
+	return scene;
+}
+
+void j1App::SetCurrentScene(j1Module* newScene)
+{
+	currentScene = newScene;
+}
+
+void j1App::C_LoadScene::function(const p2DynArray<p2SString>* arg)
+{
+	if (arg->Count() > 1)
+	{
+		j1Module* sceneToLoad = App->FindScene(arg->At(1)->GetString());
+		if (sceneToLoad)
+		{
+			App->currentScene->Disable();
+			sceneToLoad->Enable();
+		}
+		else
+		{
+			LOG("'%s': '%s' scene not found", arg->At(0)->GetString(), arg->At(1)->GetString());
+		}
+	}
+	else
+		LOG("'%s': not enough arguments, expecting scene name");
 }

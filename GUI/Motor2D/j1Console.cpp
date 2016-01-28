@@ -44,6 +44,7 @@ bool j1Console::Start()
 {
 	TTF_Font* inputFont = App->font->Load("fonts/open_sans/OpenSans-Regular.ttf", 16);
 
+	
 	//Console rect
 	consoleRect = App->gui->CreateRect("Console rect", { 0, 0, App->render->camera.w, 350 }, 0, 0, 0, 200);
 	consoleRect->SetLayer(GUI_MAX_LAYERS);
@@ -81,6 +82,7 @@ bool j1Console::Start()
 	if (found)
 		tags[tags.Count() - 1] = "Miscellaneous";
 
+	Close();
 	return true;
 	
 }
@@ -295,7 +297,8 @@ void j1Console::Output(char* str)
 		textStart += offset;
 		for (uint n = 0; n < output.Count(); n++)
 		{
-			output[n]->active = true;
+			output[n]->active = active ? true : false;
+
 			iPoint pos = output[n]->GetLocalPosition();
 			output[n]->SetLocalPosition(pos.x, pos.y + offset);
 			iPoint newPos = output[n]->GetLocalPosition();

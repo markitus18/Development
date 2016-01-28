@@ -33,11 +33,13 @@ public:
 
 	bool Enable()
 	{
+		bool ret = true;
 		if (enabled == false)
 		{
 			enabled = true;
-			Start();
+			ret = Start();
 		}
+		return ret;
 	}
 
 	bool Disable()

@@ -5,6 +5,7 @@
 #include "j1Module.h"
 #include "j1PerfTimer.h"
 #include "j1Timer.h"
+#include "j1Console.h"
 
 #include "PugiXml\src\pugixml.hpp"
 
@@ -47,6 +48,7 @@ public:
 
 	// Add a new module to handle
 	void AddModule(j1Module* module);
+	void AddScene(j1Module* module);
 
 	// Exposing some properties for reading
 	int GetArgc() const;
@@ -62,9 +64,13 @@ public:
 
 	float GetTimeSinceStart();
 
-	bool isInit();
+	bool isInit() const;
 	
+	bool SaveGUI() const;
+	bool LoadGUI();
 
+	j1Module* FindScene(const char* name) const;
+	void SetCurrentScene(j1Module*);
 private:
 
 	// Load config file
@@ -92,11 +98,6 @@ private:
 	bool SaveCVars() const;
 
 public:
-	//EXERCISE 4
-	bool SaveGUI() const;
-	bool LoadGUI();
-
-public:
 
 	// Modules
 	j1Window*			win = NULL;
@@ -116,6 +117,9 @@ public:
 private:
 
 	p2List<j1Module*>	modules;
+	p2List<j1Module*>	scenes;
+	j1Module*			currentScene = NULL;
+
 	int					argc;
 	char**				args;
 
@@ -128,6 +132,9 @@ private:
 	bool				want_to_load = false;
 	p2SString			load_game;
 	mutable p2SString	save_game;
+
+	bool				change_scene = false;
+	int					next_scene = 0;
 
 	bool				save_gui;
 	bool				load_gui;
@@ -146,6 +153,15 @@ private:
 	pugi::xml_node		config;
 
 	bool				init = false;
+
+	#pragma region Commands
+	struct C_LoadScene : public Command
+	{
+		C_LoadScene() : Command("load_scene", "Load new scene", 1, NULL, "App"){};
+		void function(const p2DynArray<p2SString>* arg);
+	};
+	C_LoadScene c_LoadScene;
+	#pragma endregion
 
 };
 

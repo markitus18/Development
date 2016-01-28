@@ -16,7 +16,7 @@
 
 j1SceneGUI::j1SceneGUI(bool start_enabled) : j1Module(start_enabled)
 {
-	name.create("scene");
+	name.create("scene_gui");
 }
 
 // Destructor
@@ -26,9 +26,10 @@ j1SceneGUI::~j1SceneGUI()
 // Called before render is available
 bool j1SceneGUI::Awake(pugi::xml_node& node)
 {
-
 	LOG("Loading Scene");
 	bool ret = true;
+
+	App->SetCurrentScene(this);
 
 	App->console->AddCommand(&command_closeGUI);
 	App->console->AddCommand(&command_openGUI);

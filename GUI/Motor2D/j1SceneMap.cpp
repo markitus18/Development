@@ -16,7 +16,7 @@
 
 j1SceneMap::j1SceneMap(bool start_enabled) : j1Module(start_enabled)
 {
-	name.create("scene");
+	name.create("scene_map");
 }
 
 // Destructor
@@ -29,6 +29,8 @@ bool j1SceneMap::Awake(pugi::xml_node& node)
 
 	LOG("Loading Scene");
 	bool ret = true;
+
+	App->SetCurrentScene(this);
 
 	App->console->AddCommand(&c_SaveGame);
 	App->console->AddCommand(&c_LoadGame);
@@ -77,20 +79,17 @@ bool j1SceneMap::Update(float dt)
 	// Debug pathfinding ------------------------------
 
 	//Getting current mouse tile
+
+	//Mouse position
 	int x, y;
 	App->input->GetMousePosition(x, y);
-	int mapX, mapY;
-	mapX = x - App->render->camera.x;
-	mapY = y - App->render->camera.y;
-	iPoint map_coordinates = App->map->WorldToMap(mapX, mapY);
-	//Fixing offset 
-	map_coordinates.x -= 1;
+	iPoint p = App->render->ScreenToWorld(x, y);
+	p = App->map->WorldToMap(p.x, p.y);
+	p = App->map->MapToWorld(p.x, p.y);
 
-	iPoint currentTile = App->map->MapToWorld(map_coordinates.x, map_coordinates.y);
-	currentTile_x = map_coordinates.x;
-	currentTile_y = map_coordinates.y;
+	App->render->Blit(debug_tex, p.x, p.y, new SDL_Rect{ 0, 0, 64, 64 });
 
-	App->render->Blit(debug_tex, currentTile.x, currentTile.y, new SDL_Rect{ 0, 0, 64, 64 });
+//	App->render->Blit(debug_tex, currentTile.x, currentTile.y, new SDL_Rect{ 0, 0, 64, 64 });
 
 	if (App->pathFinding->pathFinished)
 	{
