@@ -94,6 +94,7 @@ bool j1App::Awake()
 	PERF_START(ptimer);
 
 	App->console->AddCommand(&c_LoadScene);
+	App->console->AddCommand(&c_DisplayScenes);
 
 	pugi::xml_node		app_config;
 
@@ -668,4 +669,14 @@ void j1App::C_LoadScene::function(const p2DynArray<p2SString>* arg)
 	}
 	else
 		LOG("'%s': not enough arguments, expecting scene name");
+}
+
+void j1App::C_DisplayScenes::function(const p2DynArray<p2SString>* arg)
+{
+	LOG("Scene List:");
+	p2List_item<j1Module*>* item = NULL;
+	for (item = App->scenes.start; item; item = item->next)
+	{
+		LOG("    %s", item->data->name.GetString());
+	}
 }

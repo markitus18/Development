@@ -161,6 +161,14 @@ private:
 		void function(const p2DynArray<p2SString>* arg);
 	};
 	C_LoadScene c_LoadScene;
+
+	struct C_DisplayScenes : public Command
+	{
+		C_DisplayScenes() : Command("scenes", "Display scenes list", 0, NULL, "App"){};
+		void function(const p2DynArray<p2SString>* arg);
+	};
+	C_DisplayScenes c_DisplayScenes;
+
 	#pragma endregion
 
 };
