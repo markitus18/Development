@@ -231,6 +231,11 @@ public:
 	void OnGetFocus();
 	void OnLooseFocus();
 
+	void CheckThumbMovement(int &, int &);
+	void CheckInputMovement(int &, int &);
+	void CheckBarMovement(int &, int &);
+
+	void SetValue(float value);
 	float GetValue();
 
 public:
