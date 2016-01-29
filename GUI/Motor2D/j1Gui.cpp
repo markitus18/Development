@@ -64,7 +64,7 @@ bool j1Gui::Update(float dt)
 	return true;
 }
 // Called after all Updates
-bool j1Gui::PostUpdate()
+bool j1Gui::PostUpdate(float dt)
 {
 	inputRecieved = false;
 	for (int lay = 0; lay <= GUI_MAX_LAYERS; lay++)
@@ -74,7 +74,7 @@ bool j1Gui::PostUpdate()
 		{
 			if (item->data->active && item->data->layer == lay)
 			{
-				item->data->Update();
+				item->data->Update(dt);
 			}
 			item = item->next;
 		}	

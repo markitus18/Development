@@ -137,11 +137,10 @@ void UIElement::CheckInput()
 				}
 			}
 		}
-
 	}
 }
 
-bool UIElement::Update()
+bool UIElement::Update(float dt)
 {
 	return true;
 }
@@ -178,7 +177,7 @@ UIImage::UIImage(char* newName, iPoint newPosition, const SDL_Texture* newTextur
 	texture = newTexture;
 }
 
-bool UIImage::Update()
+bool UIImage::Update(float dt)
 {
 	App->render->Blit(texture, GetWorldRect().x - App->render->camera.x, GetWorldRect().y - App->render->camera.y, &rects[currentRect]);
 	return true;
@@ -195,7 +194,7 @@ UILabel::UILabel(char* newName, iPoint newPosition, char* newText)
 UILabel::~UILabel()
 {}
 
-bool UILabel::Update()
+bool UILabel::Update(float dt)
 {
 	App->render->Blit(texture, GetWorldRect().x - App->render->camera.x, GetWorldRect().y - App->render->camera.y);
 	if (drawLine)
@@ -247,7 +246,7 @@ UIButton::UIButton(char* newName, iPoint position, UIImage* newImage, UILabel* n
 UIButton::~UIButton()
 {}
 
-bool UIButton::Update()
+bool UIButton::Update(float dt)
 {
 	return true;
 }
@@ -384,7 +383,7 @@ void UIInputText::UpdateCursorPosition()
 	//We set crusorStart position relative to the button position, we will add global position later on
 	cursorStart.x = offsetX + x;
 	cursorStart.y = offsetY;
-	//Starting the process to move the curcor if its "out" of the input box
+	//Starting the process to move the cursor if its "out" of the input box
 	/*
 	if (cursorStart.x > image->GetWorldRect().x + image->GetWorldRect().w - offsetX)
 	{
@@ -509,7 +508,7 @@ void UIInputText::UpdateTextTexture()
 	else
 		text_texture = NULL;
 }
-bool UIInputText::Update()
+bool UIInputText::Update(float dt)
 {
 	if (textChanged)
 	{
@@ -655,7 +654,7 @@ UIScrollBar::UIScrollBar(char* newName, iPoint newPosition, UIElement* newBar, U
 UIScrollBar::~UIScrollBar()
 {}
 
-bool UIScrollBar::Update()
+bool UIScrollBar::Update(float dt)
 {
 	int x = 0, y = 0;
 	SDL_Rect thumbRect = thumb->GetWorldRect();
@@ -668,28 +667,28 @@ bool UIScrollBar::Update()
 	}
 	else if (this == App->gui->GetFocus())
 	{
-		CheckInputMovement(x, y);
+		CheckInputMovement(x, y, dt);
 	}
 	if (barClicked)
 	{
-		CheckBarMovement(x, y);
+		CheckBarMovement(x, y, dt);
 	}
 	if (moved)
 	{
 		if (type == HORIZONTAL)
 		{
-			if (thumbPos.x + x + thumbRect.w > GetWorldRect().w - offsetR)
-			{
-				thumbPos.x = GetWorldRect().w - offsetR - x - thumbRect.w;
-			}
+			if (thumbPos.x + x + thumbRect.w > rect.w - offsetR)
+				thumbPos.x = rect.w - offsetR - x - thumbRect.w;
+			if (thumbPos.x + x < offsetL)
+				thumbPos.x = offsetL - x;
 			thumb->SetLocalPosition(thumbPos.x + x, thumbPos.y);
 		}
 		else if (type == VERTICAL)
 		{
-			if (thumbPos.y + y + thumbRect.h > GetWorldRect().h - offsetD)
-			{
-				thumbPos.y = GetWorldRect().h - offsetR - y - thumbRect.h;
-			}
+			if (thumbPos.y + y + thumbRect.h > rect.h - offsetD)
+				thumbPos.y = rect.h - offsetR - y - thumbRect.h;
+			if (thumbPos.y + y < offsetU)
+				thumbPos.y = offsetU - y;
 			thumb->SetLocalPosition(thumbPos.x, thumbPos.y + y);
 		}
 		listener->OnGUI(SCROLL_CHANGE, this);
@@ -770,7 +769,7 @@ void UIScrollBar::CheckThumbMovement(int& x, int& y)
 	}
 }
 
-void UIScrollBar::CheckInputMovement(int& x, int& y)
+void UIScrollBar::CheckInputMovement(int& x, int& y, float dt)
 {
 	SDL_Rect thumbRect = thumb->GetWorldRect();
 	iPoint thumbPos = thumb->GetLocalPosition();
@@ -782,7 +781,7 @@ void UIScrollBar::CheckInputMovement(int& x, int& y)
 		{
 			if (thumbPos.x > offsetL)
 			{
-				x = -1;
+				x = -arrowsValue * dt * 100;
 				moved = true;
 			}
 		}
@@ -790,7 +789,7 @@ void UIScrollBar::CheckInputMovement(int& x, int& y)
 		{
 			if (thumbPos.x + thumbRect.w < rect.w - offsetR)
 			{
-				x = 1;
+				x = arrowsValue * dt * 100;
 				moved = true;
 			}
 		}
@@ -801,7 +800,7 @@ void UIScrollBar::CheckInputMovement(int& x, int& y)
 		{
 			if (thumbPos.y + thumbRect.h < rect.h - offsetD)
 			{
-				y = 1;
+				y = arrowsValue * dt * 100;
 				moved = true;
 			}
 		}
@@ -809,14 +808,14 @@ void UIScrollBar::CheckInputMovement(int& x, int& y)
 		{
 			if (thumbPos.y > offsetU)
 			{
-				y = -1;
+				y = -arrowsValue * dt * 100;
 				moved = true;
 			}
 		}
 	}
 }
 
-void UIScrollBar::CheckBarMovement(int& x, int& y)
+void UIScrollBar::CheckBarMovement(int& x, int& y, float dt)
 {
 	int mouseX, mouseY;
 	App->input->GetMousePosition(mouseX, mouseY);
@@ -831,7 +830,7 @@ void UIScrollBar::CheckBarMovement(int& x, int& y)
 		{
 			if (thumbPos.x + thumbRect.w < rect.w - offsetR)
 			{
-				x = 1;
+				x = barValue * dt * 100;
 				moved = true;
 			}
 		}
@@ -839,7 +838,7 @@ void UIScrollBar::CheckBarMovement(int& x, int& y)
 		{
 			if (thumbPos.x > offsetL)
 			{
-				x = -1;
+				x = -barValue * dt * 100;
 				moved = true;
 			}
 		}
@@ -850,7 +849,7 @@ void UIScrollBar::CheckBarMovement(int& x, int& y)
 		{
 			if (thumbPos.y + thumbRect.h < rect.h - offsetD)
 			{
-				y = 1;
+				y = barValue * dt * 100;
 				moved = true;
 			}
 		}
@@ -858,7 +857,7 @@ void UIScrollBar::CheckBarMovement(int& x, int& y)
 		{
 			if (thumbPos.y > offsetU)
 			{
-				y = -1;
+				y = -barValue * dt * 100;
 				moved = true;
 			}
 		}
@@ -927,7 +926,7 @@ UIRect::UIRect(char* newName, SDL_Rect newRect, int newR, int newG, int newB, in
 	filled = newFilled;
 }
 
-bool UIRect::Update()
+bool UIRect::Update(float dt)
 {
 	App->render->DrawQuad(GetWorldRect(), r, g, b, a, filled, false);
 	return true;

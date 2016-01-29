@@ -57,7 +57,7 @@ public:
 	iPoint GetLocalPosition() const;
 	SDL_Rect GetWorldRect() const;
 
-	virtual bool Update();
+	virtual bool Update(float dt);
 
 public:
 	p2SString name;
@@ -86,7 +86,7 @@ public:
 	UIImage(char* name, iPoint position, const SDL_Texture* newTexture, p2DynArray<SDL_Rect>& rects);
 	~UIImage();
 
-	bool Update();
+	bool Update(float dt);
 
 public:
 	p2DynArray<SDL_Rect> rects;
@@ -108,7 +108,7 @@ public:
 
 	void OnMouseEnter();
 	void OnMouseExit();
-	bool Update();
+	bool Update(float dt);
 
 public:
 	p2SString text;
@@ -132,7 +132,7 @@ public:
 	void OnMouseDown();
 	void OnMouseUp();
 
-	bool Update();
+	bool Update(float dt);
 
 public:
 	UIImage*	image;
@@ -166,7 +166,7 @@ public:
 	char* GetString() const;
 	void DeleteText();
 
-	bool Update();
+	bool Update(float dt);
 
 public:
 	UIImage*			image;
@@ -222,7 +222,7 @@ public:
 	UIScrollBar(char* name, iPoint position, UIElement* bar, UIElement* thumb);
 	~UIScrollBar();
 
-	bool Update();
+	bool Update(float dt);
 
 	void OnMouseDown();
 	void OnMouseUp();
@@ -232,8 +232,8 @@ public:
 	void OnLooseFocus();
 
 	void CheckThumbMovement(int &, int &);
-	void CheckInputMovement(int &, int &);
-	void CheckBarMovement(int &, int &);
+	void CheckInputMovement(int &, int &, float);
+	void CheckBarMovement(int &, int &, float);
 
 	void SetValue(float value);
 	float GetValue();
@@ -251,6 +251,9 @@ public:
 	int				offsetU;
 	int				offsetD;
 
+	int				arrowsValue = 1;
+	int				barValue = 1;
+
 	int				thumbClickOffset;
 };
 
@@ -261,7 +264,7 @@ public:
 	UIRect(char* newName, SDL_Rect newRect, int newR, int newG, int newB, int newA = 255, bool newfilled = true);
 	~UIRect();
 
-	bool Update();
+	bool Update(float dt);
 
 public:
 	int r;

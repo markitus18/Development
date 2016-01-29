@@ -97,12 +97,9 @@ bool j1Console::Start()
 	
 }
 
-bool j1Console::PostUpdate()
+bool j1Console::PostUpdate(float dt)
 {
-	if (closeGame)
-		return false;
 	return true;
-
 }
 bool j1Console::Update(float dt)
 {
@@ -380,9 +377,9 @@ void j1Console::Open()
 	App->gui->SetFocus(inputText);
 
 	int minY = 0;
-	int maxY = inputText->GetWorldRect().y - 20;
+	int maxY = inputText->GetWorldRect().y ;
 
-	textStart = output.Count() * (-LINE_SPACING) + maxY + 10;
+	textStart = output.Count() * (-LINE_SPACING) + maxY;
 	if (textStart > 0)
 		textStart = 0;
 
