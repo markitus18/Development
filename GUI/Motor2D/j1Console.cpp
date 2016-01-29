@@ -166,7 +166,6 @@ void j1Console::OnGUI(UI_Event _event, UIElement* _element)
 		if (_event == SCROLL_CHANGE)
 		{
 			float v = scrollbar->GetValue();
-			LOG("Scrollbar pos: %f", v);
 		}
 	}
 }
@@ -328,6 +327,7 @@ void j1Console::Output(char* str)
 
 		}
 	}
+	scrollbar->SetValue(1.0f);
 }
 // Find a command by  a string
 Command* j1Console::FindCommand(const char* str, uint nArgs) const
