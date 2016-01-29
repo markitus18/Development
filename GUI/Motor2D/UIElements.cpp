@@ -88,22 +88,30 @@ void UIElement::CheckInput()
 				App->gui->inputRecieved = true;
 				App->gui->SetFocus(this);
 			}
-			else if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP && mouseWasClicked)
+			else if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
 			{
-				//LOG("%s - Mouse Up", name.GetString());
-				mouseWasClicked = false;
-				OnMouseUp();
-				if (listener)
+				if (mouseWasClicked)
 				{
-					listener->OnGUI(MOUSE_UP, this);
+					//LOG("%s - Mouse Up", name.GetString());
+					mouseWasClicked = false;
+					OnMouseUp();
+					if (listener)
+					{
+						listener->OnGUI(MOUSE_UP, this);
+					}
+					App->gui->inputRecieved = true;
 				}
-				App->gui->inputRecieved = true;
+				else if (App->gui->GetFocus()->mouseWasClicked)
+				{
+					App->gui->GetFocus()->OnMouseUp();
+				}
+
 			}
 		}
 		else
 		{
-			if (mouseWasClicked)
-				mouseWasClicked = false;
+		//	if (mouseWasClicked)
+		//		mouseWasClicked = false;
 			if (mouseWasIn)
 			{
 				//LOG("%s - Mouse Exit", name.GetString());
@@ -652,12 +660,31 @@ bool UIScrollBar::Update()
 	int x = 0, y = 0;
 	SDL_Rect thumbRect = thumb->GetWorldRect();
 	int w = thumb->GetWorldRect().w;
+	int h = thumb->GetWorldRect().h;
 	iPoint thumbPos = thumb->GetLocalPosition();
+	SDL_Rect rect = bar->GetWorldRect();
 	moved = false;
 	if (thumbClicked)
 	{
-		App->input->GetMouseMotion(x, y);
-		moved = true;
+		int mouseX, mouseY;
+		App->input->GetMousePosition(mouseX, mouseY);
+		if (type == HORIZONTAL)
+		{
+			if (mouseX - thumbClickOffset >= rect.x + offsetL && mouseX - thumbClickOffset <= rect.x + rect.w - offsetR)
+			{
+				x = mouseX - thumbPos.x - thumbClickOffset;
+				moved = true;
+			}
+		}
+		else if (type == VERTICAL)
+		{
+			if (mouseY - thumbClickOffset >= rect.y + offsetU && mouseY - thumbClickOffset <= rect.y + rect.h - offsetD - h)
+			{
+				y = mouseY - thumbPos.y - thumbClickOffset;
+				moved = true;
+			}
+		}
+
 	}
 
 	else if (this == App->gui->GetFocus())
@@ -666,30 +693,40 @@ bool UIScrollBar::Update()
 		{
 			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 			{
-				x = -1;
-				moved = true;
+				if (thumbPos.x > offsetL)
+				{
+					x = -1;
+					moved = true;
+				}
 			}
 			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 			{
-				x = 1;
-				moved = true;
+				if (thumbPos.x + w < rect.w - offsetR)
+				{
+					x = 1;
+					moved = true;
+				}
 			}
 		}
 		else if (type == VERTICAL)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 			{
-				y = -1;
-				moved = true;
+				if (thumbPos.y + h < rect.h - offsetD)
+				{
+					y = 1;
+					moved = true;
+				}
 			}
 			if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 			{
-				y = 1;
-				moved = true;
+				if (thumbPos.y > offsetU)
+				{
+					y = -1;
+					moved = true;
+				}
 			}
 		}
-
-
 	}
 	if (barClicked)
 	{
@@ -700,39 +737,46 @@ bool UIScrollBar::Update()
 		{
 			if (mouseX > thumbRect.x + thumbRect.w / 2)
 			{
-				x = 1;
-				moved = true;
+				if (thumbPos.x + w < rect.w - offsetR)
+				{
+					x = 1;
+					moved = true;
+				}
 			}
 			if (mouseX < thumbRect.x  + thumbRect.w / 2)
 			{
-				x = -1;
-				moved = true;
+				if (thumbPos.x > offsetL)
+				{
+					x = -1;
+					moved = true;
+				}
 			}
 		}
 		else if (type == VERTICAL)
 		{
 			if (mouseY > thumbRect.y + thumbRect.h / 2)
 			{
-				y = 1;
-				moved = true;
+				if (thumbPos.y + h < rect.h - offsetD)
+				{
+					y = 1;
+					moved = true;
+				}
 			}
 			if (mouseY < thumbRect.y + thumbRect.h / 2)
 			{
-				y = -1;
-				moved = true;
+				if (thumbPos.y > offsetU)
+				{
+					y = -1;
+					moved = true;
+				}
 			}
 		}
-
 	}
 
 	if (moved)
 	{
 		if (type == HORIZONTAL)
 		{
-			if (thumbPos.x + x < offsetL)
-			{
-				thumbPos.x = offsetL - x;
-			}
 			if (thumbPos.x + x + thumbRect.w > GetWorldRect().w - offsetR)
 			{
 				thumbPos.x = GetWorldRect().w - offsetR - x - thumbRect.w;
@@ -741,11 +785,7 @@ bool UIScrollBar::Update()
 		}
 		else if (type == VERTICAL)
 		{
-			if (thumbPos.y + y < offsetL)
-			{
-				thumbPos.y = offsetL - y;
-			}
-			if (thumbPos.y + y + thumbRect.h > GetWorldRect().h - offsetR)
+			if (thumbPos.y + y + thumbRect.h > GetWorldRect().h - offsetD)
 			{
 				thumbPos.y = GetWorldRect().h - offsetR - y - thumbRect.h;
 			}
@@ -762,17 +802,25 @@ void UIScrollBar::OnMouseDown()
 	App->input->GetMousePosition(mouseX, mouseY);
 	SDL_Rect barRect = GetWorldRect();
 	int w = thumb->GetWorldRect().w / 2;
+	int h = thumb->GetWorldRect().h / 2;
 
 	SDL_Rect thumbRect = thumb->GetWorldRect();
 	if (mouseX > thumbRect.x && mouseX < thumbRect.x + thumbRect.w && mouseY >thumbRect.y && mouseY < thumbRect.y + thumbRect.h)
 	{
-		LOG("Thumb Clicked");
 		thumbClicked = true;
+		if (type == HORIZONTAL)
+			thumbClickOffset = mouseX - thumbRect.x;
+		else if (type == VERTICAL)
+			thumbClickOffset = mouseY - thumbRect.y;
 	}
 	else
 	{
-		if (mouseX > barRect.x + offsetL + w && mouseX < barRect.x + barRect.w - offsetR - w)
-			barClicked = true;
+		if (type == HORIZONTAL)
+			if (mouseX > barRect.x + offsetL + w && mouseX < barRect.x + barRect.w - offsetR - w)
+				barClicked = true;
+		if (type == VERTICAL)
+			if (mouseY > barRect.y + offsetU + h && mouseY < barRect.y + barRect.h - offsetD - h)
+				barClicked = true;
 	}
 
 
@@ -786,7 +834,6 @@ void UIScrollBar::OnMouseUp()
 
 void UIScrollBar::OnMouseExit()
 {
-	thumbClicked = false;
 	barClicked = false;
 }
 
@@ -801,14 +848,26 @@ void UIScrollBar::OnLooseFocus()
 
 float UIScrollBar::GetValue()
 {
-	LOG("%i", thumb->GetLocalPosition().x + thumb->GetWorldRect().w / 2);
-	float minPos = (float)thumb->GetWorldRect().w / 2 + offsetL;
-	float maxPos = (float)(((GetWorldRect().w) - minPos) - offsetR) - thumb->GetWorldRect().w / 2 ;
-	float thumbPos = (float)thumb->GetLocalPosition().x - offsetL;
+	SDL_Rect thumbRect = thumb->GetWorldRect();
+	SDL_Rect barRect = bar->GetWorldRect();
+
+	int minPos, maxPos, thumbPos;
+	if (type == VERTICAL)
+	{
+		minPos = barRect.y + offsetU;
+		maxPos = barRect.y + barRect.h - offsetD - thumbRect.h;
+		thumbPos = thumbRect.y - offsetU;
+	}
+	else if (type == HORIZONTAL)
+	{
+		minPos = barRect.x + offsetL;
+		maxPos = barRect.x + barRect.w - offsetR - thumbRect.w;
+		thumbPos = thumbRect.x - offsetL;
+	}
 	float totalLenght = maxPos - minPos;
 	float ret = (thumbPos / totalLenght);
-	if (ret > 1)
-		ret = 1;
+
+	float k = 0.006135;
 	return ret;
 }
 

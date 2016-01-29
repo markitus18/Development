@@ -243,7 +243,10 @@ public:
 	bool			barClicked = false;
 	int				offsetL;
 	int				offsetR;
-	int				thumbOffset;
+	int				offsetU;
+	int				offsetD;
+
+	int				thumbClickOffset;
 };
 
 class UIRect : public UIElement

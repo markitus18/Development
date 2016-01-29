@@ -47,14 +47,6 @@ bool j1Gui::PreUpdate()
 
 bool j1Gui::Update(float dt)
 {
-	if (App->input->GetInputState() == false)
-	{
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP)
-		{
-			debugMode = !debugMode;
-		}
-	}
-
 	if (App->input->GetKey(SDL_SCANCODE_TAB) == KEY_UP)
 	{
 		focus = GetNextFocus();
@@ -101,7 +93,7 @@ bool j1Gui::PostUpdate()
 			item = item->prev;
 		}
 	}
-	DrawFocus();
+	//DrawFocus();
 	if (inputEnabled)
 		DrawCursorInput();
 	if (hoveringElement != NULL)
@@ -204,7 +196,7 @@ UICheckingButton* j1Gui::CreateCheckingButton(char* name, iPoint position, UIIma
 	return checkingButton;
 }
 
-UIScrollBar* j1Gui::CreateScrollBar(char* name, iPoint position, UIElement* image, UIElement* thumb, UIElement* parent, int offsetL, int offsetR, int thumbOffset, bool active, j1Module* listener)
+UIScrollBar* j1Gui::CreateScrollBar(char* name, iPoint position, UIElement* image, UIElement* thumb, UIElement* parent, ScrollBar_Types type, int offsetL, int offsetR, int offsetU, int offsetD, bool active, j1Module* listener)
 {
 	UIScrollBar* scrollBar = new UIScrollBar(name, position, image, thumb);
 
@@ -216,10 +208,15 @@ UIScrollBar* j1Gui::CreateScrollBar(char* name, iPoint position, UIElement* imag
 
 	scrollBar->offsetL = offsetL;
 	scrollBar->offsetR = offsetR;
+	scrollBar->offsetU = offsetU;
+	scrollBar->offsetD = offsetD;
+
+	scrollBar->type = type;
+
 	scrollBar->active = active;
 	scrollBar->listener = listener;
 
-	scrollBar->thumb->SetLocalPosition(offsetL, thumbOffset);
+	scrollBar->thumb->SetLocalPosition(offsetL, offsetU);
 
 	uiElements.add(scrollBar);
 

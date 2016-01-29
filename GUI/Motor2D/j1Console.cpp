@@ -73,7 +73,7 @@ bool j1Console::Start()
 	scrollbar_thumb = App->gui->CreateRect("Console Scroll Bar Thumb", { App->render->camera.w - 13, 155, 11, 20 }, 0, 0, 0);
 	scrollbar_thumb->SetLayer(GUI_MAX_LAYERS);
 
-	scrollbar = App->gui->CreateScrollBar("Console Scroll Bar", { App->render->camera.w - 15, 0 }, scrollbar_rect, scrollbar_thumb, App->gui->GetScreen(), 2, 2, 0, true, this);
+	scrollbar = App->gui->CreateScrollBar("Console Scroll Bar", { App->render->camera.w - 15, 0 }, scrollbar_rect, scrollbar_thumb, App->gui->GetScreen(), VERTICAL, 2, 0, 2, 2, true, this);
 	scrollbar->SetLayer(GUI_MAX_LAYERS);
 
 	//Moving Miscellaneous tag to the last tag in the list
@@ -159,6 +159,14 @@ void j1Console::OnGUI(UI_Event _event, UIElement* _element)
 		if (_event == MOUSE_UP || _event == MOUSE_EXIT)
 		{
 			dragText = false;
+		}
+	}
+	if (_element == scrollbar)
+	{
+		if (_event == SCROLL_CHANGE)
+		{
+			float v = scrollbar->GetValue();
+			LOG("Scrollbar pos: %f", v);
 		}
 	}
 }
@@ -368,6 +376,7 @@ void j1Console::Open()
 	consoleRect->Activate();
 	inputRect->Activate(); 
 	inputText->Activate();
+	scrollbar->Activate();
 	App->gui->SetFocus(inputText);
 
 	int minY = 0;
@@ -399,6 +408,7 @@ void j1Console::Close()
 	consoleRect->Deactivate();
 	inputRect->Deactivate();
 	inputText->Deactivate();
+	scrollbar->Deactivate();
 
 	active = false;
 }
