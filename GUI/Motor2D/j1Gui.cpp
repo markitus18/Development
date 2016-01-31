@@ -106,7 +106,7 @@ bool j1Gui::PostUpdate(float dt)
 	return true;
 }
 
-// Called before quitting
+// Called before quiting
 bool j1Gui::CleanUp()
 {
 	LOG("Freeing GUI");

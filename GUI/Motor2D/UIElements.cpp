@@ -101,10 +101,14 @@ void UIElement::CheckInput()
 					}
 					App->gui->inputRecieved = true;
 				}
-				else if (App->gui->GetFocus()->mouseWasClicked)
+				else if (App->gui->GetFocus())
 				{
-					App->gui->GetFocus()->OnMouseUp();
+					if(App->gui->GetFocus()->mouseWasClicked)
+					{
+						App->gui->GetFocus()->OnMouseUp();
+					}
 				}
+
 
 			}
 		}
@@ -874,16 +878,16 @@ void UIScrollBar::SetValue(float value)
 	int minPos, maxPos, thumbPos;
 	if (type == VERTICAL)
 	{
-		minPos = barRect.y + offsetU;
-		maxPos = barRect.y + barRect.h - offsetD - thumbRect.h;
+		minPos = offsetU;
+		maxPos = barRect.h - offsetD - thumbRect.h;
 	}
 	else if (type == HORIZONTAL)
 	{
-		minPos = barRect.x + offsetL;
+		minPos = offsetL;
 		maxPos = barRect.x + barRect.w - offsetR - thumbRect.w;
 	}
 	float totalLenght = maxPos - minPos;
-	thumbPos = value * totalLenght;
+	thumbPos = value * totalLenght + minPos;
 
 	if (type == VERTICAL)
 		thumb->SetLocalPosition(thumb->GetLocalPosition().x, thumbPos);

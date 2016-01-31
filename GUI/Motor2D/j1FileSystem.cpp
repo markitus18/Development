@@ -18,7 +18,9 @@ j1FileSystem::j1FileSystem(bool start_enabled) : j1Module(start_enabled)
 
 	// By default we include executable's own directory
 	// without this we won't be able to find config.xml :-(
-	AddPath(".");
+//	AddPath(".");
+
+	AddPath("./../Game");
 }
 
 // Destructor

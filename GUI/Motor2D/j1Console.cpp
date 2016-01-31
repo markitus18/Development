@@ -73,7 +73,7 @@ bool j1Console::Start()
 	scrollbar_thumb = App->gui->CreateRect("Console Scroll Bar Thumb", { App->render->camera.w - 13, 155, 11, 20 }, 0, 0, 0);
 	scrollbar_thumb->SetLayer(GUI_MAX_LAYERS);
 
-	scrollbar = App->gui->CreateScrollBar("Console Scroll Bar", { App->render->camera.w - 15, 0 }, scrollbar_rect, scrollbar_thumb, App->gui->GetScreen(), VERTICAL, 2, 0, 2, 2, true, this);
+	scrollbar = App->gui->CreateScrollBar("Console Scroll Bar", { App->render->camera.w - 15, 0 }, scrollbar_rect, scrollbar_thumb, App->gui->GetScreen(), VERTICAL, 2, 0, 20, 20, true, this);
 	scrollbar->SetLayer(GUI_MAX_LAYERS);
 
 	//Moving Miscellaneous tag to the last tag in the list
@@ -99,6 +99,8 @@ bool j1Console::Start()
 
 bool j1Console::PostUpdate(float dt)
 {
+	if (closeGame)
+		return false;
 	return true;
 }
 bool j1Console::Update(float dt)

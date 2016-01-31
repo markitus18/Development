@@ -28,7 +28,7 @@
   </window>
 
   <file_system>
-    <path>data.zip</path>
+    <path>./../Game/data.zip</path>
   </file_system>
 
   <map>
