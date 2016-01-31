@@ -163,6 +163,25 @@ void j1Console::OnGUI(UI_Event _event, UIElement* _element)
 		if (_event == SCROLL_CHANGE)
 		{
 			float v = scrollbar->GetValue();
+			int maxY = inputText->GetWorldRect().y - 20;
+			int minY = output.Count() * (-LINE_SPACING) + maxY;
+
+			textStart = v * minY;
+
+			for (uint n = 0; n < output.Count(); n++)
+			{
+				output[n]->active = true;
+				iPoint pos = output[n]->GetLocalPosition();
+				output[n]->SetLocalPosition(pos.x, textStart + n * LINE_SPACING);
+				iPoint newPos = output[n]->GetLocalPosition();
+
+				if (newPos.y >= maxY || newPos.y < 0)
+				{
+					output[n]->active = false;
+				}
+
+			}
+			
 		}
 	}
 }
