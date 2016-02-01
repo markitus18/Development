@@ -36,6 +36,15 @@
 #define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
 #define TO_BOOL( a )  ( (a != 0) ? true : false )
 
+#define RADTODEG( a ) ( a = a * 180 / 3.14 )
+#define CAP(x, m, M) \
+		{		\
+	if (x < m) \
+		x = m; \
+	if (x > M) \
+		x = M; \
+		}
+
 typedef unsigned int uint;
 typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;

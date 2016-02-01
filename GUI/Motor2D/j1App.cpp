@@ -11,12 +11,14 @@
 #include "j1Audio.h"
 #include "j1SceneGUI.h"
 #include "j1SceneMap.h"
+#include "j1SceneUnit.h"
 #include "j1FileSystem.h"
 #include "j1Map.h"
 #include "j1Pathfinding.h"
 #include "j1Fonts.h"
 #include "j1Gui.h"
 #include "j1Console.h"
+#include "EntityManager.h"
 #include "j1App.h"
 
 // Constructor
@@ -34,13 +36,15 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 
 	//Scenes-------------------------
 	sceneGUI = new j1SceneGUI(false);
-	sceneMap = new j1SceneMap(true);
+	sceneMap = new j1SceneMap(false);
+	sceneUnit = new j1SceneUnit(true);
 	//-------------------------------
 
 	fs = new j1FileSystem(true);
 	map = new j1Map(true);
 	pathFinding = new j1PathFinding(true);
 	console = new j1Console(true);
+	entityManager = new EntityManager(true);
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -55,6 +59,8 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(console);
 	AddScene(sceneGUI);
 	AddScene(sceneMap);
+	AddScene(sceneUnit);
+	AddModule(entityManager);
 	AddModule(pathFinding);
 
 	// render last to swap buffer

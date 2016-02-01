@@ -20,9 +20,11 @@ class j1Audio;
 class j1FileSystem;
 class j1SceneGUI;
 class j1SceneMap;
+class j1SceneUnit;
 class j1Map;
 class j1PathFinding;
 class j1Console;
+class EntityManager;
 
 class j1App
 {
@@ -107,12 +109,14 @@ public:
 	j1Audio*			audio = NULL;
 	j1SceneGUI*			sceneGUI = NULL;
 	j1SceneMap*			sceneMap = NULL;
+	j1SceneUnit*		sceneUnit = NULL;
 	j1FileSystem*		fs = NULL;
 	j1Map*				map = NULL;
 	j1PathFinding*		pathFinding = NULL;
 	j1Fonts*			font = NULL;
 	j1Gui*				gui = NULL;
 	j1Console*			console = NULL;
+	EntityManager*		entityManager = NULL;
 
 private:
 

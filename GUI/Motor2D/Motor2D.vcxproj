@@ -77,6 +77,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CVar.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="j1FileSystem.cpp" />
     <ClCompile Include="j1Fonts.cpp" />
     <ClCompile Include="j1Gui.cpp" />
@@ -90,6 +92,7 @@
     <ClCompile Include="j1PerfTimer.cpp" />
     <ClCompile Include="j1SceneGUI.cpp" />
     <ClCompile Include="j1SceneMap.cpp" />
+    <ClCompile Include="j1SceneUnit.cpp" />
     <ClCompile Include="j1Timer.cpp" />
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="j1Render.cpp" />
@@ -98,8 +101,11 @@
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
     <ClCompile Include="UIElements.cpp" />
     <ClCompile Include="UI_PositionManagement.cpp" />
+    <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="j1Animation.h" />
     <ClInclude Include="j1Console.h" />
     <ClInclude Include="j1FileSystem.h" />
@@ -110,6 +116,7 @@
     <ClInclude Include="j1PerfTimer.h" />
     <ClInclude Include="j1SceneGUI.h" />
     <ClInclude Include="j1SceneMap.h" />
+    <ClInclude Include="j1SceneUnit.h" />
     <ClInclude Include="j1Timer.h" />
     <ClInclude Include="p2DynArray.h" />
     <ClInclude Include="j1Audio.h" />
@@ -124,9 +131,11 @@
     <ClInclude Include="j1Textures.h" />
     <ClInclude Include="j1Window.h" />
     <ClInclude Include="p2SString.h" />
+    <ClInclude Include="p2Vec2.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
     <ClInclude Include="UIElements.h" />
+    <ClInclude Include="Unit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
