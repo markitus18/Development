@@ -16,7 +16,7 @@ public:
 	virtual ~j1SceneUnit();
 
 	// Called before render is available
-	bool Awake();
+	bool Awake(pugi::xml_node& node);
 
 	// Called before the first frame
 	bool Start();
@@ -45,6 +45,7 @@ public:
 	bool renderGrid = false;
 	bool renderForces = true;
 	SDL_Texture* debug_tex;
+	Unit* unit;
 private:
 
 	SDL_Texture* instructions_title;
@@ -53,7 +54,7 @@ private:
 	SDL_Texture* target_tex;
 	SDL_Texture* grid_tex;
 
-	Unit* unit;
+
 	int entityTargetIndex;
 	p2DynArray<iPoint> targetList;
 };

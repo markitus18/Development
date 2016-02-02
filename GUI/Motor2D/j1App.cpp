@@ -658,6 +658,10 @@ void j1App::SetCurrentScene(j1Module* newScene)
 	currentScene = newScene;
 }
 
+j1Module* j1App::GetCurrentScene() const
+{
+	return currentScene;
+}
 void j1App::C_LoadScene::function(const p2DynArray<p2SString>* arg)
 {
 	if (arg->Count() > 1)

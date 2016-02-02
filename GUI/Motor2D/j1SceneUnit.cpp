@@ -22,9 +22,10 @@ j1SceneUnit::~j1SceneUnit()
 {}
 
 // Called before render is available
-bool j1SceneUnit::Awake()
+bool j1SceneUnit::Awake(pugi::xml_node& node)
 {
 	LOG("Loading Scene");
+	App->SetCurrentScene(this);
 	bool ret = true;
 
 	return ret;
@@ -87,6 +88,7 @@ bool j1SceneUnit::Update(float dt)
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
+		unit->GetNewPath(currentTile_x, currentTile_y);
 		iPoint target = App->map->MapToWorld(currentTile_x, currentTile_y);
 		unit->SetTarget(target.x, target.y);
 	}

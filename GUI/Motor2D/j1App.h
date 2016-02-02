@@ -73,6 +73,7 @@ public:
 
 	j1Module* FindScene(const char* name) const;
 	void SetCurrentScene(j1Module*);
+	j1Module* GetCurrentScene() const;
 private:
 
 	// Load config file

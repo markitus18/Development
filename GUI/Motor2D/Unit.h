@@ -24,9 +24,6 @@ enum UnitType
 
 class Unit : public Entity
 {
-
-
-
 public:
 	Unit();
 	Unit(int x, int y);
@@ -50,11 +47,13 @@ public:
 	float GetSlowRad();
 	UnitType GetType();
 	int GetLevel();
+	void GetNewPath(int, int);
 
 private:
 	Behaviour behaviour = PATROL;
 	UnitType type = RED;
 	int level = 1;
+	p2DynArray<iPoint> path;
 
 	float maxSpeed = 0.5f;
 	float maxForce = 50.0f;

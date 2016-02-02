@@ -1,6 +1,9 @@
 #include "Unit.h"
 #include "p2Log.h"
-#include <time.h>
+#include "j1App.h"
+#include "j1SceneUnit.h"
+
+//Include map / pathfinding / render????
 
 Unit::Unit()
 {}
@@ -31,6 +34,14 @@ bool Unit::Update(float dt)
 		if (behaviour == PATROL)
 		{
 			SetTarget(rand() % 64, rand() % 64);
+		}
+	}
+	if (path.Count() > 0)
+	{
+		for (size_t i = 0; i < path.Count(); i++)
+		{
+		//	iPoint position = App->map->MapToWorld(path[i].x, path[i].y);
+		//	App->render->Blit(App->sceneUnit->debug_tex, position.x, position.y, new SDL_Rect{ 0, 0, 64, 64 });
 		}
 	}
 	return true;
@@ -152,4 +163,10 @@ UnitType Unit::GetType()
 int Unit::GetLevel()
 {
 	return level;
+}
+
+void Unit::GetNewPath(int tileX, int tileY)
+{
+	//iPoint tilePos = App->map->WorldToMap(position.x, position.y);
+	//App->pathFinding->GetNewPath(iPoint(0, 0), iPoint(tileX, tileY), path);
 }

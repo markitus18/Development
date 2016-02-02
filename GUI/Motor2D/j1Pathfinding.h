@@ -4,6 +4,8 @@
 #include "j1Module.h"
 #include "j1Console.h"
 
+struct MapLayer;
+
 class j1PathFinding : public j1Module
 {
 
@@ -41,7 +43,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void GetNewPath(iPoint start, iPoint end, p2DynArray<iPoint> pathOutput);
 
+private:
 	p2List_item<node*>*  GetLowestF() const;
 
 	void AutomaticPath();
@@ -85,7 +89,7 @@ public:
 	bool		automaticIteration = true;
 	bool		pathStarted = false;
 	bool		pathFinished = false;
-
+	bool		pathFound = false;
 	p2DynArray<iPoint> path;
 
 #pragma region Commands

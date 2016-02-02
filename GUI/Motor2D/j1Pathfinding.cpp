@@ -70,6 +70,19 @@ bool j1PathFinding::CleanUp()
 	return true;
 }
 
+void j1PathFinding::GetNewPath(iPoint start, iPoint end, p2DynArray<iPoint> pathOutput)
+{
+	startTile = start;
+	endTile = end;
+	FindPath();
+	if (pathFound)
+	{
+		for (int i = path.Count() - 1; i >= 0; i--)
+		{
+			pathOutput.PushBack(path[i]);
+		}
+	}
+}
 void j1PathFinding::FindPath()
 {
 	StartPathFinding();
@@ -106,9 +119,11 @@ bool j1PathFinding::StepUp()
 		}
 		else
 		{
+			if (pathStarted)
+				LOG("-- Pathfinding: Could not find a path --");
 			pathFinished = true;
 			pathStarted = false;
-			LOG("-- Pathfinding: Could not find a path --");
+
 		}
 	}
 	return ret;
@@ -153,14 +168,13 @@ bool j1PathFinding::IfPathPossible()
 			if (mapData->isWalkable(startTile.x, startTile.y) && mapData->isWalkable(endTile.x, endTile.y))
 				ret = true;
 	}
-	if (!ret)
-		LOG("-- Pathfinding: No possible path to be found --");
 	return ret;
 }
 
 bool j1PathFinding::StartPathFinding()
 {
 	bool ret = false;
+	pathFound = false;
 	if (mapChanged)
 	{
 		LoadMapData();
@@ -186,10 +200,9 @@ bool j1PathFinding::StartPathFinding()
 			pathStarted = true;
 			LOG("-- Pathfinding: Correct pathfinding start --");
 		}
-		else
-			LOG("-- Pathfinding: Could not start the process--");
-
 	}
+	else
+		LOG("-- Pathfinding: Could not start the process, not possible path to be found");
 	return ret;
 }
 
@@ -386,12 +399,11 @@ void j1PathFinding::FinishPathFinding(p2DynArray<iPoint>& pathRef)
 	int i = 0;
 	for (node = goal; node->parent; node = node->parent)
 	{
-		iPoint tile;
 		LOG("-- Pathfinding: node %d: %d x, %d y", i, node->tile.x, node->tile.y);
 		pathRef.PushBack(node->tile);
-		tile = pathRef[path.Count() - 1];
 		i++;
 	}
+	pathFound = true;
 }
 
 bool j1PathFinding::map::isWalkable(int x, int y) const

@@ -4,6 +4,8 @@
 #include "j1Render.h"
 #include "j1Input.h"
 #include "j1SceneGUI.h"
+#include "j1SceneUnit.h"
+#include "j1SceneMap.h"
 #include "j1FileSystem.h"
 #include "j1Textures.h"
 #include "j1Map.h"
@@ -50,8 +52,17 @@ bool j1Map::Update(float dt)
 		//Paint unwalkable
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
 		{
-			int x = App->sceneGUI->currentTile_x;
-			int y = App->sceneGUI->currentTile_y;
+			int x, y;
+			if (App->GetCurrentScene()->name == "scene_gui")
+			{
+				int x = App->sceneGUI->currentTile_x;
+				int y = App->sceneGUI->currentTile_y;
+			}
+			if (App->GetCurrentScene()->name == "scene_unit");
+			{
+				x = App->sceneUnit->currentTile_x;
+				y = App->sceneUnit->currentTile_y;
+			}
 			if (x >= 0 && y >= 0)
 			{
 				App->map->ChangeTile(x, y, 26);
@@ -62,8 +73,17 @@ bool j1Map::Update(float dt)
 		//Paint walkable
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 		{
-			int x = App->sceneGUI->currentTile_x;
-			int y = App->sceneGUI->currentTile_y;
+			int x, y;
+			if (App->GetCurrentScene()->name == "scene_gui")
+			{
+				int x = App->sceneGUI->currentTile_x;
+				int y = App->sceneGUI->currentTile_y;
+			}
+			if (App->GetCurrentScene()->name == "scene_unit");
+			{
+				x = App->sceneUnit->currentTile_x;
+				y = App->sceneUnit->currentTile_y;
+			}
 			if (x >= 0 && y >= 0)
 			{
 				App->map->ChangeTile(x, y, 25);
