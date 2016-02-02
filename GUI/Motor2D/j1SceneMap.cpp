@@ -56,15 +56,6 @@ bool j1SceneMap::Start()
 // Called each loop iteration
 bool j1SceneMap::PreUpdate()
 {
-	// debug pathfing ------------------
-	static iPoint origin;
-	static bool origin_selected = false;
-
-	int x, y;
-	App->input->GetMousePosition(x, y);
-	iPoint p = App->render->ScreenToWorld(x, y);
-	p = App->map->WorldToMap(p.x, p.y);
-
 	return true;
 }
 
@@ -75,8 +66,6 @@ bool j1SceneMap::Update(float dt)
 	ManageInput(dt);
 
 	App->map->Draw();
-
-	// Debug pathfinding ------------------------------
 
 	//Getting current mouse tile
 
@@ -198,17 +187,6 @@ void j1SceneMap::ManageInput(float dt)
 
 
 
-	}
-	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-	{
-		if (App->console->isActive())
-		{
-			App->console->Close();
-		}
-		else
-		{
-			App->console->Open();
-		}
 	}
 }
 

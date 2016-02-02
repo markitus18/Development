@@ -44,9 +44,9 @@ public:
 	bool renderInstructions = false;
 	bool renderGrid = false;
 	bool renderForces = true;
-
-private:
 	SDL_Texture* debug_tex;
+private:
+
 	SDL_Texture* instructions_title;
 	SDL_Texture* instructions;
 	SDL_Texture* entity_tex;

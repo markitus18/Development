@@ -17,13 +17,13 @@ public:
 	virtual bool Destroy();
 
 	//Set methods
-	void setPosition(float, float);
-	void setPosition(fPoint);
-	void setHP(int);
+	void SetPosition(float, float);
+	void SetPosition(fPoint);
+	void SetHP(int);
 
 	//Get methods
-	fPoint getPosition();
-	int getHP();
+	fPoint GetPosition();
+	int GetHP();
 
 	//Private methods
 private:

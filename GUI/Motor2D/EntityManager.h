@@ -33,6 +33,7 @@ private:
 
 	//p2List<Building*> buildingList;
 	SDL_Texture* entity_tex;
+	SDL_Texture* unit_base;
 };
 
 #endif //_ENTITYMANAGER_H__

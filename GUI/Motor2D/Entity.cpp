@@ -30,26 +30,26 @@ bool Entity::Destroy()
 }
 
 //Setters
-void Entity::setPosition(float x, float y)
+void Entity::SetPosition(float x, float y)
 {
 	position.x = x;
 	position.y = y;
 }
-void Entity::setPosition(fPoint _position)
+void Entity::SetPosition(fPoint _position)
 {
 	position = _position;
 }
-void Entity::setHP(int _HP)
+void Entity::SetHP(int _HP)
 {
 
 }
 
-fPoint Entity::getPosition()
+fPoint Entity::GetPosition()
 {
 	return position;
 }
 
-int Entity::getHP()
+int Entity::GetHP()
 {
 	return HP;
 }

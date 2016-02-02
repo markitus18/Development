@@ -33,7 +33,7 @@ bool j1SceneUnit::Awake()
 // Called before the first frame
 bool j1SceneUnit::Start()
 {
-	App->map->Load("hello2.tmx");
+	App->map->Load("iso.tmx");
 	if (App->map->data.type == MAPTYPE_ORTHOGONAL)
 		debug_tex = App->tex->Load("textures/current_tile.png");
 	else
@@ -41,9 +41,16 @@ bool j1SceneUnit::Start()
 
 	instructions = App->tex->Load("textures/instructions.png");
 	instructions_title = App->tex->Load("textures/instructions_title.png");
-	entity_tex = App->tex->Load("textures/entity.png");
-	target_tex = App->tex->Load("textures/target.png");
 	grid_tex = App->tex->Load("textures/grid.png");
+
+	unit = new Unit;
+	iPoint unitPos = App->map->MapToWorld(3, 5);
+	unit->SetPosition(unitPos.x, unitPos.y);
+	unit->SetHP(0);
+	unit->SetBehaviour(RUN);
+	unit->SetType(RED);
+	App->entityManager->addUnit(*unit);
+
 	/*
 	unit = new Unit(0, 0);
 
@@ -66,12 +73,6 @@ bool j1SceneUnit::PreUpdate()
 // Called each loop iteration
 bool j1SceneUnit::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		App->LoadGame("save_game.xml");
-
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		App->SaveGame("save_game.xml");
-
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		App->render->camera.y += (int)(200.0f * dt);
 
@@ -84,62 +85,11 @@ bool j1SceneUnit::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x -= (int)(200.0f * dt);
 
-	//Enable / Disable debug mode
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_UP)
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		if (App->map->data.tilesets.start->next)
-		{
-			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
-				App->map->data.layers.start->next->data->properties.values[0] = 0;
-			else
-				App->map->data.layers.start->next->data->properties.values[0] = 1;
-		}
-
+		iPoint target = App->map->MapToWorld(currentTile_x, currentTile_y);
+		unit->SetTarget(target.x, target.y);
 	}
-
-	//Enable / Disable render mode
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_UP)
-	{
-		if (App->map->data.layers.start->data->properties.values[0] == 1)
-			App->map->data.layers.start->data->properties.values[0] = 0;
-		else
-			App->map->data.layers.start->data->properties.values[0] = 1;
-	}
-
-	//Paint unwalkable
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
-	{
-		if (App->map->data.layers.start->next)
-		{
-			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
-			{
-				if (currentTile_x >= 0 && currentTile_y >= 0)
-				{
-					App->map->ChangeTile(currentTile_x, currentTile_y, 26);
-					App->pathFinding->mapChanged = true;
-				}
-			}
-		}
-
-	}
-
-	//Paint walkable
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	{
-		if (App->map->data.layers.start->next)
-		{
-			if (App->map->data.layers.start->next->data->properties.values[0] == 1)
-			{
-				if (currentTile_x >= 0 && currentTile_y >= 0)
-				{
-					App->map->ChangeTile(currentTile_x, currentTile_y, 25);
-					App->pathFinding->mapChanged = true;
-				}
-			}
-		}
-
-	}
-
 	//change start tile
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_UP)
 	{
@@ -252,9 +202,6 @@ bool j1SceneUnit::Update(float dt)
 	mapX = x - App->render->camera.x;
 	mapY = y - App->render->camera.y;
 	iPoint map_coordinates = App->map->WorldToMap(mapX, mapY);
-	//Fixing offset 
-	if (App->map->data.type == (MAPTYPE_ISOMETRIC))
-		map_coordinates.x -= 1;
 
 	iPoint currentTile = App->map->MapToWorld(map_coordinates.x, map_coordinates.y);
 	currentTile_x = map_coordinates.x;
@@ -291,7 +238,7 @@ bool j1SceneUnit::Update(float dt)
 		currentTile.x, currentTile.y);
 
 	//	App->win->SetTitle(title.GetString());
-	/*
+	
 	//Drawing line testing
 	if (renderForces)
 	{
@@ -315,14 +262,14 @@ bool j1SceneUnit::Update(float dt)
 	lineX2 = (line1.x * 30 + lineX1);
 	lineY2 = (line1.y * 30 + lineY1);
 	SDL_RenderDrawLine(App->render->renderer, (int)lineX1, (int)lineY1, (int)lineX2, (int)lineY2);
-
+	
 	for (size_t i = 0; i < targetList.Count(); i++)
 	{
 	App->render->Blit(target_tex, (int)targetList[i].x - 13, (int)targetList[i].y - 13, new SDL_Rect{ 0, 0, 26, 26 });
 	}
 	App->render->DrawCircle((int)unit->target.x + App->render->camera.x, (int)unit->target.y + App->render->camera.y, (int)unit->GetSlowRad(), 255, 255, 255);
 	}
-	*/
+	
 	//App->render->Blit(entity_tex, (int)unit->GetPosition().x - 10, (int)unit->GetPosition().y - 10, new SDL_Rect{ 0, 0, 20, 20 }, 1.0f, unit->GetDirection());
 
 	//	App->render->Blit(target_tex, (int)entity->target.x - 13, (int)entity->target.y - 13, new SDL_Rect{ 0, 0, 26, 26 });

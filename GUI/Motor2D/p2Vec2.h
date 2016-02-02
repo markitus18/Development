@@ -34,15 +34,15 @@ public:
 		this->position.x = _x;
 		this->position.y = _y;
 		this->x = _distanceX;
-		this->distanceY = _distanceY;
+		this->y = _distanceY;
 	}
 
 	p2Vec2& create(const TYPE& _distanceX, const TYPE& _distanceY, const TYPE& _x = 0, const TYPE& _y = 0)
 	{
-		this->distanceX = _distanceX;
-		this->distanceY = _distanceY;
-		this->x = _x;
-		this->y = _y
+		this->position.x = _x;
+		this->position.y = _y;
+		this->x = _distanceX;
+		this->y = _distanceY
 
 			return(*this);
 	}
@@ -163,9 +163,14 @@ public:
 
 	float GetAngle() const
 	{
-		double angle = atan(y / x);
-		angle = RADTODEG(angle);
-		return (float)angle;
+		if (x != 0)
+		{
+			double angle = atan(y / x);
+			angle = RADTODEG(angle);
+			return (float)angle;
+		}
+		else
+			return 0;
 	}
 
 	bool Normalize()

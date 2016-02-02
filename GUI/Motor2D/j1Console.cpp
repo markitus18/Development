@@ -130,6 +130,19 @@ bool j1Console::Update(float dt)
 			}
 		}
 	}
+
+	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	{
+		if (App->console->isActive())
+		{
+			App->console->Close();
+		}
+		else
+		{
+			App->console->Open();
+		}
+	}
+
 	return true;
 }
 // Called before quitting

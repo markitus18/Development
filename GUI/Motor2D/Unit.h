@@ -19,7 +19,7 @@ enum UnitType
 	RED = 0,
 	GREEN,
 	BLUE,
-	YELLOW,
+	PURPLE,
 };
 
 class Unit : public Entity
@@ -44,8 +44,8 @@ public:
 	void SetBehaviour(Behaviour _behaviour);
 	void SetType(UnitType _type);
 	void SetLevel(int _level);
+	void SetMaxSpeed(int speed);
 
-	fPoint GetPosition();
 	float GetDirection();
 	float GetSlowRad();
 	UnitType GetType();
@@ -62,11 +62,11 @@ private:
 
 public:
 	fPoint target;
-	bool targetChange;
-	p2Vec2<float> currentVelocity;
-	p2Vec2<float> steeringVelocity;
-	p2Vec2<float> desiredVelocity;
-
+	bool targetChange = false;
+	p2Vec2<float> currentVelocity = { 0, 0 };
+	p2Vec2<float> steeringVelocity = { 0, 0 };
+	p2Vec2<float> desiredVelocity = { 0, 0 };
+	 
 
 
 };

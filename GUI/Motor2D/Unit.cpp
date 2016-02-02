@@ -30,7 +30,7 @@ bool Unit::Update(float dt)
 	{
 		if (behaviour == PATROL)
 		{
-			SetTarget(rand() % 1024, rand() % 480);
+			SetTarget(rand() % 64, rand() % 64);
 		}
 	}
 	return true;
@@ -128,10 +128,12 @@ void Unit::SetLevel(int _level)
 {
 	level = _level;
 }
-fPoint Unit::GetPosition()
+
+void Unit::SetMaxSpeed(int speed)
 {
-	return position;
+	maxSpeed = speed;
 }
+
 float Unit::GetSlowRad()
 {
 	return slowingRadius;
