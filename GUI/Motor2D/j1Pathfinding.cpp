@@ -22,7 +22,7 @@ j1PathFinding::~j1PathFinding()
 }
 
 // Called before render is available
-bool j1PathFinding::Awake()
+bool j1PathFinding::Awake(pugi::xml_node& node)
 {
 	App->console->AddCommand(&c_Path_Corners);
 	App->console->AddCommand(&c_Path_Diag);
