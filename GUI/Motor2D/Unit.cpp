@@ -65,19 +65,11 @@ p2Vec2<float> Unit::GetDesiredVelocity()
 
 	if (distance < slowingRadius)
 	{
-		//targetChange = false;
-		velocity.Normalize();
-		velocity *= maxSpeed* (distance / (slowingRadius));
-
-		if (abs(velocity.x) + abs(velocity.y) < 0.05f)
-		{
-			velocity.SetToZero();
-			currentVelocity.SetToZero();
-			position = target;
-			targetChange = false;
-			GetNewTarget();
-		}
-
+		velocity.SetToZero();
+		currentVelocity.SetToZero();
+		position = target;
+		targetChange = false;
+		GetNewTarget();
 	}
 	else
 	{
