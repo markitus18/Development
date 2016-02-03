@@ -5,10 +5,8 @@
 #include "j1Module.h"
 #include "p2List.h"
 
-#include "Entity.h"
-#include "Unit.h"
-
 struct SDL_Texture;
+class Unit;
 
 class EntityManager : public j1Module
 {

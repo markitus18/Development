@@ -7,6 +7,8 @@
 #include "j1SceneUnit.h"
 #include "j1Pathfinding.h"
 #include "j1SceneUnit.h"
+#include "Unit.h"
+#include "Entity.h"
 
 EntityManager::EntityManager(bool start_enabled) : j1Module(start_enabled)
 {
@@ -71,7 +73,7 @@ bool EntityManager::Update(float dt)
 		{
 			for (uint i = 0; i < item->data->path.Count(); i++)
 			{
-				iPoint position = App->map->MapToWorld(item->data->path[i].x, item->data->path[i].y);
+				iPoint position = { item->data->path[i].x, item->data->path[i].y };
 				App->render->Blit(App->sceneUnit->debug_tex, position.x - 32, position.y - 16, new SDL_Rect{ 0, 0, 64, 32 });
 			}
 
@@ -93,11 +95,17 @@ bool EntityManager::Update(float dt)
 		bool ret = App->pathFinding->GetNewPath(iPoint(unitTile.x, unitTile.y), currTile, newPath);
 		if (ret)
 		{
-			App->sceneUnit->unit->SetNewPath(newPath);
+			p2DynArray<iPoint> upPath;
+			for (uint i = 0; i < newPath.Count(); i++)
+			{
+				iPoint pos = App->map->MapToWorld(newPath[i].x, newPath[i].y);
+				upPath.PushBack(pos);
+			}
+			App->sceneUnit->unit->SetNewPath(upPath);
 		}
 
-		iPoint target = App->map->MapToWorld(currTile.x, currTile.y);
-		App->sceneUnit->unit->SetTarget(target.x, target.y);
+		//iPoint target = App->map->MapToWorld(currTile.x, currTile.y);
+		//App->sceneUnit->unit->SetTarget(target.x, target.y);
 	}
 	
 	/*

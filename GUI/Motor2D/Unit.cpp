@@ -1,8 +1,7 @@
 #include "Unit.h"
-#include "p2Log.h"
 #include "j1App.h"
 #include "j1SceneUnit.h"
-
+//#include "j1Map.h"
 //Include map / pathfinding / render????
 
 Unit::Unit()
@@ -76,6 +75,7 @@ p2Vec2<float> Unit::GetDesiredVelocity()
 			currentVelocity.SetToZero();
 			position = target;
 			targetChange = false;
+			GetNewTarget();
 		}
 
 	}
@@ -118,6 +118,15 @@ p2Vec2<float> Unit::GetcurrentVelocity(float dt)
 	return velocity;
 }
 
+void Unit::GetNewTarget()
+{
+	if (currentNode + 1 < path.Count())
+	{
+		currentNode++;
+		SetTarget(path[currentNode].x, path[currentNode].y);
+		targetChange = true;
+	}
+}
 void Unit::SetTarget(int x, int y)
 {
 	target.x = (float)x;
@@ -169,4 +178,7 @@ void Unit::SetNewPath(p2DynArray<iPoint>& newPath)
 {
 	path.Clear();
 	path += newPath;
+	targetChange = true;
+	currentNode = 0;
+	SetTarget(path[0].x, path[0].y);
 }

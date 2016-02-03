@@ -37,6 +37,8 @@ public:
 	p2Vec2<float> GetSteeringVelocity();
 	p2Vec2<float> GetcurrentVelocity(float dt);
 
+	void GetNewTarget();
+
 	void SetTarget(int x, int y);
 	void SetNewPath(p2DynArray<iPoint>& newPath);
 	void SetBehaviour(Behaviour _behaviour);
@@ -55,7 +57,7 @@ private:
 	UnitType type = RED;
 	int level = 1;
 
-
+	int currentNode = 0;
 	float maxSpeed = 0.5f;
 	float maxForce = 50.0f;
 	float slowingRadius = 5.0f;
