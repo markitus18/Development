@@ -58,7 +58,6 @@ private:
 
 
 	int entityTargetIndex;
-	p2DynArray<iPoint> targetList;
 };
 
 #endif // __j1SceneUnit_H__

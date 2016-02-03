@@ -41,6 +41,7 @@ bool j1PathFinding::Start()
 // Called each loop iteration
 bool j1PathFinding::Update(float dt)
 {
+	/*
 	if (App->input->GetInputState() == false)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
@@ -59,6 +60,7 @@ bool j1PathFinding::Update(float dt)
 			App->pathFinding->StepUp();
 		}
 	}
+	*/
 	return true;
 }
 

@@ -83,7 +83,7 @@ public:
 	bool		endTileExists = false;
 	iPoint		startTile;
 	iPoint		endTile;
-	bool		allowDiagonals = false;
+	bool		allowDiagonals = true;
 	bool		allowCorners = false;
 	bool		mapChanged = false;
 	bool		automaticIteration = true;

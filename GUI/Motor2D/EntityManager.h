@@ -27,11 +27,14 @@ public:
 	//	bool deleteBuilding();
 	//should be priv
 	p2List<Unit*> unitList;
+
+	SDL_Texture* entity_tex;
+	SDL_Texture* unit_base;
+	SDL_Texture* path_tex;
 private:
 
 	//p2List<Building*> buildingList;
-	SDL_Texture* entity_tex;
-	SDL_Texture* unit_base;
+
 };
 
 #endif //_ENTITYMANAGER_H__

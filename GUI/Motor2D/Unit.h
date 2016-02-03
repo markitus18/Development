@@ -51,26 +51,29 @@ public:
 	UnitType GetType();
 	int GetLevel();
 
-
+	void Draw();
+	void DrawDebug();
 private:
 	Behaviour behaviour = PATROL;
 	UnitType type = RED;
 	int level = 1;
 
-	int currentNode = 0;
+
 	float maxSpeed = 0.5f;
 	float maxForce = 50.0f;
 	float slowingRadius = 5.0f;
 
-public:
-
-	//Move some to private (or all)
 	p2DynArray<iPoint> path;
 	fPoint target;
 	bool targetChange = false;
+	int currentNode = 0;
 	p2Vec2<float> currentVelocity = { 0, 0 };
 	p2Vec2<float> steeringVelocity = { 0, 0 };
 	p2Vec2<float> desiredVelocity = { 0, 0 };
+public:
+
+	//Move some to private (or all)
+
 	 
 
 

@@ -52,16 +52,6 @@ bool j1SceneUnit::Start()
 	unit->SetType(RED);
 	App->entityManager->addUnit(*unit);
 
-	/*
-	unit = new Unit(0, 0);
-
-	targetList.PushBack(iPoint{ App->map->MapToWorld(12, 4).x - 16, App->map->MapToWorld(12, 4).y - 16 });
-	targetList.PushBack(iPoint{ App->map->MapToWorld(12, 10).x - 16, App->map->MapToWorld(12, 10).y - 16 });
-	targetList.PushBack(iPoint{ App->map->MapToWorld(20, 10).x - 16, App->map->MapToWorld(20, 10).y - 16 });
-	targetList.PushBack(iPoint{ App->map->MapToWorld(20, 4).x - 16, App->map->MapToWorld(20, 4).y - 16 });
-
-	unit->SetTarget(targetList[0].x, targetList[0].y);
-	*/
 	return true;
 }
 
@@ -85,18 +75,10 @@ bool j1SceneUnit::PreUpdate()
 bool j1SceneUnit::Update(float dt)
 {
 	ManageInput(dt);
-	//Change target entity
-	/*
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
-	{
-	int x, y;
-	App->input->GetMousePosition(x, y);
-	iPoint pos = App->map->WorldToMap(x - App->render->camera.x, y - App->render->camera.y);
-	pos = App->map->MapToWorld(pos.x, pos.y);
-	unit->SetTarget(pos.x + 16, pos.y + 16);
-	}
-	*/
+
 	App->map->Draw();
+
+	//Drawing point 0, 0
 	App->render->DrawCircle(0, 0, 10, 255, 255, 255);
 	App->render->DrawLine(0, -20, 0, 20, 255, 0, 0);
 	App->render->DrawLine(-20, 0, 20, 0, 255, 0, 0);
@@ -128,35 +110,7 @@ bool j1SceneUnit::Update(float dt)
 	}
 
 	//Drawing line testing
-	if (renderForces)
-	{
-	SDL_SetRenderDrawColor(App->render->renderer, 0, 255, 255, 255);
-	p2Vec2<float> line = unit->currentVelocity;
-	line.Normalize();
-	line *= 3;
-	float lineX1 = line.position.x + App->render->camera.x;
-	float lineY1 = line.position.y + App->render->camera.y;
-	float lineX2 = (line.x * 30 + lineX1);
-	float lineY2 = (line.y * 30 + lineY1);
-	SDL_RenderDrawLine(App->render->renderer, (int)lineX1, (int)lineY1, (int)lineX2, (int)lineY2);
 
-	SDL_SetRenderDrawColor(App->render->renderer, 0, 255, 0, 255);
-	p2Vec2<float> line1 = unit->currentVelocity;
-	line1 = unit->desiredVelocity;
-	line1.Normalize();
-	line1 *= 3;
-	lineX1 = line1.position.x + App->render->camera.x;
-	lineY1 = line1.position.y + App->render->camera.y;
-	lineX2 = (line1.x * 30 + lineX1);
-	lineY2 = (line1.y * 30 + lineY1);
-	SDL_RenderDrawLine(App->render->renderer, (int)lineX1, (int)lineY1, (int)lineX2, (int)lineY2);
-	
-	for (size_t i = 0; i < targetList.Count(); i++)
-	{
-	App->render->Blit(target_tex, (int)targetList[i].x - 13, (int)targetList[i].y - 13, new SDL_Rect{ 0, 0, 26, 26 });
-	}
-	App->render->DrawCircle((int)unit->target.x, (int)unit->target.y, (int)unit->GetSlowRad(), 255, 255, 255);
-	}
 
 
 	return true;
@@ -183,6 +137,19 @@ bool j1SceneUnit::CleanUp()
 
 void j1SceneUnit::ManageInput(float dt)
 {
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		p2DynArray<iPoint> newPath;
+		fPoint unitPos = unit->GetPosition();
+		iPoint unitTile = App->map->WorldToMap(unitPos.x, unitPos.y);
+		iPoint dstTile = { currentTile_x, currentTile_y };
+		bool ret = App->pathFinding->GetNewPath(unitTile, dstTile, newPath);
+		if (ret)
+		{
+			App->sceneUnit->unit->SetNewPath(newPath);
+		}
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		App->render->camera.y += (int)(200.0f * dt);
 
@@ -195,47 +162,6 @@ void j1SceneUnit::ManageInput(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x -= (int)(200.0f * dt);
 
-
-	//change start tile
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_UP)
-	{
-		if (App->map->data.type == (MAPTYPE_ISOMETRIC))
-		{
-			if (App->pathFinding->startTile.x != currentTile_x || App->pathFinding->startTile.y != currentTile_y)
-			{
-				App->pathFinding->startTile.x = currentTile_x;
-				App->pathFinding->startTile.y = currentTile_y;
-				App->pathFinding->startTileExists = true;
-			}
-			else
-			{
-				if (!App->pathFinding->startTileExists)
-					App->pathFinding->startTileExists = true;
-				else
-					App->pathFinding->startTileExists = false;
-			}
-		}
-	}
-	//Change end tile
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP)
-	{
-		if (App->map->data.type == (MAPTYPE_ISOMETRIC))
-		{
-			if (App->pathFinding->endTile.x != currentTile_x || App->pathFinding->endTile.y != currentTile_y)
-			{
-				App->pathFinding->endTile.x = currentTile_x;
-				App->pathFinding->endTile.y = currentTile_y;
-				App->pathFinding->endTileExists = true;
-			}
-			else
-			{
-				if (!App->pathFinding->endTileExists)
-					App->pathFinding->endTileExists = true;
-				else
-					App->pathFinding->endTileExists = false;
-			}
-		}
-	}
 
 	//Enable / Disable instructions
 	if (App->input->GetKey(SDL_SCANCODE_TAB) == KEY_UP)
