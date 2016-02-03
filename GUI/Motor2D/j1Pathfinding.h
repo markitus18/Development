@@ -43,7 +43,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	void GetNewPath(iPoint start, iPoint end, p2DynArray<iPoint> pathOutput);
+	bool GetNewPath(iPoint start, iPoint end, p2DynArray<iPoint>& pathOutput);
 
 private:
 	p2List_item<node*>*  GetLowestF() const;

@@ -70,10 +70,11 @@ bool j1PathFinding::CleanUp()
 	return true;
 }
 
-void j1PathFinding::GetNewPath(iPoint start, iPoint end, p2DynArray<iPoint> pathOutput)
+bool j1PathFinding::GetNewPath(iPoint start, iPoint end, p2DynArray<iPoint>& pathOutput)
 {
 	startTile = start;
 	endTile = end;
+	endTileExists = startTileExists = true;
 	FindPath();
 	if (pathFound)
 	{
@@ -81,7 +82,9 @@ void j1PathFinding::GetNewPath(iPoint start, iPoint end, p2DynArray<iPoint> path
 		{
 			pathOutput.PushBack(path[i]);
 		}
+		return true;
 	}
+	return false;
 }
 void j1PathFinding::FindPath()
 {

@@ -38,6 +38,7 @@ public:
 	p2Vec2<float> GetcurrentVelocity(float dt);
 
 	void SetTarget(int x, int y);
+	void SetNewPath(p2DynArray<iPoint>& newPath);
 	void SetBehaviour(Behaviour _behaviour);
 	void SetType(UnitType _type);
 	void SetLevel(int _level);
@@ -47,19 +48,22 @@ public:
 	float GetSlowRad();
 	UnitType GetType();
 	int GetLevel();
-	void GetNewPath(int, int);
+
 
 private:
 	Behaviour behaviour = PATROL;
 	UnitType type = RED;
 	int level = 1;
-	p2DynArray<iPoint> path;
+
 
 	float maxSpeed = 0.5f;
 	float maxForce = 50.0f;
 	float slowingRadius = 5.0f;
 
 public:
+
+	//Move some to private (or all)
+	p2DynArray<iPoint> path;
 	fPoint target;
 	bool targetChange = false;
 	p2Vec2<float> currentVelocity = { 0, 0 };

@@ -165,8 +165,8 @@ int Unit::GetLevel()
 	return level;
 }
 
-void Unit::GetNewPath(int tileX, int tileY)
+void Unit::SetNewPath(p2DynArray<iPoint>& newPath)
 {
-	//iPoint tilePos = App->map->WorldToMap(position.x, position.y);
-	//App->pathFinding->GetNewPath(iPoint(0, 0), iPoint(tileX, tileY), path);
+	path.Clear();
+	path += newPath;
 }

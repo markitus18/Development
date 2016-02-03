@@ -117,7 +117,8 @@ void j1Map::Draw()
 						{
 							SDL_Rect r = tileset->GetTileRect(tile_id);
 							iPoint pos = MapToWorld(x, y);
-
+							if (data.type == MAPTYPE_ISOMETRIC)
+								pos -= iPoint{ 32, 37 };
 							App->render->Blit(tileset->texture, pos.x, pos.y, &r);
 						}
 					}
@@ -155,6 +156,8 @@ iPoint j1Map::MapToWorld(int x, int y) const
 	}
 	else if (data.type == MAPTYPE_ISOMETRIC)
 	{
+	//	x += 32;
+	//	y += 37;
 		ret.x = int((x - y) * (data.tile_width * 0.5f));
 		ret.y = int((x + y) * (data.tile_height * 0.5f));
 	}
@@ -178,6 +181,8 @@ iPoint j1Map::WorldToMap(int x, int y) const
 	}
 	else if (data.type == MAPTYPE_ISOMETRIC)
 	{
+		x += 32;
+		y += 37;
 
 		float half_width = data.tile_width * 0.5f;
 		float half_height = data.tile_height * 0.5f;
@@ -185,6 +190,7 @@ iPoint j1Map::WorldToMap(int x, int y) const
 		float fx = (x / half_width + y / half_height) / 2 - 1;
 		float fy = (y / half_height - (x / half_width)) / 2;
 
+		
 		ret.x = floor(fx);
 		ret.y = floor(fy);
 	}

@@ -5,6 +5,8 @@
 #include "j1Map.h"
 #include "j1Input.h"
 #include "j1SceneUnit.h"
+#include "j1Pathfinding.h"
+#include "j1SceneUnit.h"
 
 EntityManager::EntityManager(bool start_enabled) : j1Module(start_enabled)
 {
@@ -55,21 +57,49 @@ bool EntityManager::Start()
 
 bool EntityManager::Update(float dt)
 {
+	
 	p2List_item<Unit*>* item = NULL;
 	item = unitList.start;
-	iPoint point = App->map->MapToWorld(0, 0);
-	App->render->DrawCircle(point.x, point.y, 20, 255, 255, 255, 255, false);
+
 	while (item)
 	{
 		//item->data->SetTarget(App->map->MapToWorld(App->scene->currentTile_x, App->scene->currentTile_y).x + 16, App->map->MapToWorld(App->scene->currentTile_x, App->scene->currentTile_y).y + 16);
 		item->data->Update(dt);
 		fPoint entityPos = item->data->GetPosition();
-		App->render->Blit(entity_tex, entityPos.x, entityPos.y - 17 , new SDL_Rect{ 0 + 70 * (item->data->GetLevel() - 1), 0 + 70 * item->data->GetType(), 65, 70 });// , 1.0f, item->data->GetDirection());
-		App->render->DrawCircle(entityPos.x, entityPos.y, 10, 255, 255, 255, 255, false);
-		App->render->Blit(unit_base, entityPos.x, entityPos.y + 20);
+
+		if (item->data->path.Count() > 0)
+		{
+			for (uint i = 0; i < item->data->path.Count(); i++)
+			{
+				iPoint position = App->map->MapToWorld(item->data->path[i].x, item->data->path[i].y);
+				App->render->Blit(App->sceneUnit->debug_tex, position.x - 32, position.y - 16, new SDL_Rect{ 0, 0, 64, 32 });
+			}
+
+		}
+
+		App->render->Blit(entity_tex, entityPos.x - 32, entityPos.y - 55, new SDL_Rect{ 0 + 70 * (item->data->GetLevel() - 1), 0 + 70 * item->data->GetType(), 65, 70 });// , 1.0f, item->data->GetDirection());
+		App->render->DrawCircle(entityPos.x, entityPos.y, 10, 255, 255, 255, 255);
+		App->render->Blit(unit_base, entityPos.x - 32, entityPos.y - 16);
+
 		item = item->next;
 	}
 
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		p2DynArray<iPoint> newPath;
+		fPoint unitPos = App->sceneUnit->unit->GetPosition();
+		iPoint unitTile = App->map->WorldToMap(unitPos.x, unitPos.y);
+		iPoint currTile = { App->sceneUnit->currentTile_x, App->sceneUnit->currentTile_y };
+		bool ret = App->pathFinding->GetNewPath(iPoint(unitTile.x, unitTile.y), currTile, newPath);
+		if (ret)
+		{
+			App->sceneUnit->unit->SetNewPath(newPath);
+		}
+
+		iPoint target = App->map->MapToWorld(currTile.x, currTile.y);
+		App->sceneUnit->unit->SetTarget(target.x, target.y);
+	}
+	
 	/*
 	p2List_item<Building*>* item = NULL;
 	item = buildingList.start;

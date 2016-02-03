@@ -33,6 +33,8 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void ManageInput(float dt);
+
 	int currentTile_x;
 	int currentTile_y;
 
