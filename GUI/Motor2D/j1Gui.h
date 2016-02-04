@@ -17,6 +17,7 @@ class UIInputText;
 class UICheckingButton;
 class UIScrollBar;
 class UIRect;
+class UIBar;
 
 enum ScrollBar_Types;
 
@@ -56,7 +57,7 @@ public:
 	UIScrollBar* CreateScrollBar(char* name, iPoint position, UIElement* image, UIElement* thumb, UIElement* parent, ScrollBar_Types type, int offsetL, int offsetR, int offsetU, int offsetD, bool active = true, j1Module* listener = NULL);
 	UIInputText* CreateInputText(char* name, SDL_Rect rect, UIImage* image, UILabel* label, UIElement* parent, int offsetX, int offsetY, bool active = true, j1Module* listener = NULL);
 	UIRect* CreateRect(char* name, SDL_Rect rect, int newR, int newG, int newB, int newA = 255, bool newFilled = true, UIElement* parent = NULL, bool active = true, j1Module* listener = NULL);
-	
+	UIBar* CreateBar(char* newName, UIElement* background, UIElement* fillImage, int*, int*);
 	void DeleteElement(UIElement* element);
 
 	const UIElement* GetMouseHover() const;

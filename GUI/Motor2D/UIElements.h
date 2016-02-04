@@ -53,6 +53,7 @@ public:
 	void SetParent(UIElement* parent);
 	void SetHoveringTexture(SDL_Texture*);
 	void SetLayer(int lay);
+	void SetIgnoreCamera();
 
 	iPoint GetLocalPosition() const;
 	SDL_Rect GetWorldRect() const;
@@ -69,8 +70,9 @@ public:
 	SDL_Texture* hoveringTexture;
 	bool mouseWasIn = false;
 	bool mouseWasClicked = false;
-	j1Module* listener;
 
+	bool ignoreCamera = false;
+	j1Module* listener;
 	UIElement* parent;
 	p2DynArray<UIElement*> childs;
 
@@ -278,11 +280,16 @@ class UIBar : public UIElement
 {
 public:
 	UIBar();
-	UIBar(char* newNane, UIImage* background, UIImage* fillImage);
+	UIBar(char* newNane, UIElement* background, UIElement* fillImage, int*, int*);
 	~UIBar();
 
 	bool Update(float dt);
 
+private:
+	UIElement* background;
+	UIElement* fillImage;
+
+	int  maxW;
 	int* maxValue;
 	int* currValue;
 

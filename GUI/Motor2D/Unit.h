@@ -71,12 +71,6 @@ private:
 	p2Vec2<float> steeringVelocity = { 0, 0 };
 	p2Vec2<float> desiredVelocity = { 0, 0 };
 public:
-
-	//Move some to private (or all)
-
-	 
-
-
 };
 
 #endif //__UNIT_H__

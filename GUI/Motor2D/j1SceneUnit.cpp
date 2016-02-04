@@ -1,6 +1,5 @@
 #include "p2Defs.h"
 #include "p2Log.h"
-#include "p2Vec2.h"
 #include "j1App.h"
 #include "j1Input.h"
 #include "j1Textures.h"
@@ -11,6 +10,9 @@
 #include "j1SceneUnit.h"
 #include "j1PathFinding.h"
 #include "EntityManager.h"
+#include "j1Gui.h"
+#include "UIElements.h"
+
 
 j1SceneUnit::j1SceneUnit(bool start_enabled) : j1Module(start_enabled)
 {
@@ -52,6 +54,11 @@ bool j1SceneUnit::Start()
 	unit->SetType(RED);
 	App->entityManager->addUnit(*unit);
 
+	//bar test
+	UIRect* rect1 = App->gui->CreateRect("testRect1", { 0, 100, 150, 20 }, 0, 0, 0);
+	UIRect* rect2 = App->gui->CreateRect("testRect1", { 5, 105, 140, 10 }, 255, 0, 0);
+	testBar = App->gui->CreateBar("testBar", (UIElement*)rect1, (UIElement*)rect2, &testInt, &currTestInt);
+	testBar->SetIgnoreCamera();
 	return true;
 }
 
@@ -75,7 +82,7 @@ bool j1SceneUnit::PreUpdate()
 bool j1SceneUnit::Update(float dt)
 {
 	ManageInput(dt);
-
+	
 	App->map->Draw();
 
 	//Drawing point 0, 0
@@ -120,6 +127,7 @@ void j1SceneUnit::ManageInput(float dt)
 {
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN)
 	{
+		currTestInt += 5;
 		p2DynArray<iPoint> newPath;
 		fPoint unitPos = unit->GetPosition();
 		iPoint unitTile = App->map->WorldToMap(unitPos.x, unitPos.y);

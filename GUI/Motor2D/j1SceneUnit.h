@@ -4,7 +4,9 @@
 #include "j1Module.h"
 #include "Unit.h"
 
+
 struct SDL_Texture;
+class UIBar;
 
 class j1SceneUnit : public j1Module
 {
@@ -59,6 +61,10 @@ private:
 
 	int entityTargetIndex;
 	int entityType = 0;
+
+	UIBar* testBar;
+	int testInt = 100;
+	int currTestInt = 50;
 };
 
 #endif // __j1SceneUnit_H__

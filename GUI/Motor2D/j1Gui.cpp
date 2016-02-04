@@ -254,6 +254,17 @@ UIRect* j1Gui::CreateRect(char* name, SDL_Rect rect, int newR, int newG, int new
 	return newRect;
 }
 
+UIBar* j1Gui::CreateBar(char* newName, UIElement* background, UIElement* fillImage, int* maxValue, int* currValue)
+{
+	UIBar* bar = new UIBar(newName, background, fillImage, maxValue, currValue);
+	background->SetParent(bar);
+	fillImage->SetParent(bar);
+
+	uiElements.add(bar);
+
+	return bar;
+}
+
 void j1Gui::DeleteElement(UIElement* element)
 {
 	p2List_item<UIElement*> item = *uiElements.At(uiElements.find(element));

@@ -166,6 +166,15 @@ void UIElement::SetLayer(int lay)
 	layer = lay;
 }
 
+void UIElement::SetIgnoreCamera()
+{
+	for (uint i = 0; i < childs.Count(); i++)
+	{
+		childs[i]->ignoreCamera = true;
+	}
+	ignoreCamera = true;
+}
+
 UIImage::UIImage()
 {}
 
@@ -183,7 +192,15 @@ UIImage::UIImage(char* newName, iPoint newPosition, const SDL_Texture* newTextur
 
 bool UIImage::Update(float dt)
 {
-	App->render->Blit(texture, GetWorldRect().x - App->render->camera.x, GetWorldRect().y - App->render->camera.y, &rects[currentRect]);
+	SDL_Rect rect = GetWorldRect();
+	int x = rect.x;
+	int y = rect.y;
+	if (!ignoreCamera)
+	{
+		x -= App->render->camera.x;
+		y -= App->render->camera.y;
+	}
+	App->render->Blit(texture, x, y, &rects[currentRect]);
 	return true;
 }
 
@@ -932,6 +949,30 @@ UIRect::UIRect(char* newName, SDL_Rect newRect, int newR, int newG, int newB, in
 
 bool UIRect::Update(float dt)
 {
-	App->render->DrawQuad(GetWorldRect(), r, g, b, a, filled, false);
+	App->render->DrawQuad(GetWorldRect(), r, g, b, a, filled, ignoreCamera);
+
+	return true;
+}
+
+UIBar::UIBar(){ name = "Startard bar"; };
+
+UIBar::UIBar(char* newName, UIElement* bgImage, UIElement* filledimg, int* maxV, int* currV)
+{
+	name = newName;
+	background = bgImage;
+	fillImage = filledimg;
+	maxValue = maxV;
+	currValue = currV;
+	maxW = filledimg->GetWorldRect().w;
+}
+
+bool UIBar::Update(float dt)
+{
+	SDL_Rect rect = fillImage->GetWorldRect();
+	float curr = *currValue;
+	float max = *maxValue;
+	float value = (curr / max);
+	fillImage->SetCollider(rect.x, rect.y, value * maxW, rect.h);
+
 	return true;
 }
