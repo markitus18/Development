@@ -1,6 +1,6 @@
 #pragma once
 #include "p2DynArray.h"
-#include "SDL\include\SDL.h"
+#include "j1Render.h"
 
 class Animation
 {
@@ -20,9 +20,9 @@ public:
 	Animation(const Animation& a) : frames(a.frames), speed(a.speed), current_frame(0), loop(a.loop), loops(0)
 	{}
 
-	SDL_Rect& GetCurrentFrame()
+	SDL_Rect& GetCurrentFrame(float dt)
 	{
-		current_frame += speed;
+		current_frame += speed * dt;
 		if (current_frame >= frames.Count())
 		{
 			current_frame = (loop) ? 0.0f : frames.Count() - 1;

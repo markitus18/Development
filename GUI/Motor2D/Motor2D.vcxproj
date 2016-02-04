@@ -94,7 +94,6 @@
     <ClCompile Include="j1SceneMap.cpp" />
     <ClCompile Include="j1SceneUnit.cpp" />
     <ClCompile Include="j1Timer.cpp" />
-    <ClCompile Include="Test.cpp" />
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="j1Render.cpp" />
     <ClCompile Include="j1Textures.cpp" />

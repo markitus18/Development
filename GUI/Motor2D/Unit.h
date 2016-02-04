@@ -33,11 +33,11 @@ public:
 	bool Update(float dt);
 
 	void UpdateVelocity(float dt);
-	p2Vec2<float> GetDesiredVelocity();
+	bool Unit::GetDesiredVelocity(p2Vec2<float>& newDesiredVelocity);
 	p2Vec2<float> GetSteeringVelocity();
 	p2Vec2<float> GetcurrentVelocity(float dt);
 
-	void GetNewTarget();
+	bool GetNewTarget();
 
 	void SetTarget(int x, int y);
 	void SetNewPath(p2DynArray<iPoint>& newPath);
@@ -46,7 +46,7 @@ public:
 	void SetLevel(int _level);
 	void SetMaxSpeed(int speed);
 
-	float GetDirection();
+	Entity_Directions GetDirection();
 	float GetSlowRad();
 	UnitType GetType();
 	int GetLevel();

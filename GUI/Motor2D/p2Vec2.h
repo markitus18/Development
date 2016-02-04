@@ -165,7 +165,7 @@ public:
 	{
 		if (x != 0)
 		{
-			double angle = atan(y / x);
+			double angle = atan2(y, x);
 			angle = RADTODEG(angle);
 			return (float)angle;
 		}

@@ -79,9 +79,6 @@
     <ClCompile Include="j1SceneUnit.cpp">
       <Filter>Desenvolupament  ========\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
-      <Filter>Desenvolupament  ========\Modules</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">

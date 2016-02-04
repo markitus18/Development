@@ -52,14 +52,15 @@ bool Unit::Update(float dt)
 
 void Unit::UpdateVelocity(float dt)
 {
-	desiredVelocity = GetDesiredVelocity();
+	if (GetDesiredVelocity(desiredVelocity))
 	//	steeringVelocity = GetSteeringVelocity();
 	currentVelocity = GetcurrentVelocity(dt);
 }
 
 //Get the desired velocity: target position - entity position
-p2Vec2<float> Unit::GetDesiredVelocity()
+bool Unit::GetDesiredVelocity(p2Vec2<float>& newDesiredVelocity)
 {
+	bool ret = true;
 	p2Vec2<float> velocity;
 	velocity.position = position;
 	velocity.x = target.x - position.x;
@@ -67,21 +68,28 @@ p2Vec2<float> Unit::GetDesiredVelocity()
 
 	float distance = velocity.GetModule();
 
-	if (distance < slowingRadius)
+	while (distance < slowingRadius)
 	{
-		velocity.SetToZero();
-		currentVelocity.SetToZero();
 		position = target;
 		targetChange = false;
-		GetNewTarget();
+		if (GetNewTarget())
+		{
+			velocity.x = target.x - position.x;
+			velocity.y = target.y - position.y;
+			distance = velocity.GetModule();
+		}
+		else
+		{
+			velocity.SetToZero();
+			ret = false;
+			break;
+		}
 	}
-	else
-	{
-		velocity.Normalize();
-		velocity *= maxSpeed;
-	}
+	velocity.Normalize();
+	velocity *= maxSpeed;
+	newDesiredVelocity = velocity;
 
-	return velocity;
+	return ret;
 }
 
 //Get the steering velocity: current velocity - desired velocity
@@ -114,14 +122,17 @@ p2Vec2<float> Unit::GetcurrentVelocity(float dt)
 	return velocity;
 }
 
-void Unit::GetNewTarget()
+bool Unit::GetNewTarget()
 {
+	bool ret = false;
 	if (currentNode + 1 < path.Count())
 	{
 		currentNode++;
 		iPoint newPos = App->map->MapToWorld(path[currentNode].x, path[currentNode].y);
 		SetTarget(newPos.x, newPos.y);
+		ret = true;
 	}
+	return ret;
 }
 
 void Unit::SetTarget(int x, int y)
@@ -156,9 +167,26 @@ float Unit::GetSlowRad()
 	return slowingRadius;
 }
 
-float Unit::GetDirection()
+Entity_Directions Unit::GetDirection()
 {
-	return currentVelocity.GetAngle();
+	Entity_Directions direction = UP;
+	float angle = currentVelocity.GetAngle();
+	if (targetChange)
+	{
+		LOG("Angle: %f", angle);
+		LOG("Velocity: %f x, %f y", currentVelocity.x, currentVelocity.y);
+	}
+
+	if (angle <= 0 && angle > -90)
+		direction =	UP;
+	else if (angle <= -90 && angle > -180)
+		direction =	LEFT;
+	else if (angle > 0 && angle < 90)
+		direction =	RIGHT;
+	else if (angle > 90 && angle <= 180)
+		direction = DOWN;
+	
+	return direction;
 }
 
 UnitType Unit::GetType()
@@ -183,7 +211,7 @@ void Unit::SetNewPath(p2DynArray<iPoint>& newPath)
 void Unit::Draw()
 {
 	App->render->Blit(App->entityManager->unit_base, position.x - 32, position.y - 16);
-	App->render->Blit(App->entityManager->entity_tex, position.x - 32, position.y - 55, new SDL_Rect{ 0 + 70 * (level - 1), 0 + 70 * type, 65, 70 });// , 1.0f, GetDirection());
+	App->render->Blit(App->entityManager->entity_tex, position.x - 32, position.y - 55, new SDL_Rect{ 256 * (level - 1)  + 64 * GetDirection(), 70 * type, 65, 70 });// , 1.0f, GetDirection());
 
 	if (App->sceneUnit->renderForces)
 		DrawDebug();
@@ -192,7 +220,7 @@ void Unit::Draw()
 void Unit::DrawDebug()
 {
 	float lineX1, lineX2, lineY1, lineY2;
-	/*
+	
 	p2Vec2<float> line = currentVelocity;
 	line.Normalize();
 	line *= 3;
@@ -200,8 +228,8 @@ void Unit::DrawDebug()
 	lineY1 = line.position.y + App->render->camera.y;
 	lineX2 = (line.x * 30 + lineX1);
 	lineY2 = (line.y * 30 + lineY1);
-	App->render->DrawLine((int)lineX1, (int)lineY1, (int)lineX2, (int)lineY2, 255, 255, 255);
-	*/	
+	App->render->DrawLine((int)lineX1, (int)lineY1, (int)lineX2, (int)lineY2, 0, 255, 0);
+	/*
 	p2Vec2<float> line1 = currentVelocity;
 	line1 = desiredVelocity;
 	line1.Normalize();
@@ -211,7 +239,7 @@ void Unit::DrawDebug()
 	lineX2 = (line1.x * 30 + lineX1);
 	lineY2 = (line1.y * 30 + lineY1);
 	App->render->DrawLine((int)lineX1, (int)lineY1, (int)lineX2, (int)lineY2, 0, 255, 0);
-
+	*/
 	App->render->DrawCircle((int)target.x, (int)target.y, (int)GetSlowRad(), 255, 255, 255);
 	App->render->DrawCircle(position.x, position.y, 10, 255, 255, 255, 255);
 

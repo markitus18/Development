@@ -3,6 +3,14 @@
 
 #include "p2Point.h"
 
+enum Entity_Directions
+{
+	UP = 0,
+	RIGHT,
+	DOWN,
+	LEFT,
+};
+
 class Entity
 {
 	//Public methods
