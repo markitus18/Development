@@ -35,17 +35,7 @@ bool Unit::Update(float dt)
 	{
 		GetNewTarget();
 	}
-	if (path.Count() > 0)
-	{
-		for (uint i = 0; i < path.Count(); i++)
-		{
-			iPoint position = App->map->MapToWorld(path[i].x, path[i].y);
-			SDL_Rect rect = { 0, 0, 64, 32 };
-			if (i < currentNode)
-				rect = { 0, 64, 64, 32 };
-			App->render->Blit(App->entityManager->path_tex, position.x - 32, position.y - 16, &rect);
-		}
-	}
+
 	Draw();
 	return true;
 }
@@ -219,13 +209,13 @@ void Unit::Draw()
 
 void Unit::DrawDebug()
 {
+	//Direction Line
 	float lineX1, lineX2, lineY1, lineY2;
-	
 	p2Vec2<float> line = currentVelocity;
 	line.Normalize();
 	line *= 3;
-	lineX1 = line.position.x + App->render->camera.x;
-	lineY1 = line.position.y + App->render->camera.y;
+	lineX1 = line.position.x;
+	lineY1 = line.position.y;
 	lineX2 = (line.x * 30 + lineX1);
 	lineY2 = (line.y * 30 + lineY1);
 	App->render->DrawLine((int)lineX1, (int)lineY1, (int)lineX2, (int)lineY2, 0, 255, 0);
@@ -240,7 +230,21 @@ void Unit::DrawDebug()
 	lineY2 = (line1.y * 30 + lineY1);
 	App->render->DrawLine((int)lineX1, (int)lineY1, (int)lineX2, (int)lineY2, 0, 255, 0);
 	*/
+	//Target position
 	App->render->DrawCircle((int)target.x, (int)target.y, (int)GetSlowRad(), 255, 255, 255);
+	//Unit position
 	App->render->DrawCircle(position.x, position.y, 10, 255, 255, 255, 255);
 
+	//Path
+	if (path.Count() > 0)
+	{
+		for (uint i = 0; i < path.Count(); i++)
+		{
+			iPoint position = App->map->MapToWorld(path[i].x, path[i].y);
+			SDL_Rect rect = { 0, 0, 64, 32 };
+			if (i < currentNode)
+				rect = { 0, 64, 64, 32 };
+			App->render->Blit(App->entityManager->path_tex, position.x - 32, position.y - 16, &rect);
+		}
+	}
 }

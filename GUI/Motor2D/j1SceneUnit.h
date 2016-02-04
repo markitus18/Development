@@ -58,6 +58,7 @@ private:
 
 
 	int entityTargetIndex;
+	int entityType = 0;
 };
 
 #endif // __j1SceneUnit_H__

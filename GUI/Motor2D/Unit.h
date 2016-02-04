@@ -17,9 +17,9 @@ enum Behaviour
 enum UnitType
 {
 	RED = 0,
+	YELLOW,
 	GREEN,
 	BLUE,
-	PURPLE,
 };
 
 class Unit : public Entity

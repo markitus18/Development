@@ -79,39 +79,20 @@ bool j1SceneUnit::Update(float dt)
 	App->map->Draw();
 
 	//Drawing point 0, 0
-	App->render->DrawCircle(0, 0, 10, 255, 255, 255);
-	App->render->DrawLine(0, -20, 0, 20, 255, 0, 0);
-	App->render->DrawLine(-20, 0, 20, 0, 255, 0, 0);
-	// --- TO CHANGE: clean drawing start/end tiles and current tile ---
-	//Drawing start and end
-	iPoint startPosition = App->map->MapToWorld(App->pathFinding->startTile.x, App->pathFinding->startTile.y);
-	iPoint endPosition = App->map->MapToWorld(App->pathFinding->endTile.x, App->pathFinding->endTile.y);
-	if (App->pathFinding->startTileExists)
-		App->render->Blit(App->map->data.tilesets.start->next->data->texture, startPosition.x - 32, startPosition.y - 16, new SDL_Rect{ 0, 32, 64, 32 });
-	if (App->pathFinding->endTileExists)
-		App->render->Blit(App->map->data.tilesets.start->next->data->texture, endPosition.x - 32, endPosition.y - 16, new SDL_Rect{ 64, 32, 64, 32 });
-
-
-
-	//Rendering instructions
-	if (renderInstructions)
+	if (renderForces)
 	{
-		App->render->Blit(instructions, 1024 - 250 - App->render->camera.x, 768 - 340 - App->render->camera.y, new SDL_Rect{ 0, 0, 250, 340 });
+		App->render->DrawCircle(0, 0, 10, 255, 255, 255);
+		App->render->DrawLine(0, -20, 0, 20, 255, 0, 0);
+		App->render->DrawLine(-20, 0, 20, 0, 255, 0, 0);
+		// --- TO CHANGE: clean drawing start/end tiles and current tile ---
+		//Drawing start and end
+		iPoint startPosition = App->map->MapToWorld(App->pathFinding->startTile.x, App->pathFinding->startTile.y);
+		iPoint endPosition = App->map->MapToWorld(App->pathFinding->endTile.x, App->pathFinding->endTile.y);
+		if (App->pathFinding->startTileExists)
+			App->render->Blit(App->map->data.tilesets.start->next->data->texture, startPosition.x - 32, startPosition.y - 16, new SDL_Rect{ 0, 32, 64, 32 });
+		if (App->pathFinding->endTileExists)
+			App->render->Blit(App->map->data.tilesets.start->next->data->texture, endPosition.x - 32, endPosition.y - 16, new SDL_Rect{ 64, 32, 64, 32 });
 	}
-	else
-	{
-		App->render->Blit(instructions_title, 1024 - 250 - App->render->camera.x, 768 - 89 - App->render->camera.y, new SDL_Rect{ 0, 0, 250, 89 });
-	}
-
-	//Rendering grid
-	if (renderGrid)
-	{
-		App->render->Blit(grid_tex, 0, 0, new SDL_Rect{ 0, 0, 1600, 480 });
-	}
-
-	//Drawing line testing
-
-
 
 	return true;
 }
@@ -137,7 +118,7 @@ bool j1SceneUnit::CleanUp()
 
 void j1SceneUnit::ManageInput(float dt)
 {
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN)
 	{
 		p2DynArray<iPoint> newPath;
 		fPoint unitPos = unit->GetPosition();
@@ -146,8 +127,29 @@ void j1SceneUnit::ManageInput(float dt)
 		bool ret = App->pathFinding->GetNewPath(unitTile, dstTile, newPath);
 		if (ret)
 		{
-			App->sceneUnit->unit->SetNewPath(newPath);
+			unit->SetNewPath(newPath);
 		}
+
+		if (entityType < 3)
+			entityType++;
+		else
+			entityType = 0;
+		switch (entityType)
+		{
+			case 0:
+				unit->SetType(RED);
+				break;
+			case 1:
+				unit->SetType(YELLOW);
+				break;
+			case 2:
+				unit->SetType(GREEN);
+				break;
+			case 3:
+				unit->SetType(BLUE);
+				break;
+		}
+
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
