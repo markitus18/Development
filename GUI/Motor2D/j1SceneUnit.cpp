@@ -135,7 +135,7 @@ void j1SceneUnit::ManageInput(float dt)
 		else
 			entityType = 0;
 		switch (entityType)
-		{
+		{ 
 			case 0:
 				unit->SetType(RED);
 				break;

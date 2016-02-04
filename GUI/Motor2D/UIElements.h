@@ -273,4 +273,20 @@ public:
 	int a;
 	bool filled;
 };
+
+class UIBar : public UIElement
+{
+public:
+	UIBar();
+	UIBar(char* newNane, UIImage* background, UIImage* fillImage);
+	~UIBar();
+
+	bool Update(float dt);
+
+	int* maxValue;
+	int* currValue;
+
+public:
+
+};
 #endif //_UIELEMENTS_H__
