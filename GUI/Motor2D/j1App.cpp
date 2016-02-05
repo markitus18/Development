@@ -33,6 +33,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	font = new j1Fonts(true);
 	gui = new j1Gui(true);
 	audio = new j1Audio(true);
+	entityManager = new EntityManager(true);
 
 	//Scenes-------------------------
 	sceneGUI = new j1SceneGUI(false);
@@ -44,7 +45,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	map = new j1Map(true);
 	pathFinding = new j1PathFinding(true);
 	console = new j1Console(true);
-	entityManager = new EntityManager(true);
+
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp

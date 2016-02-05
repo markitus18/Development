@@ -22,6 +22,8 @@ enum UnitType
 	BLUE,
 };
 
+class UIBar;
+
 class Unit : public Entity
 {
 public:
@@ -32,6 +34,7 @@ public:
 	bool Start();
 	bool Update(float dt);
 
+	//Movement methods
 	void UpdateVelocity(float dt);
 	bool Unit::GetDesiredVelocity(p2Vec2<float>& newDesiredVelocity);
 	p2Vec2<float> GetSteeringVelocity();
@@ -39,6 +42,7 @@ public:
 
 	bool GetNewTarget();
 
+	//Setters
 	void SetTarget(int x, int y);
 	void SetNewPath(p2DynArray<iPoint>& newPath);
 	void SetBehaviour(Behaviour _behaviour);
@@ -46,25 +50,31 @@ public:
 	void SetLevel(int _level);
 	void SetMaxSpeed(int speed);
 
+	//Getters
 	Entity_Directions GetDirection();
 	float GetSlowRad();
 	UnitType GetType();
 	int GetLevel();
 
+	//Drawing methods
 	void Draw();
 	void DrawDebug();
+
+	//HP controllers
+	void CreateBar();
 private:
 	Behaviour behaviour = PATROL;
 	UnitType type = RED;
 	int level = 1;
 
+	UIBar* HPBar;
 
 	float maxSpeed = 0.5f;
 	float maxForce = 50.0f;
 	float slowingRadius = 5.0f;
 
 	p2DynArray<iPoint> path;
-	fPoint target;
+	iPoint target;
 	bool targetChange = false;
 	int currentNode = 0;
 	p2Vec2<float> currentVelocity = { 0, 0 };

@@ -26,11 +26,11 @@ public:
 
 	//Set methods
 	void SetPosition(float, float);
-	void SetPosition(fPoint);
+	void SetPosition(iPoint);
 	void SetHP(int);
 
 	//Get methods
-	fPoint GetPosition();
+	iPoint GetPosition();
 	int GetHP();
 
 	//Private methods
@@ -44,7 +44,8 @@ public:
 	//Private properties
 protected:
 
-	fPoint position;
-	int HP;
+	iPoint position = { 0, 0 };
+	int maxHP = 100;
+	int HP = 100;
 };
 #endif //__ENTITY_H

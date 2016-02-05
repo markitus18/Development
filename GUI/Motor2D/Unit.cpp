@@ -7,22 +7,31 @@
 #include "j1Map.h"
 #include "EntityManager.h"
 #include "j1SceneUnit.h"
+#include "j1Gui.h"
+#include "UIElements.h"
 
 Unit::Unit()
-{}
+{
+	position.x = position.y = 0;
+	CreateBar();
+}
 Unit::Unit(int x, int y)
 {
 	position.x = (float)x;
 	position.y = (float)y;
+	CreateBar();
 }
 Unit::~Unit()
 {}
 
 bool Unit::Start()
 {
+	HPBar->Center(position);
+	HPBar->SetLocalPosition(HPBar->GetLocalPosition().x, HPBar->GetLocalPosition().y - 60);
 
 	return true;
 }
+
 bool Unit::Update(float dt)
 {
 	if (targetChange)
@@ -30,11 +39,15 @@ bool Unit::Update(float dt)
 		UpdateVelocity(dt);
 		position.x += currentVelocity.x;
 		position.y += currentVelocity.y;
+
+		HPBar->Center(position);
+		HPBar->SetLocalPosition(HPBar->GetLocalPosition().x, HPBar->GetLocalPosition().y - 60);
 	}
 	else
 	{
 		GetNewTarget();
 	}
+
 
 	Draw();
 	return true;
@@ -52,7 +65,8 @@ bool Unit::GetDesiredVelocity(p2Vec2<float>& newDesiredVelocity)
 {
 	bool ret = true;
 	p2Vec2<float> velocity;
-	velocity.position = position;
+	velocity.position.x = position.x;
+	velocity.position.y = position.y;
 	velocity.x = target.x - position.x;
 	velocity.y = target.y - position.y;
 
@@ -77,8 +91,8 @@ bool Unit::GetDesiredVelocity(p2Vec2<float>& newDesiredVelocity)
 	}
 	velocity.Normalize();
 	velocity *= maxSpeed;
-	newDesiredVelocity = velocity;
 
+	newDesiredVelocity = velocity;
 	return ret;
 }
 
@@ -100,7 +114,8 @@ p2Vec2<float> Unit::GetcurrentVelocity(float dt)
 {
 	p2Vec2<float> velocity;
 	velocity = desiredVelocity;//currentVelocity + steeringVelocity;
-	velocity.position = position;
+	velocity.position.x = position.x;
+	velocity.position.y = position.y;
 	velocity *= 300.0f * dt;
 	/*
 	if (velocity.IsOpposite(desiredVelocity))
@@ -247,4 +262,12 @@ void Unit::DrawDebug()
 			App->render->Blit(App->entityManager->path_tex, position.x - 32, position.y - 16, &rect);
 		}
 	}
+}
+
+void Unit::CreateBar()
+{
+	UIRect* rect1 = App->gui->CreateRect("testRect1", { 0, 0, 150, 20 }, 0, 0, 0);
+	UIRect* rect2 = App->gui->CreateRect("testRect1", { 5, 5, 140, 10 }, 255, 0, 0);
+	HPBar = App->gui->CreateBar("HP Bar", (UIElement*)rect1, (UIElement*)rect2, &maxHP, &HP);
+	HPBar->SetIgnoreCamera();
 }

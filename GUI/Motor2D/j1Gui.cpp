@@ -257,8 +257,16 @@ UIRect* j1Gui::CreateRect(char* name, SDL_Rect rect, int newR, int newG, int new
 UIBar* j1Gui::CreateBar(char* newName, UIElement* background, UIElement* fillImage, int* maxValue, int* currValue)
 {
 	UIBar* bar = new UIBar(newName, background, fillImage, maxValue, currValue);
-	background->SetParent(bar);
-	fillImage->SetParent(bar);
+	if (background)
+	{
+		bar->SetCollider(background->GetWorldRect());
+		background->SetParent(bar);
+	}
+	if (fillImage)
+	{
+		fillImage->SetParent(bar);
+	}
+	bar->interactive = false;
 
 	uiElements.add(bar);
 

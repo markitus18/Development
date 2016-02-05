@@ -34,6 +34,10 @@ void UIElement::Center(UIElement* element)
 
 	SetGlobalPosition(centerX - collider.w / 2, centerY - collider.h / 2);
 }
+void UIElement::Center(iPoint point)
+{
+	SetGlobalPosition(point.x - collider.w / 2, point.y - collider.h / 2);
+}
 
 void UIElement::Center_x(UIElement* element)
 {
@@ -41,12 +45,22 @@ void UIElement::Center_x(UIElement* element)
 	int currentY = GetWorldRect().y;
 	SetGlobalPosition(centerX - collider.w / 2, currentY);
 }
+void UIElement::Center_x(int x)
+{
+	SDL_Rect rect = GetWorldRect();
+	SetGlobalPosition(x - collider.w / 2, rect.y);
+}
 
 void UIElement::Center_y(UIElement* element)
 {
 	int centerY = element->GetWorldRect().y + element->collider.h / 2;
 	int currentX = GetWorldRect().x;
 	SetGlobalPosition(currentX, centerY - collider.h / 2);
+}
+void UIElement::Center_y(int y)
+{
+	SDL_Rect rect = GetWorldRect();
+	SetGlobalPosition(rect.x, y - collider.h);
 }
 
 void UIElement::Align(UIElement* element)

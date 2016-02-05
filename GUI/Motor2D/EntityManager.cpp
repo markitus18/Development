@@ -22,39 +22,15 @@ EntityManager::~EntityManager()
 
 bool EntityManager::Start()
 {
-
 	entity_tex = App->tex->Load("textures/unit.png");
 	unit_base = App->tex->Load("textures/unit_base.png");
 	path_tex = App->tex->Load("textures/path.png");
-	/*
-	Unit* unit = new Unit;
-	unit->setPosition(10, 10);
-	unit->setHP(0);
-	unit->SetBehaviour(PATROL);
-	unit->SetType(RED);
-	addUnit(*unit);
 
-	Unit* unit1 = new Unit;
-	unit1->setPosition(400, 400);
-	unit1->setHP(0);
-	unit->SetBehaviour(PATROL);
-	unit1->SetType(GREEN);
-	addUnit(*unit1);
+	for (uint i = 0; i < unitList.count(); i++)
+	{
+		unitList[i]->Start();
+	}
 
-	Unit* unit2 = new Unit;
-	unit2->setPosition(1000, 500);
-	unit2->setHP(0);
-	unit->SetBehaviour(PATROL);
-	unit2->SetType(BLUE);
-	addUnit(*unit2);
-
-	Unit* unit3 = new Unit;
-	unit3->setPosition(800, 50);
-	unit3->setHP(0);
-	unit->SetBehaviour(PATROL);
-	unit3->SetType(YELLOW);
-	addUnit(*unit3);
-	*/
 	return true;
 }
 

@@ -28,9 +28,8 @@ bool j1SceneUnit::Awake(pugi::xml_node& node)
 {
 	LOG("Loading Scene");
 	App->SetCurrentScene(this);
-	bool ret = true;
 
-	return ret;
+	return true;
 }
 
 // Called before the first frame
@@ -49,16 +48,16 @@ bool j1SceneUnit::Start()
 	unit = new Unit;
 	iPoint unitPos = App->map->MapToWorld(3, 5);
 	unit->SetPosition(unitPos.x, unitPos.y);
-	unit->SetHP(0);
+	unit->SetHP(100);
 	unit->SetBehaviour(RUN);
 	unit->SetType(RED);
 	App->entityManager->addUnit(*unit);
-
+	/*
 	//bar test
 	UIRect* rect1 = App->gui->CreateRect("testRect1", { 0, 100, 150, 20 }, 0, 0, 0);
 	UIRect* rect2 = App->gui->CreateRect("testRect1", { 5, 105, 140, 10 }, 255, 0, 0);
 	testBar = App->gui->CreateBar("testBar", (UIElement*)rect1, (UIElement*)rect2, &testInt, &currTestInt);
-	testBar->SetIgnoreCamera();
+	testBar->SetIgnoreCamera();*/
 	return true;
 }
 
@@ -127,9 +126,8 @@ void j1SceneUnit::ManageInput(float dt)
 {
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN)
 	{
-		currTestInt += 5;
 		p2DynArray<iPoint> newPath;
-		fPoint unitPos = unit->GetPosition();
+		iPoint unitPos = unit->GetPosition();
 		iPoint unitTile = App->map->WorldToMap(unitPos.x, unitPos.y);
 		iPoint dstTile = { currentTile_x, currentTile_y };
 		bool ret = App->pathFinding->GetNewPath(unitTile, dstTile, newPath);
@@ -158,6 +156,19 @@ void j1SceneUnit::ManageInput(float dt)
 				break;
 		}
 
+	}
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+		int hp = unit->GetHP();
+		if (hp > 0)
+			unit->SetHP(--hp);
+	}
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	{
+		int hp = unit->GetHP();
+		if (hp < 100)
+			unit->SetHP(++hp);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)

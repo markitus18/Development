@@ -42,8 +42,11 @@ public:
 	void SetCollider(int, int, int, int);
 
 	void Center(UIElement*);
+	void Center(iPoint);
 	void Center_x(UIElement*);
+	void Center_x(int);
 	void Center_y(UIElement*);
+	void Center_y(int);
 
 	void Align(UIElement*);
 	void Align_x(UIElement*);

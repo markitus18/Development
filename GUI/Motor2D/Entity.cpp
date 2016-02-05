@@ -14,7 +14,6 @@ Entity::~Entity(){}
 
 bool Entity::Start()
 {
-
 	return true;
 }
 
@@ -35,16 +34,16 @@ void Entity::SetPosition(float x, float y)
 	position.x = x;
 	position.y = y;
 }
-void Entity::SetPosition(fPoint _position)
+void Entity::SetPosition(iPoint _position)
 {
 	position = _position;
 }
 void Entity::SetHP(int _HP)
 {
-
+	HP = _HP;
 }
 
-fPoint Entity::GetPosition()
+iPoint Entity::GetPosition()
 {
 	return position;
 }

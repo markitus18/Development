@@ -58,13 +58,8 @@ private:
 	SDL_Texture* target_tex;
 	SDL_Texture* grid_tex;
 
-
 	int entityTargetIndex;
 	int entityType = 0;
-
-	UIBar* testBar;
-	int testInt = 100;
-	int currTestInt = 50;
 };
 
 #endif // __j1SceneUnit_H__

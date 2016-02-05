@@ -950,7 +950,6 @@ UIRect::UIRect(char* newName, SDL_Rect newRect, int newR, int newG, int newB, in
 bool UIRect::Update(float dt)
 {
 	App->render->DrawQuad(GetWorldRect(), r, g, b, a, filled, ignoreCamera);
-
 	return true;
 }
 
@@ -969,10 +968,12 @@ UIBar::UIBar(char* newName, UIElement* bgImage, UIElement* filledimg, int* maxV,
 bool UIBar::Update(float dt)
 {
 	SDL_Rect rect = fillImage->GetWorldRect();
+	iPoint pos = fillImage->GetLocalPosition();
 	float curr = *currValue;
 	float max = *maxValue;
 	float value = (curr / max);
-	fillImage->SetCollider(rect.x, rect.y, value * maxW, rect.h);
-
+	CAP(value, 0, 1.0f);
+	fillImage->SetCollider(pos.x, pos.y, value * maxW, rect.h);
+	rect = fillImage->GetWorldRect();
 	return true;
 }
