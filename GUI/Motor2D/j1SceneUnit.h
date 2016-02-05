@@ -30,7 +30,7 @@ public:
 	bool Update(float dt);
 
 	// Called before all Updates
-	bool PostUpdate();
+	bool PostUpdate(float dt);
 
 	// Called before quitting
 	bool CleanUp();
@@ -50,6 +50,8 @@ public:
 	bool renderForces = true;
 	SDL_Texture* debug_tex;
 	Unit* unit;
+
+	iPoint lastMouseClick;
 private:
 
 	SDL_Texture* instructions_title;

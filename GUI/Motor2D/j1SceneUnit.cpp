@@ -104,9 +104,19 @@ bool j1SceneUnit::Update(float dt)
 }
 
 // Called each loop iteration
-bool j1SceneUnit::PostUpdate()
+bool j1SceneUnit::PostUpdate(float dt)
 {
 	bool ret = true;
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	{
+		int hp = unit->GetHP();
+		if (hp < 100)
+			unit->SetHP(++hp);
+		int x, y;
+		App->input->GetMousePosition(x, y);
+		App->render->DrawQuad({ lastMouseClick.x, lastMouseClick.y, x - lastMouseClick.x, y - lastMouseClick.y }, 255, 255, 255, 255, false, false);
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
@@ -163,13 +173,13 @@ void j1SceneUnit::ManageInput(float dt)
 		if (hp > 0)
 			unit->SetHP(--hp);
 	}
-
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		int hp = unit->GetHP();
-		if (hp < 100)
-			unit->SetHP(++hp);
+		int x, y;
+		App->input->GetMousePosition(x, y);
+		lastMouseClick = { x, y };
 	}
+
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		App->render->camera.y += (int)(200.0f * dt);
