@@ -1,5 +1,5 @@
-#include "j1Textures.h"
 #include "j1App.h"
+#include "j1Textures.h"
 #include "p2Log.h"
 #include "j1Render.h"
 #include "j1Fonts.h"
@@ -435,9 +435,9 @@ void UIInputText::RenderCursor()
 void UIInputText::GetNewInput(char* text)
 {
 	bool end = false;
-	if (textList.count() < maxCharacters)
+	if (textList.count() < (uint)maxCharacters)
 	{
-		for (uint i = 0; !end && textList.count() <= maxCharacters; i++)
+		for (uint i = 0; !end && textList.count() <= (uint)maxCharacters; i++)
 		{
 			if (text[i] == '\0')
 				end = true;
@@ -570,7 +570,7 @@ void UIInputText::ManageInput()
 {
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
 	{
-		if (cursorPosition < textList.count())
+		if ((uint)cursorPosition < textList.count())
 		{
 			cursorPosition++;
 			cursorNeedUpdate = true;
@@ -802,7 +802,7 @@ void UIScrollBar::CheckInputMovement(int& x, int& y, float dt)
 		{
 			if (thumbPos.x > offsetL)
 			{
-				x = -arrowsValue * dt * 100;
+				x = (int)(-arrowsValue * dt * 100);
 				moved = true;
 			}
 		}
@@ -810,7 +810,7 @@ void UIScrollBar::CheckInputMovement(int& x, int& y, float dt)
 		{
 			if (thumbPos.x + thumbRect.w < rect.w - offsetR)
 			{
-				x = arrowsValue * dt * 100;
+				x = (int)(arrowsValue * dt * 100);
 				moved = true;
 			}
 		}
@@ -821,7 +821,7 @@ void UIScrollBar::CheckInputMovement(int& x, int& y, float dt)
 		{
 			if (thumbPos.y + thumbRect.h < rect.h - offsetD)
 			{
-				y = arrowsValue * dt * 100;
+				y = (int)(arrowsValue * dt * 100);
 				moved = true;
 			}
 		}
@@ -829,7 +829,7 @@ void UIScrollBar::CheckInputMovement(int& x, int& y, float dt)
 		{
 			if (thumbPos.y > offsetU)
 			{
-				y = -arrowsValue * dt * 100;
+				y = (int)(-arrowsValue * dt * 100);
 				moved = true;
 			}
 		}
@@ -851,7 +851,7 @@ void UIScrollBar::CheckBarMovement(int& x, int& y, float dt)
 		{
 			if (thumbPos.x + thumbRect.w < rect.w - offsetR)
 			{
-				x = barValue * dt * 100;
+				x = (int)(barValue * dt * 100);
 				moved = true;
 			}
 		}
@@ -859,7 +859,7 @@ void UIScrollBar::CheckBarMovement(int& x, int& y, float dt)
 		{
 			if (thumbPos.x > offsetL)
 			{
-				x = -barValue * dt * 100;
+				x = (int)(-barValue * dt * 100);
 				moved = true;
 			}
 		}
@@ -870,7 +870,7 @@ void UIScrollBar::CheckBarMovement(int& x, int& y, float dt)
 		{
 			if (thumbPos.y + thumbRect.h < rect.h - offsetD)
 			{
-				y = barValue * dt * 100;
+				y = (int)(barValue * dt * 100);
 				moved = true;
 			}
 		}
@@ -878,7 +878,7 @@ void UIScrollBar::CheckBarMovement(int& x, int& y, float dt)
 		{
 			if (thumbPos.y > offsetU)
 			{
-				y = -barValue * dt * 100;
+				y = (int)(-barValue * dt * 100);
 				moved = true;
 			}
 		}
@@ -903,8 +903,8 @@ void UIScrollBar::SetValue(float value)
 		minPos = offsetL;
 		maxPos = barRect.x + barRect.w - offsetR - thumbRect.w;
 	}
-	float totalLenght = maxPos - minPos;
-	thumbPos = value * totalLenght + minPos;
+	int totalLenght = maxPos - minPos;
+	thumbPos = (int)(value * totalLenght + minPos);
 
 	if (type == VERTICAL)
 		thumb->SetLocalPosition(thumb->GetLocalPosition().x, thumbPos);
@@ -930,8 +930,8 @@ float UIScrollBar::GetValue()
 		maxPos = barRect.x + barRect.w - offsetR - thumbRect.w;
 		thumbPos = thumbRect.x - offsetL;
 	}
-	float totalLenght = maxPos - minPos;
-	float ret = (thumbPos / totalLenght);
+	int totalLenght = maxPos - minPos;
+	float ret = (float)(thumbPos / totalLenght);
 
 	return ret;
 }
@@ -969,11 +969,10 @@ bool UIBar::Update(float dt)
 {
 	SDL_Rect rect = fillImage->GetWorldRect();
 	iPoint pos = fillImage->GetLocalPosition();
-	float curr = *currValue;
-	float max = *maxValue;
-	float value = (curr / max);
+
+	float value = (float)(*currValue / *maxValue);
 	CAP(value, 0, 1.0f);
-	fillImage->SetCollider(pos.x, pos.y, value * maxW, rect.h);
+	fillImage->SetCollider(pos.x, pos.y, (int)value * maxW, rect.h);
 	rect = fillImage->GetWorldRect();
 	return true;
 }

@@ -2,11 +2,9 @@
 #define __j1SceneUnit_H__
 
 #include "j1Module.h"
-#include "Unit.h"
 
-
-struct SDL_Texture;
 class UIBar;
+class Unit;
 
 class j1SceneUnit : public j1Module
 {
@@ -51,7 +49,6 @@ public:
 	SDL_Texture* debug_tex;
 	Unit* unit;
 
-	iPoint lastMouseClick;
 private:
 
 	SDL_Texture* instructions_title;

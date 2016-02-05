@@ -5,6 +5,8 @@
 #include "j1Render.h"
 #include "j1App.h"
 #include "j1Map.h"
+#include "Entity.h"
+#include "j1Textures.h"
 #include "EntityManager.h"
 #include "j1SceneUnit.h"
 #include "j1Gui.h"
@@ -17,8 +19,8 @@ Unit::Unit()
 }
 Unit::Unit(int x, int y)
 {
-	position.x = (float)x;
-	position.y = (float)y;
+	position.x = x;
+	position.y = y;
 	CreateBar();
 }
 Unit::~Unit()
@@ -37,8 +39,8 @@ bool Unit::Update(float dt)
 	if (targetChange)
 	{
 		UpdateVelocity(dt);
-		position.x += currentVelocity.x;
-		position.y += currentVelocity.y;
+		position.x += (int)currentVelocity.x;
+		position.y += (int)currentVelocity.y;
 
 		HPBar->Center(position);
 		HPBar->SetLocalPosition(HPBar->GetLocalPosition().x, HPBar->GetLocalPosition().y - 60);
@@ -65,10 +67,10 @@ bool Unit::GetDesiredVelocity(p2Vec2<float>& newDesiredVelocity)
 {
 	bool ret = true;
 	p2Vec2<float> velocity;
-	velocity.position.x = position.x;
-	velocity.position.y = position.y;
-	velocity.x = target.x - position.x;
-	velocity.y = target.y - position.y;
+	velocity.position.x = (float)position.x;
+	velocity.position.y = (float)position.y;
+	velocity.x = (float)(target.x - position.x);
+	velocity.y = (float)(target.y - position.y);
 
 	float distance = velocity.GetModule();
 
@@ -78,8 +80,8 @@ bool Unit::GetDesiredVelocity(p2Vec2<float>& newDesiredVelocity)
 		targetChange = false;
 		if (GetNewTarget())
 		{
-			velocity.x = target.x - position.x;
-			velocity.y = target.y - position.y;
+			velocity.x = (float)(target.x - position.x);
+			velocity.y = (float)(target.y - position.y);
 			distance = velocity.GetModule();
 		}
 		else
@@ -114,8 +116,8 @@ p2Vec2<float> Unit::GetcurrentVelocity(float dt)
 {
 	p2Vec2<float> velocity;
 	velocity = desiredVelocity;//currentVelocity + steeringVelocity;
-	velocity.position.x = position.x;
-	velocity.position.y = position.y;
+	velocity.position.x = (float)position.x;
+	velocity.position.y = (float)position.y;
 	velocity *= 300.0f * dt;
 	/*
 	if (velocity.IsOpposite(desiredVelocity))
@@ -130,7 +132,7 @@ p2Vec2<float> Unit::GetcurrentVelocity(float dt)
 bool Unit::GetNewTarget()
 {
 	bool ret = false;
-	if (currentNode + 1 < path.Count())
+	if ((uint)currentNode + 1 < path.Count())
 	{
 		currentNode++;
 		iPoint newPos = App->map->MapToWorld(path[currentNode].x, path[currentNode].y);
@@ -142,8 +144,8 @@ bool Unit::GetNewTarget()
 
 void Unit::SetTarget(int x, int y)
 {
-	target.x = (float)x;
-	target.y = (float)y;
+	target.x = x;
+	target.y = y;
 	targetChange = true;
 }
 
@@ -162,7 +164,7 @@ void Unit::SetLevel(int _level)
 	level = _level;
 }
 
-void Unit::SetMaxSpeed(int speed)
+void Unit::SetMaxSpeed(float speed)
 {
 	maxSpeed = speed;
 }
@@ -257,7 +259,7 @@ void Unit::DrawDebug()
 		{
 			iPoint position = App->map->MapToWorld(path[i].x, path[i].y);
 			SDL_Rect rect = { 0, 0, 64, 32 };
-			if (i < currentNode)
+			if (i < (uint)currentNode)
 				rect = { 0, 64, 64, 32 };
 			App->render->Blit(App->entityManager->path_tex, position.x - 32, position.y - 16, &rect);
 		}

@@ -48,7 +48,7 @@ public:
 	void SetBehaviour(Behaviour _behaviour);
 	void SetType(UnitType _type);
 	void SetLevel(int _level);
-	void SetMaxSpeed(int speed);
+	void SetMaxSpeed(float speed);
 
 	//Getters
 	Entity_Directions GetDirection();

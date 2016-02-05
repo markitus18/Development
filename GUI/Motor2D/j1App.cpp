@@ -4,6 +4,7 @@
 #include "p2Defs.h"
 #include "p2Log.h"
 
+#include "j1App.h"
 #include "j1Window.h"
 #include "j1Input.h"
 #include "j1Render.h"
@@ -18,8 +19,10 @@
 #include "j1Fonts.h"
 #include "j1Gui.h"
 #include "j1Console.h"
+#include "Entity.h"
+#include "Unit.h"
 #include "EntityManager.h"
-#include "j1App.h"
+
 
 // Constructor
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)

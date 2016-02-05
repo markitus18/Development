@@ -1,14 +1,9 @@
-#include "EntityManager.h"
 #include "j1App.h"
 #include "j1Textures.h"
-#include "j1Render.h"
-#include "j1Map.h"
-#include "j1Input.h"
-#include "j1SceneUnit.h"
-#include "j1Pathfinding.h"
-#include "j1SceneUnit.h"
 #include "Unit.h"
-#include "Entity.h"
+#include "j1Render.h"
+#include "j1Input.h"
+#include "EntityManager.h"
 
 EntityManager::EntityManager(bool start_enabled) : j1Module(start_enabled)
 {
@@ -36,7 +31,8 @@ bool EntityManager::Start()
 
 bool EntityManager::Update(float dt)
 {
-	
+	ManageInput();
+
 	p2List_item<Unit*>* item = NULL;
 	item = unitList.start;
 
@@ -63,6 +59,12 @@ bool EntityManager::Update(float dt)
 	return true;
 }
 
+bool EntityManager::PostUpdate(float dt)
+{
+	if (selectionRect.w != 0 || selectionRect.h != 0)
+		App->render->DrawQuad(selectionRect, 255, 255, 255, 255, false, false);
+	return true;
+}
 bool EntityManager::CleanUp()
 {
 	p2List_item<Unit*>* item = NULL;
@@ -81,6 +83,21 @@ void EntityManager::ManageInput()
 	{
 		if (unitList[0]->GetLevel() < 3)
 			unitList[0]->SetLevel(unitList[0]->GetLevel() + 1);
+	}
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		App->input->GetMousePosition(selectionRect.x, selectionRect.y);
+	}
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	{
+		int x, y;
+		App->input->GetMousePosition(x, y);
+		selectionRect.w = x - selectionRect.x;
+		selectionRect.h = y - selectionRect.y;
+	}
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
+	{
+		selectionRect.w = selectionRect.h = 0;
 	}
 }
 bool EntityManager::addUnit(Unit& _unit)

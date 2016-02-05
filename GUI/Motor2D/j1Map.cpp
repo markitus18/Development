@@ -58,7 +58,7 @@ bool j1Map::Update(float dt)
 				int x = App->sceneGUI->currentTile_x;
 				int y = App->sceneGUI->currentTile_y;
 			}
-			if (App->GetCurrentScene()->name == "scene_unit");
+			if (App->GetCurrentScene()->name == "scene_unit")
 			{
 				x = App->sceneUnit->currentTile_x;
 				y = App->sceneUnit->currentTile_y;
@@ -79,7 +79,7 @@ bool j1Map::Update(float dt)
 				int x = App->sceneGUI->currentTile_x;
 				int y = App->sceneGUI->currentTile_y;
 			}
-			if (App->GetCurrentScene()->name == "scene_unit");
+			if (App->GetCurrentScene()->name == "scene_unit")
 			{
 				x = App->sceneUnit->currentTile_x;
 				y = App->sceneUnit->currentTile_y;
@@ -191,8 +191,8 @@ iPoint j1Map::WorldToMap(int x, int y) const
 		float fy = (y / half_height - (x / half_width)) / 2;
 
 		
-		ret.x = floor(fx);
-		ret.y = floor(fy);
+		ret.x = (int)floor(fx);
+		ret.y = (int)floor(fy);
 	}
 	else
 	{

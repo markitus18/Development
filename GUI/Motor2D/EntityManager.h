@@ -3,10 +3,11 @@
 
 
 #include "j1Module.h"
-#include "p2List.h"
 
-struct SDL_Texture;
 class Unit;
+
+//struct SDL_Rect;
+//struct SDL_Texture;
 
 class EntityManager : public j1Module
 {
@@ -16,6 +17,7 @@ public:
 
 	bool Start();
 	bool Update(float dt);
+	bool PostUpdate(float dt);
 	bool CleanUp();
 
 	void ManageInput();
@@ -25,7 +27,8 @@ public:
 
 	//	bool addBuilding(Entity& _entity);
 	//	bool deleteBuilding();
-	//should be priv
+	//should be priv+
+	SDL_Rect selectionRect;
 	p2List<Unit*> unitList;
 
 	SDL_Texture* entity_tex;
