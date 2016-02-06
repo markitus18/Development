@@ -40,6 +40,7 @@ private:
 	//Public properties
 public:
 
+	bool selected = false;
 
 	//Private properties
 protected:

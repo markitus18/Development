@@ -970,9 +970,9 @@ bool UIBar::Update(float dt)
 	SDL_Rect rect = fillImage->GetWorldRect();
 	iPoint pos = fillImage->GetLocalPosition();
 
-	float value = (float)(*currValue / *maxValue);
+	float value = (float)*currValue / (float)*maxValue;
 	CAP(value, 0, 1.0f);
-	fillImage->SetCollider(pos.x, pos.y, (int)value * maxW, rect.h);
+	fillImage->SetCollider(pos.x, pos.y, (int)(value * maxW), rect.h);
 	rect = fillImage->GetWorldRect();
 	return true;
 }

@@ -54,12 +54,14 @@ bool j1SceneUnit::Start()
 	unit->SetBehaviour(RUN);
 	unit->SetType(RED);
 	App->entityManager->addUnit(*unit);
-	/*
-	//bar test
-	UIRect* rect1 = App->gui->CreateRect("testRect1", { 0, 100, 150, 20 }, 0, 0, 0);
-	UIRect* rect2 = App->gui->CreateRect("testRect1", { 5, 105, 140, 10 }, 255, 0, 0);
-	testBar = App->gui->CreateBar("testBar", (UIElement*)rect1, (UIElement*)rect2, &testInt, &currTestInt);
-	testBar->SetIgnoreCamera();*/
+
+	//Centering camera
+	int width = App->map->data.width / 2;
+	int height = App->map->data.height / 2;
+	iPoint pos = App->map->MapToWorld(width, height);
+	App->render->camera.x = pos.x + App->render->camera.w / 2;
+	App->render->camera.y = pos.y - App->render->camera.h / 2;
+	
 	return true;
 }
 
@@ -110,8 +112,8 @@ bool j1SceneUnit::PostUpdate(float dt)
 {
 	bool ret = true;
 	
-	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		ret = false;
+	//if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	//	ret = false;
 
 	return ret;
 }
@@ -128,48 +130,21 @@ void j1SceneUnit::ManageInput(float dt)
 {
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN)
 	{
-		p2DynArray<iPoint> newPath;
-		iPoint unitPos = unit->GetPosition();
-		iPoint unitTile = App->map->WorldToMap(unitPos.x, unitPos.y);
-		iPoint dstTile = { currentTile_x, currentTile_y };
-		bool ret = App->pathFinding->GetNewPath(unitTile, dstTile, newPath);
-		if (ret)
-		{
-			unit->SetNewPath(newPath);
-		}
-
-		if (entityType < 3)
-			entityType++;
-		else
-			entityType = 0;
-		switch (entityType)
-		{ 
-			case 0:
-				unit->SetType(RED);
-				break;
-			case 1:
-				unit->SetType(YELLOW);
-				break;
-			case 2:
-				unit->SetType(GREEN);
-				break;
-			case 3:
-				unit->SetType(BLUE);
-				break;
-		}
-
+		App->entityManager->SendNewPath(currentTile_x, currentTile_y);
 	}
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	{
-		int hp = unit->GetHP();
-		if (hp > 0)
-			unit->SetHP(--hp);
-	}
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+
+
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 	{
 		int hp = unit->GetHP();
 		if (hp < 100)
 			unit->SetHP(++hp);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+	{
+		int hp = unit->GetHP();
+		if (hp > 0)
+			unit->SetHP(--hp);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -199,17 +174,5 @@ void j1SceneUnit::ManageInput(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_UP)
 	{
 		renderForces = !renderForces;
-	}
-
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
-	{
-		int x, y;
-		App->input->GetMousePosition(x, y);
-		iPoint p = App->render->ScreenToWorld(x, y);
-
-		LOG("Mouse Position: %i, %i", p.x, p.y);
-		LOG("Current tile: %i, %i", currentTile_x, currentTile_y);
-		p = App->map->MapToWorld(currentTile_x, currentTile_y);
-		LOG("Draw Pos :%i, %i", p.x, p.y);
 	}
 }

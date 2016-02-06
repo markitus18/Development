@@ -50,7 +50,6 @@ bool Unit::Update(float dt)
 		GetNewTarget();
 	}
 
-
 	Draw();
 	return true;
 }
@@ -178,11 +177,6 @@ Entity_Directions Unit::GetDirection()
 {
 	Entity_Directions direction = UP;
 	float angle = currentVelocity.GetAngle();
-	if (targetChange)
-	{
-		LOG("Angle: %f", angle);
-		LOG("Velocity: %f x, %f y", currentVelocity.x, currentVelocity.y);
-	}
 
 	if (angle <= 0 && angle > -90)
 		direction =	UP;
@@ -219,7 +213,17 @@ void Unit::Draw()
 {
 	App->render->Blit(App->entityManager->unit_base, position.x - 32, position.y - 16);
 	App->render->Blit(App->entityManager->entity_tex, position.x - 32, position.y - 55, new SDL_Rect{ 256 * (level - 1)  + 64 * GetDirection(), 70 * type, 65, 70 });// , 1.0f, GetDirection());
-
+	
+	if (selected)
+	{
+		if (HPBar->active == false)
+			HPBar->Activate();
+	}
+	else
+	{
+		if (HPBar->active == true)
+			HPBar->Deactivate();
+	}
 	if (App->sceneUnit->renderForces)
 		DrawDebug();
 }

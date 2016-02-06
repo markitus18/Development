@@ -25,11 +25,14 @@ public:
 	bool addUnit(Unit& _unit);
 	bool deleteUnit();
 
+	bool IsUnitSelected(p2List_item<Unit*>*);
+	void SendNewPath(int x, int y);
 	//	bool addBuilding(Entity& _entity);
 	//	bool deleteBuilding();
 	//should be priv+
 	SDL_Rect selectionRect;
 	p2List<Unit*> unitList;
+	p2List<Unit*> selectedUnits;
 
 	SDL_Texture* entity_tex;
 	SDL_Texture* unit_base;

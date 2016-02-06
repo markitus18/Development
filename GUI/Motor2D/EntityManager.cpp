@@ -3,6 +3,8 @@
 #include "Unit.h"
 #include "j1Render.h"
 #include "j1Input.h"
+#include "j1Map.h"
+#include "j1Pathfinding.h"
 #include "EntityManager.h"
 
 EntityManager::EntityManager(bool start_enabled) : j1Module(start_enabled)
@@ -38,6 +40,24 @@ bool EntityManager::Update(float dt)
 
 	while (item)
 	{
+		if (selectionRect.w != 0 || selectionRect.h != 0)
+		{
+			if (IsUnitSelected(item))
+			{
+				if (item->data->selected == false)
+				{
+					item->data->selected = true;
+					selectedUnits.add(item->data);
+				}
+			}
+
+			else if (item->data->selected == true)
+			{
+				item->data->selected = false;
+				selectedUnits.del(selectedUnits.At(selectedUnits.find(item->data)));
+			}
+
+		}
 		item->data->Update(dt);
 		item = item->next;
 	}
@@ -81,7 +101,7 @@ void EntityManager::ManageInput()
 {
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_UP)
 	{
-		if (unitList[0]->GetLevel() < 3)
+		if (unitList[0]->GetLevel() < 2)
 			unitList[0]->SetLevel(unitList[0]->GetLevel() + 1);
 	}
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
@@ -104,4 +124,54 @@ bool EntityManager::addUnit(Unit& _unit)
 {
 	unitList.add(&_unit);
 	return true;
+}
+
+bool EntityManager::IsUnitSelected(p2List_item<Unit*>* unit)
+{
+	iPoint itemPos = unit->data->GetPosition();
+	itemPos.x += App->render->camera.x;
+	itemPos.y += App->render->camera.y;
+	SDL_Rect rect = selectionRect;
+	//Fixing negative values
+	if (rect.h < 0)
+	{
+		rect.y += rect.h;
+		rect.h *= -1;
+	}
+	if (rect.w < 0)
+	{
+		rect.x += rect.w;
+		rect.w *= -1;
+	}
+	if (itemPos.x > rect.x && itemPos.x < rect.x + rect.w && itemPos.y > rect.y && itemPos.y < rect.y + rect.h)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void EntityManager::SendNewPath(int x, int y)
+{
+	for (uint i = 0; i < selectedUnits.count(); i++)
+	{
+		p2DynArray<iPoint> newPath;
+		iPoint unitPos = selectedUnits[i]->GetPosition();
+		iPoint unitTile = App->map->WorldToMap(unitPos.x, unitPos.y);
+		iPoint dstTile = {x, y};
+		if (App->pathFinding->GetNewPath(unitTile, dstTile, newPath))
+			selectedUnits[i]->SetNewPath(newPath);
+
+		//Change color
+		if (selectedUnits[i]->GetType() == BLUE)
+			selectedUnits[i]->SetType(RED);
+		else if (selectedUnits[i]->GetType() == RED)
+			selectedUnits[i]->SetType(YELLOW);
+		else if (selectedUnits[i]->GetType() == YELLOW)
+			selectedUnits[i]->SetType(GREEN);
+		else if (selectedUnits[i]->GetType() == GREEN)
+			selectedUnits[i]->SetType(BLUE);
+	}
 }
