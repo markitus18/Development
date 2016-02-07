@@ -6,6 +6,15 @@
 
 struct MapLayer;
 
+struct PathNode
+{
+	iPoint point;
+	bool converted;
+
+	PathNode(iPoint newPoint){ point = newPoint; converted = false; };
+	PathNode(iPoint newPoint, bool conv){ point = newPoint; converted = conv; };
+};
+
 class j1PathFinding : public j1Module
 {
 
@@ -43,7 +52,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	bool GetNewPath(iPoint start, iPoint end, p2DynArray<iPoint>& pathOutput);
+	bool GetNewPath(iPoint start, iPoint end, p2DynArray<PathNode>& pathOutput);
 
 private:
 	p2List_item<node*>*  GetLowestF() const;
@@ -90,7 +99,7 @@ public:
 	bool		pathStarted = false;
 	bool		pathFinished = false;
 	bool		pathFound = false;
-	p2DynArray<iPoint> path;
+	p2DynArray<PathNode> path;
 
 #pragma region Commands
 	struct C_Path_Corners: public Command

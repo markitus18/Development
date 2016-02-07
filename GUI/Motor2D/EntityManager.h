@@ -22,7 +22,7 @@ public:
 
 	void ManageInput();
 
-	bool addUnit(Unit& _unit);
+	Unit* CreateUnit(int x, int y, UnitType);
 	bool deleteUnit();
 
 	bool IsUnitSelected(p2List_item<Unit*>*);

@@ -148,11 +148,6 @@ void Unit::SetTarget(int x, int y)
 	targetChange = true;
 }
 
-void Unit::SetBehaviour(Behaviour _behaviour)
-{
-	behaviour = _behaviour;
-}
-
 void Unit::SetType(UnitType _type)
 {
 	type = _type;

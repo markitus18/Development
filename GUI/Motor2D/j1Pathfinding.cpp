@@ -72,7 +72,7 @@ bool j1PathFinding::CleanUp()
 	return true;
 }
 
-bool j1PathFinding::GetNewPath(iPoint start, iPoint end, p2DynArray<iPoint>& pathOutput)
+bool j1PathFinding::GetNewPath(iPoint start, iPoint end, p2DynArray<PathNode>& pathOutput)
 {
 	startTile = start;
 	endTile = end;

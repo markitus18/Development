@@ -7,13 +7,6 @@
 
 #include "Entity.h"
 
-enum Behaviour
-{
-	ATTACK = 0,
-	RUN,
-	PATROL,
-};
-
 enum UnitType
 {
 	RED = 0,
@@ -45,7 +38,6 @@ public:
 	//Setters
 	void SetTarget(int x, int y);
 	void SetNewPath(p2DynArray<iPoint>& newPath);
-	void SetBehaviour(Behaviour _behaviour);
 	void SetType(UnitType _type);
 	void SetLevel(int _level);
 	void SetMaxSpeed(float speed);
@@ -63,7 +55,6 @@ public:
 	//HP controllers
 	void CreateBar();
 private:
-	Behaviour behaviour = PATROL;
 	UnitType type = RED;
 	int level = 1;
 

@@ -120,11 +120,21 @@ void EntityManager::ManageInput()
 		selectionRect.w = selectionRect.h = 0;
 	}
 }
-bool EntityManager::addUnit(Unit& _unit)
+
+Unit* EntityManager::CreateUnit(int x, int y, UnitType type)
 {
-	unitList.add(&_unit);
+	Unit* unit = new Unit(x, y);
+	unit->SetType(type);
+
+	unitList.add(unit);
+	return unit;
+}
+
+bool deleteUnit()
+{
 	return true;
 }
+
 
 bool EntityManager::IsUnitSelected(p2List_item<Unit*>* unit)
 {
@@ -162,7 +172,11 @@ void EntityManager::SendNewPath(int x, int y)
 		iPoint unitTile = App->map->WorldToMap(unitPos.x, unitPos.y);
 		iPoint dstTile = {x, y};
 		if (App->pathFinding->GetNewPath(unitTile, dstTile, newPath))
+		{
+			
 			selectedUnits[i]->SetNewPath(newPath);
+		}
+
 
 		//Change color
 		if (selectedUnits[i]->GetType() == BLUE)

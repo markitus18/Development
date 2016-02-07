@@ -47,13 +47,18 @@ bool j1SceneUnit::Start()
 	instructions_title = App->tex->Load("textures/instructions_title.png");
 	grid_tex = App->tex->Load("textures/grid.png");
 
-	unit = new Unit;
+
 	iPoint unitPos = App->map->MapToWorld(3, 5);
-	unit->SetPosition((float)unitPos.x, (float)unitPos.y);
-	unit->SetHP(100);
-	unit->SetBehaviour(RUN);
-	unit->SetType(RED);
-	App->entityManager->addUnit(*unit);
+	unit = App->entityManager->CreateUnit(unitPos.x, unitPos.y, RED);
+
+	unitPos = App->map->MapToWorld(5, 5);
+	unit = App->entityManager->CreateUnit(unitPos.x, unitPos.y, GREEN);
+
+	unitPos = App->map->MapToWorld(7, 3);
+	unit = App->entityManager->CreateUnit(unitPos.x, unitPos.y, YELLOW);
+
+	unitPos = App->map->MapToWorld(2, 8);
+	unit = App->entityManager->CreateUnit(unitPos.x, unitPos.y, BLUE);
 
 	//Centering camera
 	int width = App->map->data.width / 2;
@@ -88,9 +93,9 @@ bool j1SceneUnit::Update(float dt)
 	
 	App->map->Draw();
 
-	//Drawing point 0, 0
 	if (renderForces)
-	{
+	{	
+		//Drawing point 0, 0
 		App->render->DrawCircle(0, 0, 10, 255, 255, 255);
 		App->render->DrawLine(0, -20, 0, 20, 255, 0, 0);
 		App->render->DrawLine(-20, 0, 20, 0, 255, 0, 0);
@@ -103,7 +108,6 @@ bool j1SceneUnit::Update(float dt)
 		if (App->pathFinding->endTileExists)
 			App->render->Blit(App->map->data.tilesets.start->next->data->texture, endPosition.x - 32, endPosition.y - 16, new SDL_Rect{ 64, 32, 64, 32 });
 	}
-
 	return true;
 }
 
