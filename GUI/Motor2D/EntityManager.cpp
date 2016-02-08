@@ -101,8 +101,11 @@ void EntityManager::ManageInput()
 {
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_UP)
 	{
-		if (unitList[0]->GetLevel() < 2)
-			unitList[0]->SetLevel(unitList[0]->GetLevel() + 1);
+		for (uint i = 0; i < unitList.count(); i++)
+		{
+			if (unitList[i]->GetLevel() < 2)
+				unitList[i]->SetLevel(unitList[i]->GetLevel() + 1);
+		}
 	}
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
@@ -170,7 +173,7 @@ void EntityManager::SendNewPath(int x, int y)
 		p2DynArray<PathNode> newPath;
 		iPoint unitPos = selectedUnits[i]->GetPosition();
 		iPoint unitTile = App->map->WorldToMap(unitPos.x, unitPos.y);
-		iPoint dstTile = {x, y};
+		iPoint dstTile = App->map->WorldToMap(x, y);
 		if (App->pathFinding->GetNewPath(unitTile, dstTile, newPath))
 		{
 			newPath[newPath.Count() - 1].point = { x, y };

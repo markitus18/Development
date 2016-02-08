@@ -134,7 +134,10 @@ void j1SceneUnit::ManageInput(float dt)
 {
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN)
 	{
-		App->entityManager->SendNewPath(currentTile_x, currentTile_y);
+		int x, y;
+		App->input->GetMousePosition(x, y);
+		iPoint p = App->render->ScreenToWorld(x, y);
+		App->entityManager->SendNewPath(p.x, p.y);
 	}
 
 
