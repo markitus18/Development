@@ -84,7 +84,7 @@ bool j1SceneMap::Update(float dt)
 	{
 		for (uint i = 0; i < App->pathFinding->path.Count(); i++)
 		{
-			iPoint position = App->map->MapToWorld(App->pathFinding->path[i].x, App->pathFinding->path[i].y);
+			iPoint position = App->map->MapToWorld(App->pathFinding->path[i].point.x, App->pathFinding->path[i].point.y);
 			App->render->Blit(debug_tex, position.x, position.y, new SDL_Rect{ 0, 0, 64, 64 });
 		}
 	}

@@ -398,7 +398,7 @@ bool j1PathFinding::CheckIfEnd(node* node, iPoint end)
 	return false;
 }
 
-void j1PathFinding::FinishPathFinding(p2DynArray<iPoint>& pathRef)
+void j1PathFinding::FinishPathFinding(p2DynArray<PathNode>& pathRef)
 {
 	node* node;
 	int i = 0;

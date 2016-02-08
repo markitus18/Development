@@ -167,7 +167,7 @@ void EntityManager::SendNewPath(int x, int y)
 {
 	for (uint i = 0; i < selectedUnits.count(); i++)
 	{
-		p2DynArray<iPoint> newPath;
+		p2DynArray<PathNode> newPath;
 		iPoint unitPos = selectedUnits[i]->GetPosition();
 		iPoint unitTile = App->map->WorldToMap(unitPos.x, unitPos.y);
 		iPoint dstTile = {x, y};

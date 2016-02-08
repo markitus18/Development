@@ -11,6 +11,7 @@ struct PathNode
 	iPoint point;
 	bool converted;
 
+	PathNode(){};
 	PathNode(iPoint newPoint){ point = newPoint; converted = false; };
 	PathNode(iPoint newPoint, bool conv){ point = newPoint; converted = conv; };
 };
@@ -73,7 +74,7 @@ private:
 	bool IsNodeClosed(node* node);
 	bool CheckIfExists(node* node);
 	bool CheckIfEnd(node* node, iPoint end);
-	void FinishPathFinding(p2DynArray<iPoint>& pathRef);
+	void FinishPathFinding(p2DynArray<PathNode>& pathRef);
 
 private:
 

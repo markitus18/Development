@@ -11,6 +11,7 @@
 #include "j1SceneUnit.h"
 #include "j1Gui.h"
 #include "UIElements.h"
+#include "j1Pathfinding.h"
 
 Unit::Unit()
 {
@@ -134,7 +135,7 @@ bool Unit::GetNewTarget()
 	if ((uint)currentNode + 1 < path.Count())
 	{
 		currentNode++;
-		iPoint newPos = App->map->MapToWorld(path[currentNode].x, path[currentNode].y);
+		iPoint newPos = App->map->MapToWorld(path[currentNode].point.x, path[currentNode].point.y);
 		SetTarget(newPos.x, newPos.y);
 		ret = true;
 	}
@@ -195,7 +196,7 @@ int Unit::GetLevel()
 	return level;
 }
 
-void Unit::SetNewPath(p2DynArray<iPoint>& newPath)
+void Unit::SetNewPath(p2DynArray<PathNode>& newPath)
 {
 	path.Clear();
 	path += newPath;
@@ -256,7 +257,7 @@ void Unit::DrawDebug()
 	{
 		for (uint i = 0; i < path.Count(); i++)
 		{
-			iPoint position = App->map->MapToWorld(path[i].x, path[i].y);
+			iPoint position = App->map->MapToWorld(path[i].point.x, path[i].point.y);
 			SDL_Rect rect = { 0, 0, 64, 32 };
 			if (i < (uint)currentNode)
 				rect = { 0, 64, 64, 32 };

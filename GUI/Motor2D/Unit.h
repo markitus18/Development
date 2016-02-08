@@ -16,6 +16,7 @@ enum UnitType
 };
 
 class UIBar;
+struct PathNode;
 
 class Unit : public Entity
 {
@@ -37,7 +38,7 @@ public:
 
 	//Setters
 	void SetTarget(int x, int y);
-	void SetNewPath(p2DynArray<iPoint>& newPath);
+	void SetNewPath(p2DynArray<PathNode>& newPath);
 	void SetType(UnitType _type);
 	void SetLevel(int _level);
 	void SetMaxSpeed(float speed);
@@ -64,7 +65,7 @@ private:
 	float maxForce = 50.0f;
 	float slowingRadius = 5.0f;
 
-	p2DynArray<iPoint> path;
+	p2DynArray<PathNode> path;
 	iPoint target;
 	bool targetChange = false;
 	int currentNode = 0;
