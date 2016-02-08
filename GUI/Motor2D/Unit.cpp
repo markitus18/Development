@@ -135,7 +135,16 @@ bool Unit::GetNewTarget()
 	if ((uint)currentNode + 1 < path.Count())
 	{
 		currentNode++;
-		iPoint newPos = App->map->MapToWorld(path[currentNode].point.x, path[currentNode].point.y);
+		iPoint newPos;
+		if (!path[currentNode].converted)
+		{
+			newPos = App->map->MapToWorld(path[currentNode].point.x, path[currentNode].point.y);
+		}
+		else
+		{
+			newPos = { path[currentNode].point.x, path[currentNode].point.y };
+		}
+
 		SetTarget(newPos.x, newPos.y);
 		ret = true;
 	}
